@@ -8,8 +8,9 @@
 #     15-dec-2023  JM  initial version
 
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow,QMdiArea, QMdiSubWindow, QTextEdit, QMenu
+from PySide6.QtWidgets import QApplication, QMainWindow,QMdiArea, QMdiSubWindow, QTextEdit, QMenu, QStatusBar
 from PySide6.QtGui import QAction
+from statusbar import myStatusBar
 
 # define the MDI class
 
@@ -43,7 +44,11 @@ class MDIWindow(QMainWindow) :
     tiledAction.triggered.connect(self.tiledPressed)
     fileMenu.addAction(tiledAction)
 
-    #-jm file.connect(self.WindowTrig)
+    # and the statusbar
+
+    statusbar = myStatusBar()
+    self.setStatusBar(statusbar)
+    statusbar.setText("ready",3)
 
     self.setWindowTitle("MDI Application")
 
