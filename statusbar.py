@@ -17,8 +17,6 @@ class myStatusBar(QStatusBar) :
 
   def __init__(self) :
     super().__init__()
-    self.led = ledWidget()
-    self.addPermanentWidget(self.led)
 
   # setText
   #
