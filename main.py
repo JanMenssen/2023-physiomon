@@ -10,6 +10,7 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow,QMdiArea, QMdiSubWindow, QTextEdit, QMenu, QMessageBox
 from PySide6.QtGui import QAction
+from PySide6.QtCore import QTimer
 from PySide6.QtCharts import QChartView
 from PySide6.QtMultimedia import QAudioFormat, QAudioSource, QMediaDevices
 from statusbar import myStatusBar
@@ -20,7 +21,11 @@ from stripchart import stripChart
 class MDIWindow(QMainWindow) :
 
   # constructor
-
+  #
+  #   - windows are created
+  #   - menus are created
+  #   - audio device is created and coupled (should be replaced by data from arduino)
+    
   def __init__(self,device) :
     super().__init__()
 
@@ -57,6 +62,7 @@ class MDIWindow(QMainWindow) :
     self.setWindowTitle("MDI Application")
 
     # audio device
+
     self.name = device.description()
 
     m_formatAudio = QAudioFormat()
@@ -66,18 +72,27 @@ class MDIWindow(QMainWindow) :
 
     self.m_audioInput = QAudioSource(device, m_formatAudio, self)
     self.m_ioDevice = self.m_audioInput.start()
-    self.m_ioDevice.readyRead.connect(self._readyRead)
+    #-jm self.m_ioDevice.readyRead.connect(self.update)
 
-  def _readyRead(self) :
+  # update
+  #
+  #     this function updates the windows if there is data available
+    
+  def update(self) :
+    
     data = self.m_ioDevice.readAll()
+    print(data.size())
     if self.count > 0 :
       for i in range(self.count) :
         self.m_scope[i].update(data)
 
+  # newPressed
+  #
+  #     callback which is called when a new window should be created. The subwindow is created
+  #     containing a stripchart. Number of windows is incremented
+        
   def newPressed(self) :
 
-  
-    print(self.count)
     scope = stripChart(f"Data from the microphone ({self.name})")
     self.m_scope.append(scope)
 
@@ -92,13 +107,31 @@ class MDIWindow(QMainWindow) :
 
     self.count = self.count + 1
 
+  # cascadePressed
+  #
+  #     callback which is called when the cascade menu item is pressed. All windows are placed
+  #     in a cascade way
+    
   def cascadePressed(self) :
   
     self.mdi.cascadeSubWindows()
 
+  # tiledPressed
+  #
+  #     function which is called from the menu item <tiled>. Windows are placed tiled on the screen
+    
   def tiledPressed(self) :
       
     self.mdi.tileSubWindows()
+
+# onTimeOut
+#
+#     callback wich is called on time outs of the timer
+#     NOTE : mdiwindow is known ?
+    
+def onTimeOut() :
+  mdiwindow.update()
+  return
 
 # main loop
       
@@ -112,8 +145,21 @@ if __name__ == '__main__' :
   if not input_devices :
     QMessageBox.warning(None,"audio","Ther is no audio input device available.")
 
+  # show the window
+    
   mdiwindow = MDIWindow(input_devices[0])
   mdiwindow.show()
+
+  # check device is connected
+    
+  # and timer
+
+  timer = QTimer()
+  timer.timeout.connect(onTimeOut)
+  timer.start(100)
+    
+  # and return until exit
+
   sys.exit(app.exec())
 
 
