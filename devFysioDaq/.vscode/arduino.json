@@ -1,0 +1,6 @@
+{
+    "port": "/dev/tty.usbmodem101",
+    "board": "arduino:avr:uno",
+    "programmer": "avrisp",
+    "sketch": "2022-testPython.ino"
+}

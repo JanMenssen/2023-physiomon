@@ -15,6 +15,14 @@ from PySide6.QtCharts import QChartView
 from PySide6.QtMultimedia import QAudioFormat, QAudioSource, QMediaDevices
 from statusbar import myStatusBar
 from stripchart import stripChart
+from devfysiodaq import devFysioDaq
+
+#-jm port = "cu.BLTH"
+#-jm port = "tty.BLTH"
+#-jm port = "cu.Bluetooth-Incoming-Port"
+#-jm port = "tty.Bluetooth-Incoming-Port"
+#-jm port = "cu.usbmodem14201"
+port = "tty.usbmodem101"
 
 # define the MDI class
 
@@ -26,11 +34,12 @@ class MDIWindow(QMainWindow) :
   #   - menus are created
   #   - audio device is created and coupled (should be replaced by data from arduino)
     
-  def __init__(self,device) :
+  def __init__(self,audiodevice,device) :
     super().__init__()
 
     self.count = 0
     self.m_scope = []
+    self.device = device
 
     self.mdi = QMdiArea()
     self.setCentralWidget(self.mdi)
@@ -39,7 +48,9 @@ class MDIWindow(QMainWindow) :
 
     bar = self.menuBar()
     fileMenu = QMenu("&File", self)
+    deviceMenu = QMenu("&Device", self)
     bar.addMenu(fileMenu)
+    bar.addMenu(deviceMenu)
 
     newAction = QAction("New",self)
     newAction.triggered.connect(self.newPressed)
@@ -53,26 +64,35 @@ class MDIWindow(QMainWindow) :
     tiledAction.triggered.connect(self.tiledPressed)
     fileMenu.addAction(tiledAction)
 
+    startAction = QAction("start",self)
+    startAction.triggered.connect(self.startPressed)
+    deviceMenu.addAction(startAction)
+
+    devInfoAction = QAction("device &Info",self)
+    devInfoAction.triggered.connect(self.devInfoPressed)
+    deviceMenu.addAction(devInfoAction)
+
     # and the statusbar
 
     statusbar = myStatusBar()
     self.setStatusBar(statusbar)
     statusbar.setText("ready",3)
 
-    self.setWindowTitle("MDI Application")
+    self.setWindowTitle("FysioMon v1.01")
 
     # audio device
 
-    self.name = device.description()
+    self.name = audiodevice.description()
 
     m_formatAudio = QAudioFormat()
     m_formatAudio.setSampleRate(8000)
     m_formatAudio.setChannelCount(1)
     m_formatAudio.setSampleFormat(QAudioFormat.UInt8)
 
-    self.m_audioInput = QAudioSource(device, m_formatAudio, self)
+    self.m_audioInput = QAudioSource(audiodevice, m_formatAudio, self)
     self.m_ioDevice = self.m_audioInput.start()
     #-jm self.m_ioDevice.readyRead.connect(self.update)
+
 
   # update
   #
@@ -81,11 +101,36 @@ class MDIWindow(QMainWindow) :
   def update(self) :
     
     data = self.m_ioDevice.readAll()
-    print(data.size())
     if self.count > 0 :
       for i in range(self.count) :
         self.m_scope[i].update(data)
 
+  # startPressed
+  #
+  #     the startstop is pressed, this toggles start stop of the device
+
+  def startPressed(self) :
+
+    started = device.isStarted()
+    
+    if (not started) :
+      device.setStartStop(True)
+      self.statusBar().setText("device started",5)
+    else :
+      device.setStartStop(False)
+      self.statusBar().setText("device stopped",5)
+   
+    return
+
+  # devInfoPressed
+  #
+  #     returns the device info
+
+  def devInfoPressed(self) :
+    dataStr = self.device.isConnected()
+    self.statusBar().setText(dataStr,5)
+    return
+       
   # newPressed
   #
   #     callback which is called when a new window should be created. The subwindow is created
@@ -145,12 +190,26 @@ if __name__ == '__main__' :
   if not input_devices :
     QMessageBox.warning(None,"audio","Ther is no audio input device available.")
 
+  # create the device
+      
+  device = devFysioDaq()
+  device.initialise(port,1200)
+
   # show the window
     
-  mdiwindow = MDIWindow(input_devices[0])
+  mdiwindow = MDIWindow(input_devices[0],device)
   mdiwindow.show()
 
+  # create the statusbar
+    
+  statusbar = myStatusBar()
+  mdiwindow.setStatusBar(statusbar)
+
   # check device is connected
+
+  devInfoStr = device.isConnected()
+  print(devInfoStr)
+  statusbar.setText(devInfoStr,5)
     
   # and timer
 

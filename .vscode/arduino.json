@@ -1,0 +1,6 @@
+{
+    "board": "arduino:avr:uno",
+    "programmer": "avrisp",
+    "sketch": "devFysioDaq/devFysioDaq.ino",
+    "port": "/dev/tty.usbmodem101"
+}
