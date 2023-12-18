@@ -8,7 +8,7 @@
 #     15-dec-2023  JM  initial version
 
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow,QMdiArea, QMdiSubWindow, QTextEdit, QMenu, QMessageBox
+from PySide6.QtWidgets import QApplication, QMainWindow,QMdiArea, QMdiSubWindow, QTextEdit, QMenu, QMessageBox, QToolBar
 from PySide6.QtGui import QAction
 from PySide6.QtCore import QTimer
 from PySide6.QtCharts import QChartView
@@ -43,6 +43,36 @@ class MDIWindow(QMainWindow) :
 
     self.mdi = QMdiArea()
     self.setCentralWidget(self.mdi)
+
+    # create the toolbar
+
+    toolbar = QToolBar("main toolbar")
+    self.addToolBar(toolbar)
+
+    startButton = QAction("start",self)
+    startButton.setStatusTip("start/stop the program")
+    startButton.triggered.connect(self.startPressed)
+    toolbar.addAction(startButton)
+
+    saveButton = QAction("save",self)
+    saveButton.setStatusTip("save the measurement")
+    saveButton.triggered.connect(self.savePressed)
+    toolbar.addAction(saveButton)
+
+    displayButton = QAction("display",self)
+    displayButton.setStatusTip("edit the display settings")
+    displayButton.triggered.connect(self.displayPressed)
+    toolbar.addAction(displayButton)
+
+    deviceButton = QAction("device",self)
+    deviceButton.setStatusTip("edit the device settings")
+    deviceButton.triggered.connect(self.devicePressed)
+    toolbar.addAction(deviceButton)
+
+    deviceInfoButton = QAction("info",self)
+    deviceInfoButton.setStatusTip("device info")
+    deviceButton.triggered.connect(self.devInfoPressed)
+    toolbar.addAction(deviceInfoButton)
 
     # create the menu structure
 
@@ -105,6 +135,27 @@ class MDIWindow(QMainWindow) :
       for i in range(self.count) :
         self.m_scope[i].update(data)
 
+  # devicePressed
+  #
+  #     settings of the device are changed
+        
+  def devicePressed(self) :
+    return
+  
+  # savePressed
+  #
+  #     measurement is stored
+
+  def savePressed(self) :
+    return
+  
+  # displayPressed
+  #
+  #     display settings are changed
+
+  def displayPressed(self) :
+    return
+  
   # startPressed
   #
   #     the startstop is pressed, this toggles start stop of the device
