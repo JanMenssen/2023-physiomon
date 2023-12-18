@@ -7,6 +7,8 @@
 #   modifications
 #     15-dec-2023   JM    initial version
 
+from PySide6.QtCore import QSettings
+
 from mydevice import myDevice
 from arduinocomm import arduinoComm
 
@@ -18,14 +20,15 @@ class devFysioDaq(myDevice) :
     
     super().__init__()
     self.m_arduino = arduinoComm()
+    self.m_portName = []
 
   # intialise
   #
   #     intialises the device, seperate routine is used to be compatible with LabView
 
-  def initialise(self,deviceName,baudRate) :
+  def initialise(self) :
     
-    self.m_arduino.initialise(deviceName,baudRate)
+    self.m_arduino.initialise(self.m_portName,1200)
     return
 
   # isConnected
@@ -59,6 +62,20 @@ class devFysioDaq(myDevice) :
 
     super().setStartStop(startstop)
     self.m_arduino.startstop(startstop)
+    return
+  
+  # iniRead
+  #
+  #     reads the settings for the device from the specific file
+
+  def iniRead(self,name) :
+
+    settings = QSettings(QSettings.IniFormat,QSettings.UserScope,"JanSoft",name)
+
+    settings.beginGroup("algemeen")
+    self.m_portName = settings.value("address")
+    settings.endGroup()
+
     return
   
   # read

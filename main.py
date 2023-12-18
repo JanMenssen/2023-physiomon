@@ -16,6 +16,8 @@ from PySide6.QtMultimedia import QAudioFormat, QAudioSource, QMediaDevices
 from statusbar import myStatusBar
 from stripchart import stripChart
 from devfysiodaq import devFysioDaq
+from mydevice import myDevice
+from settings import settings
 
 #-jm port = "cu.BLTH"
 #-jm port = "tty.BLTH"
@@ -43,6 +45,8 @@ class MDIWindow(QMainWindow) :
 
     self.mdi = QMdiArea()
     self.setCentralWidget(self.mdi)
+
+
 
     # create the toolbar
 
@@ -123,7 +127,14 @@ class MDIWindow(QMainWindow) :
     self.m_ioDevice = self.m_audioInput.start()
     #-jm self.m_ioDevice.readyRead.connect(self.update)
 
-
+  # init
+  #
+  #     this is the initialisation part of the mainWindow
+    
+  def init(self) :
+    print("in init")
+    return
+  
   # update
   #
   #     this function updates the windows if there is data available
@@ -227,6 +238,9 @@ class MDIWindow(QMainWindow) :
     
 def onTimeOut() :
   mdiwindow.update()
+#-jm  data = device.read()
+#-jm  display.plot(data)
+#-jm  datastore.write(data)
   return
 
 # main loop
@@ -241,14 +255,28 @@ if __name__ == '__main__' :
   if not input_devices :
     QMessageBox.warning(None,"audio","Ther is no audio input device available.")
 
-  # create the device
-      
-  device = devFysioDaq()
-  device.initialise(port,1200)
+  # read the settings 
+  
+  settings = settings()
+  settings.initialise()
+  deviceName = settings.iniRead()
 
-  # show the window
+  # create the device
+  
+  device = myDevice()
+  if (deviceName == "fysiodaq") :    
+    device = devFysioDaq()
     
+  device.iniRead(deviceName)
+  device.initialise()
+
+
+  # create the graphical structure
+
   mdiwindow = MDIWindow(input_devices[0],device)
+
+  # and show
+
   mdiwindow.show()
 
   # create the statusbar
@@ -258,9 +286,9 @@ if __name__ == '__main__' :
 
   # check device is connected
 
-  devInfoStr = device.isConnected()
-  print(devInfoStr)
-  statusbar.setText(devInfoStr,5)
+  #-jm devInfoStr = device.isConnected()
+  #-jm print(devInfoStr)
+  #-jm statusbar.setText(devInfoStr,5)
     
   # and timer
 

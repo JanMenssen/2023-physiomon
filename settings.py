@@ -13,39 +13,66 @@ class settings(QSettings) :
   # constructor
 
   def __init__(self) :
-    super().__init__("FysioMon","main")
+    super().__init__(QSettings.IniFormat,QSettings.UserScope,"JanSoft","fysiomon")
 
     self.general = {"numchan" : 1, "numdisp" : 1, "device" :""}
     self.channels = []
     self.displays = []
     self.events = []
-    
-    self.setDefaultFormat()
+
+    self.setFallbacksEnabled(False)
     
     return
+
+
+  # initialise
+  #
+  #     sets the *.ini file
+  #     Note : this is curretly an empty method in Python/C but due to compatibiltiy with
+  #            labView it is kept
+
+  def initialise(self) :
+    return
   
+
   # iniRead
   #
   #   read the *.INI file
 
   def iniRead(self) :
 
-    self._readGeneral(self)
-    self._readChannels(self)
-    self._readDisplaySettings(self)
-    self._readEventSettings(self)
+    self._readGeneral()
+    self._readChannels()
+    self._readDisplaySettings()
+    self._readEventSettings()
+
+    return self.general["device"]
+  
+  # iniWrite
+  #
+  #     writes the current configuration
+
+  def iniWrite(self) :
+
+    self.beginGroup("general")
+    self.setValue("numchan",self.general["numchan"])
+    self.setValue("numdisp",self.general["numdisp"])
+                                         
+    self.endGroup()
+
 
     return
   
+
   # _readGeneral
   #
   #     private method to read the general settings from the *.ini file
 
   def _readGeneral(self) :
 
-    self.beginGroup('general')
-    self.general["numchan"] = self.value("numchan",1).toInt()
-    self.general["numdisp"] = self.value("numdisp",1).toInit()
+    self.beginGroup("algemeen")
+    self.general["numchan"] = int(self.value("numchan",defaultValue = 1))
+    self.general["numdisp"] = int(self.value("numdisp",1))
     self.general["device"] = self.value("device","")
     self.endGroup()
 
@@ -59,19 +86,16 @@ class settings(QSettings) :
 
     channel = {"name" : "", "type" : 0, "source" : 0, "display" : 0}
 
-    for i in range(self.numchan) :
+    numchan = self.general["numchan"]
+    for i in range(numchan) :
       
-      name = "channel" + str(i+1)
-
-      self.beginGroup(name)
+      keyName = "channel " + str(i+1)
+      
+      self.beginGroup(keyName)
       channel["name"] = self.value("name",1)
-      type = self.value("type","analog")
-      if (type == "analog") :
-        channel["type"] = 1
-      if (type == "numeric") :
-        channel["type"] = 2
-      channel["source"] = self.value("source", 0)
-      channel["display"] = self.value("display")
+      channel["type"] = self.value("type",defaultValue = "analog in")
+      channel["source"] = int(self.value("source", defaultValue = 0))
+      channel["display"] = int(self.value("display",defaultValue = 0))
       self.endGroup()
       
       self.channels.append(channel)
@@ -86,18 +110,19 @@ class settings(QSettings) :
 
     display = {"top" : 0, "left" : 0, "width" : 0, "height" : 0, "ymin" : 0, "ymax" : 0, "timescale" : 10}
 
-    for i in range(self.numdisp) :
+    numdisp = self.general["numdisp"]
+    for i in range(numdisp) :
 
-      name = "display" + str(i+1)
+      name = "display " + str(i+1)
 
       self.beginGroup(name)
-      display["top"] = self.value("top",0).toFloat()
-      display["left"] = self.value("left",0).toFloat()
-      display["widht"] = self.value("width",0).toFloat()
-      display["height"] = self.value("height",0).toFloat()
-      display["ymin"] = self.value("ymin",0).toFloat()
-      display["ymax"] = self.value("ymax",0).toFloat()
-      display["timescale"] = self.value("timescale",10).toInt()
+      display["top"] = self.value("top",0.0)
+      display["left"] = self.value("left",0.0)
+      display["width"] = self.value("width",0.0)
+      display["height"] = self.value("height",0.0)
+      display["ymin"] = self.value("ymin",0.0)
+      display["ymax"] = self.value("ymax",0.0)
+      display["timescale"] = self.value("timescale",10)
       self.endGroup()
 
       self.displays.append(display)

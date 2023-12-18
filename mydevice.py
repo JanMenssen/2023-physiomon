@@ -15,6 +15,13 @@ class myDevice() :
     self.m_started = False
     return
   
+  # initialise
+  #
+  #   initialises this dummy device, nothing is done
+
+  def initialise(self) :
+    return
+  
   # isStarted
   #
   #   this function returns the started state
