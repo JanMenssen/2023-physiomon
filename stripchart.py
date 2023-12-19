@@ -33,7 +33,8 @@ class stripChart :
     self.m_axisX.setLabelsColor(Qt.cyan)
 
     self.m_axisY = QValueAxis()
-    self.m_axisY.setRange(-1,1)
+    #-jm self.m_axisY.setRange(-1,1)
+    self.setYaxis(-1,1)
     self.m_axisY.setTitleText("audio level")
     self.m_axisY.setTitleBrush(Qt.cyan)
     self.m_axisY.setGridLineVisible(False)
@@ -59,6 +60,15 @@ class stripChart :
     self.m_buffer = [QPointF(x, 0) for x in range(SAMPLE_COUNT)]
     self.m_series.append(self.m_buffer)
 
+  # setYaxis
+  #
+  #     sets the scale of the Yaxis
+    
+  def setYaxis(self,ymin,ymax) :
+
+    self.m_axisY.setRange(ymin,ymax)
+    return
+  
   # update
   #
   #   the update method is called at new samples

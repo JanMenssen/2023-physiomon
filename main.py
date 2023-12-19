@@ -257,8 +257,6 @@ if __name__ == '__main__' :
   statusbar = myStatusBar()
   mdiwindow.setStatusBar(statusbar)
   
-  
-
   # check device is connected
 
   #-jm devInfoStr = device.isConnected()

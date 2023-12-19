@@ -15,10 +15,10 @@ class settings(QSettings) :
   def __init__(self) :
     super().__init__(QSettings.IniFormat,QSettings.UserScope,"JanSoft","fysiomon")
 
-    self.general = {"numchan" : 1, "numdisp" : 1, "device" :""}
-    self.channels = []
-    self.displays = []
-    self.events = []
+    self.m_general = {"numchan" : 1, "numdisp" : 1, "device" :""}
+    self.m_channels = []
+    self.m_displays = []
+    self.m_events = []
 
     self.setFallbacksEnabled(False)
     
@@ -46,8 +46,28 @@ class settings(QSettings) :
     self._readDisplaySettings()
     self._readEventSettings()
 
-    return self.general["device"]
+    return self.m_general["device"]
   
+  # getDisplayInfo
+  #
+  #     returns the position and the scale setting for the display with index i
+
+  def getDisplayInfo(self,i) :
+
+    position = {"top" : 0,"left" : 0, "height" : 0, "width" : 0}
+    scale = {"ymin" : 0, "ymax" : 0, "time" : 0}
+
+    position["top"] = self.m_displays[i]["top"]
+    position["left"] = self.m_displays[i]["left"]
+    position["height"] = self.m_displays[i]["height"]
+    position["width"] = self.m_displays[i]["width"]   
+
+    scale["ymin"] = self.m_displays[i]["ymin"]
+    scale["ymax"] = self.m_displays[i]["ymax"]
+    scale["time"] = self.m_displays[i]["timescale"]
+    
+    return position,scale
+
   # iniWrite
   #
   #     writes the current configuration
@@ -63,7 +83,6 @@ class settings(QSettings) :
 
     return
   
-
   # _readGeneral
   #
   #     private method to read the general settings from the *.ini file
@@ -71,9 +90,9 @@ class settings(QSettings) :
   def _readGeneral(self) :
 
     self.beginGroup("algemeen")
-    self.general["numchan"] = int(self.value("numchan",defaultValue = 1))
-    self.general["numdisp"] = int(self.value("numdisp",1))
-    self.general["device"] = self.value("device","")
+    self.m_general["numchan"] = int(self.value("numchan",defaultValue = 1))
+    self.m_general["numdisp"] = int(self.value("numdisp",1))
+    self.m_general["device"] = self.value("device","")
     self.endGroup()
 
     return
@@ -85,8 +104,9 @@ class settings(QSettings) :
   def _readChannels(self) :
 
     channel = {"name" : "", "type" : 0, "source" : 0, "display" : 0}
+    self.m_channels = []
 
-    numchan = self.general["numchan"]
+    numchan = self.m_general["numchan"]
     for i in range(numchan) :
       
       keyName = "channel " + str(i+1)
@@ -98,7 +118,7 @@ class settings(QSettings) :
       channel["display"] = int(self.value("display",defaultValue = 0))
       self.endGroup()
       
-      self.channels.append(channel)
+      self.m_channels.append(channel.copy())
 
     return
 
@@ -109,24 +129,25 @@ class settings(QSettings) :
   def _readDisplaySettings(self) :
 
     display = {"top" : 0, "left" : 0, "width" : 0, "height" : 0, "ymin" : 0, "ymax" : 0, "timescale" : 10}
+    self.m_displays = []
 
-    numdisp = self.general["numdisp"]
+    numdisp = self.m_general["numdisp"]
     for i in range(numdisp) :
 
       name = "display " + str(i+1)
 
       self.beginGroup(name)
-      display["top"] = self.value("top",0.0)
-      display["left"] = self.value("left",0.0)
-      display["width"] = self.value("width",0.0)
-      display["height"] = self.value("height",0.0)
-      display["ymin"] = self.value("ymin",0.0)
-      display["ymax"] = self.value("ymax",0.0)
-      display["timescale"] = self.value("timescale",10)
+      display["top"] = float(self.value("top",0.0))
+      display["left"] = float(self.value("left",0.0))
+      display["width"] = float(self.value("width",0.0))
+      display["height"] = float(self.value("height",0.0))
+      display["ymin"] = float(self.value("ymin",0.0))
+      display["ymax"] = float(self.value("ymax",0.0))
+      display["timescale"] = float(self.value("timescale",10))
       self.endGroup()
 
-      self.displays.append(display)
-
+      self.m_displays.append(display.copy())
+    
     return  
   
   # _readEventSettings
@@ -138,6 +159,6 @@ class settings(QSettings) :
     self.beginGroup("events")
     for i in range(1,10) :
       event = self.value(str(i),"")
-      self.events.append(event)
+      self.m_events.append(event)
     self.endGroup()
     return
