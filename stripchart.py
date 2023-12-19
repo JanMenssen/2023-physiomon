@@ -9,8 +9,8 @@
 from PySide6.QtCore import QPointF,Qt
 from PySide6.QtCharts import QChart,QLineSeries,QValueAxis
 
-SAMPLE_COUNT = 2000
-RESOLUTION = 4
+SAMPLE_COUNT = 1000
+RESOLUTION = 1
 
 class stripChart :
 
@@ -75,7 +75,8 @@ class stripChart :
 
   def update(self,data) :
 
-    available_samples = data.size() // RESOLUTION
+  #-jm  available_samples = data.size() // RESOLUTION
+    available_samples = len(data) // RESOLUTION
     start = 0
     
     if (available_samples < SAMPLE_COUNT) :
@@ -85,7 +86,8 @@ class stripChart :
     
     data_index = 0
     for s in range(start, SAMPLE_COUNT) :
-      value = (ord(data[data_index]) - 128) / 128
+  #-jm    value = (ord(data[data_index]) - 128) / 128
+      value = data[data_index]
       self.m_buffer[s].setY(value)
       data_index = data_index + RESOLUTION
     self.m_series.replace(self.m_buffer)

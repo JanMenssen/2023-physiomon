@@ -74,7 +74,7 @@ class MDIWindow(QMainWindow) :
 
     deviceInfoButton = QAction("info",self)
     deviceInfoButton.setStatusTip("device info")
-    deviceButton.triggered.connect(self.devInfoPressed)
+    deviceInfoButton.triggered.connect(self.devInfoPressed)
     toolbar.addAction(deviceInfoButton)
 
     # create the menu structure
@@ -126,17 +126,6 @@ class MDIWindow(QMainWindow) :
     print("in init")
     return
   
-  # update
-  #
-  #     this function updates the windows if there is data available
-    
-  def update(self) :
-    
-    data = self.m_ioDevice.readAll()
-    #-jm if self.count > 0 :
-    #-jm  for i in range(self.count) :
-    #-jm    self.m_scope[i].update(data)
-    displays.plot(data)
 
   # devicePressed
   #
@@ -208,10 +197,28 @@ def configure(settings) :
 #     NOTE : mdiwindow is known ?
     
 def onTimeOut() :
-  mdiwindow.update()
-#-jm  data = device.read()
-#-jm  display.plot(data)
+
+  # if from io device, QbyteArray should be converted to floats
+
+  #-jm  data = mdiwindow.m_ioDevice.readAll()
+  #-jm  floatData =[]
+  #-jm for data_index in range(len(data)) :
+  #-jm   value = (ord(data[data_index]) - 128) / 128
+  #-jm  floatData.append(value) 
+
+  # if from Arduino, integer data should be converted to floats (this is tempory)
+             
+  data = device.read()
+  floatData = []
+  for data_index in range(len(data)) :
+    value = data[data_index] / 500
+    floatData.append(value)
+
+  # and write to display and data store
+    
+  displays.plot(floatData)
 #-jm  datastore.write(data)
+  
   return
 
 # main loop
@@ -240,6 +247,7 @@ if __name__ == '__main__' :
     
   device.iniRead(deviceName)
   device.initialise()
+  device.setSampleRate(1000)
 
   # create the graphical structure
 

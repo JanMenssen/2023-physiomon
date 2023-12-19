@@ -14,8 +14,8 @@
 
 #define MAX_DATA_SIZE 64
 #define BAUDRATE 115200
-// #define BAUDRATE 9600
-#define BUADRATE 1200
+//-jm #define BAUDRATE 9600
+//-jm #define BAUDRATE 1200
 #define NR_COMMANDS 26
 
 typedef void (*eventFunction)(int n,int *data);

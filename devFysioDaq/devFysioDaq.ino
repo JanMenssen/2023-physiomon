@@ -24,7 +24,7 @@
 // define the instances of the classes
 
 hostInterface   myCommander(BAUDRATE);
-adc             myADC(1);
+adc             myADC(50);
 
 // other variables
 
@@ -67,8 +67,7 @@ void setup() {
   // and setup and enable the timer interrupt routine
 
   Timer1.initialize(1000);
-  Timer1.attachInterrupt(timerISR);
- 
+  Timer1.attachInterrupt(timerISR); 
 }
 
 

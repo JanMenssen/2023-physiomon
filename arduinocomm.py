@@ -10,6 +10,8 @@
 from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo 
 from PySide6.QtCore import QByteArray, QIODevice
 
+BAUDRATE = 115200
+
 class arduinoComm :
 
   # constructor, nothing is done
@@ -22,18 +24,20 @@ class arduinoComm :
 
   # initialise the port
 
-  def initialise(self,port,baudrate) :
+  def initialise(self,port) :
   
     self.m_port = QSerialPort()
 
     self.m_port.setPortName(port)
     self.m_port.open(QIODevice.ReadWrite)
   
-    self.m_port.setBaudRate(1200)
+    self.m_port.setBaudRate(BAUDRATE)
     self.m_port.setDataBits(QSerialPort.Data8)
     self.m_port.setFlowControl(QSerialPort.NoFlowControl)
     self.m_port.setParity(QSerialPort.NoParity)
     self.m_port.setStopBits(QSerialPort.OneStop)
+    
+    self.m_port.flush()
     
     self.m_started = False
 
@@ -110,6 +114,7 @@ class arduinoComm :
     # read the incoming bytes to the buffer
     
     nbytes = self.m_port.bytesAvailable()
+    print(nbytes)
     self.rcvBuffer += self.m_port.read(nbytes)
     
     # if there are more than 7 bytes received, we know the length of the message

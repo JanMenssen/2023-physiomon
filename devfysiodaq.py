@@ -28,7 +28,7 @@ class devFysioDaq(myDevice) :
 
   def initialise(self) :
     
-    self.m_arduino.initialise(self.m_portName,1200)
+    self.m_arduino.initialise(self.m_portName)
     return
 
   # isConnected
@@ -44,7 +44,13 @@ class devFysioDaq(myDevice) :
   #
   #     sets the sample rate of the device
 
-  def setSampleRate(self) :
+  def setSampleRate(self,ms) :
+
+    data = []
+    data.append(int(ms))
+    print(data)
+    
+    self.m_arduino.sendMsg('c',data)
     return
   
   # isStarted
@@ -83,7 +89,17 @@ class devFysioDaq(myDevice) :
   #     reads the availabled data from the device
 
   def read(self) :
-    return
+
+    tmpdata = []
+
+    if self.isStarted() :
+      msgOK = True
+      while msgOK :
+        msgOK,cmd,data = self.m_arduino.rcvMsg()
+        if (cmd == 'A') :
+          tmpdata.append(data[0])   
+
+    return tmpdata
 
   # edit
   #

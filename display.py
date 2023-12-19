@@ -47,29 +47,20 @@ class display() :
 
     # and add the stripcharts
 
-    geometry = self.m_mdiArea.geometry()
-    print(geometry)
-    geometry = self.m_mdiArea.parent().geometry()
-    print("parent")
-    print(geometry)
-
     self.m_numDisplay = settings.m_general["numdisp"]
     for i in range(self.m_numDisplay) :
     
       position,scale = settings.getDisplayInfo(i)
 
       stripchart = stripChart("stripchart")
-      stripchart.setYaxis(scale["ymin"],scale["ymax"])
+      #-jm stripchart.setYaxis(scale["ymin"],scale["ymax"])
                     
       self.m_graphDisplay.append(stripchart)
 
       chartView = QChartView(stripchart.m_chart)
 
       sub = QMdiSubWindow()
-      sub.setGeometry(0,0,640,480)
-
-      print("sub")
-      print(sub.geometry())
+      sub.setGeometry(0,0,800,400)
       sub.setWidget(chartView)
       sub.setWindowTitle("Sub Windows " + str(i))
 
