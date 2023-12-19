@@ -1,29 +1,50 @@
+//
 // devFysioDaq
 //
-//    simple Arduino device that samples analog ports at a given frequeny
+//    analog input from an Arduino. Currently it supports the following commands
 //
-//  modifications
-//      15-dec-2023  JM  initial version
+//      - x       : start/stops the device
+//      - c       : configures the device (samplerate in ms is set)
+//      - v       : version information is returned
+//
+//  Modifications
+//    04-okt-2014    JM   initial version
+//    29-jan-2016    JM   now makes use of callBack functions
+//    06-feb-2017    JM   now returned
+//    15-feb-2017    JM   Interrupts are now handled in intr1ms and callback is used
+//    18-feb-2017    JM   TimerOne library is used instead of intr1ms, intr1ms obsolete
 
 // include necessary classes
 
-#include "arduino.h"
+#include "Arduino.h"
+#include "adc.h"
 #include "hostinterface.h"
+#include <TimerOne.h>
 
-// define the instances of the classes. For the UNO Wifi Rev2, 115200 baud
-// is the maximal baudrate
+// define the instances of the classes
 
-hostInterface   myCommander(1200);
+hostInterface   myCommander(BAUDRATE);
+adc             myADC(1);
+
+// other variables
+
+int adc_buffer[MAX_ADC_CHANNELS];
 
 char     command;
 int      lenData;
 
 bool startIt;
+bool LEDon;
 
 // callback functions
 
-//-jm void setStartStop(int n, int *data);
-//-jm void returnVersion(int n, int *data);
+void setStartStop(int n, int *data);
+void configure(int n, int *data);
+void returnVersion(int n, int *data);
+
+// interupt-routine (every 1 ms)
+
+void timerISR();
 
 // setup
 //
@@ -33,56 +54,92 @@ void setup() {
 
   // set LED at startup off
 
-  pinMode(LED_BUILTIN, OUTPUT);  
+  pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
 
   // intialise the interface with the hoat
 
-  myCommander.init();
+  myCommander.start();
   myCommander.setEvent('x', setStartStop);
+  myCommander.setEvent('c', configure);
   myCommander.setEvent('v', returnVersion);
 
+  // and setup and enable the timer interrupt routine
+
+  Timer1.initialize(1000);
+  Timer1.attachInterrupt(timerISR);
+ 
 }
 
-int n = 0;
-int data[10];
+
+// loop
+//
+//  in the loop function, the Arduino checks command from PC and send data to PC
+//  in necessary
 
 void loop() {
 
-  // and handle a possible command
+  // handle received command from the host (if any)
 
   myCommander.handleCmd();
 
+  // if ADC started and data vailable send it to the hist
+
+  if (myADC.isStarted()) {
+    if (myADC.getData(&lenData, adc_buffer)) myCommander.sendCmd(65, lenData, adc_buffer);
+  }
+
   // done
+
 }
 
 
 // returnVersion
 //
 //      returns the current version of the Arduino program
- 
+
 void returnVersion(int n, int *data) {
  
-  int retData[21] = {65, 114, 100, 117, 105, 110, 111, 32, 45, 32, 77, 101, 100, 76, 97, 98, 32, 118, 48, 46, 53};
+  int retData[23] = {65, 114, 100, 117, 105, 110, 111, 32, 45, 32, 70, 121, 115, 105, 111, 68, 97, 113, 32, 118, 48, 46, 56};
 
-  //-jm digitalWrite(LED_BUILTIN,HIGH);
-  myCommander.sendCmd('V', 21, retData);
+  myCommander.sendCmd('V', 23, retData);
+  
+  return;
+}
+
+
+// configure
+//
+//     sets the sample rate (in ms) for the ADC
+
+void configure(int n, int *data) {
+
+  myADC.setSampleRate(data[0]);
+  return;
 }
 
 
 // setStartStop
 //
 //     starts or stops all devices, currently only ADC
- 
+
 void setStartStop(int n, int *data) {
 
   boolean startIt;
 
-  // check program should be started
+  // check ADC (bit 0) should be started
 
-  startIt = (data[0] == 1);
-
-  digitalWrite(LED_BUILTIN,(startIt ? HIGH : LOW));
+  startIt = bitRead(data[0], 0);
+  digitalWrite(LED_BUILTIN, (startIt ? HIGH : LOW));
+  myADC.setStartStop(startIt);
 
   return;
 }
+
+
+// and the interrupt routine
+
+void timerISR() {
+  myADC.readADC();
+}
+

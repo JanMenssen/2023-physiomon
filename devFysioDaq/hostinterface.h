@@ -13,8 +13,9 @@
 #define HOSTINTERFACE_H
 
 #define MAX_DATA_SIZE 64
-#define BAUDRATE 460800
 #define BAUDRATE 115200
+// #define BAUDRATE 9600
+#define BUADRATE 1200
 #define NR_COMMANDS 26
 
 typedef void (*eventFunction)(int n,int *data);
@@ -23,7 +24,7 @@ class hostInterface {
   
   public:
     hostInterface(long int baudrate);
-    void init();
+    void start();
     boolean isDataAvailable();
     boolean sendCmd(char cmd,int n,int *data);
     void handleCmd();

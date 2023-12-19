@@ -43,11 +43,11 @@ hostInterface::hostInterface(long int baudrate) {
 //
 //    initialises teh serial port
 
-void hostInterface::init() {
+void hostInterface::start() {
 
   Serial.begin(mBaudRate);
   while(!Serial);
-
+  
 }
 
 
@@ -131,7 +131,7 @@ boolean hostInterface::sendCmd(char cmd,int n,int *data) {
     Serial.write(lowByte(data[i]));
   }
   
-  // checksum and end of transmission
+  // checksum and enod of transmission
   
   Serial.write(lowByte(checksum));
   Serial.write(lowByte(ETX));             
@@ -150,12 +150,12 @@ boolean hostInterface::getCmd(char *command, int *n, int *data) {
 
   // if no last command, check data is available 
   
-  if (mLastCmd == 0x00) avail = isDataAvailable();
-         
+  if (mLastCmd == 0x00)  avail = isDataAvailable();
+    
   // if new command is available, copy to the output and clear the internal states
 
   if (avail) {
-
+   
     *command = mLastCmd;
     *n = mDataLen;
     for (int i=0;i<mDataLen;i++) data[i] = mLastData[i];
