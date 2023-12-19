@@ -8,7 +8,7 @@
 #     15-dec-2023  JM  initial version
 
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow,QMdiArea, QMdiSubWindow, QTextEdit, QMenu, QMessageBox, QToolBar
+from PySide6.QtWidgets import QApplication, QMainWindow,QMdiArea, QMdiSubWindow, QMenu, QMessageBox, QToolBar
 from PySide6.QtGui import QAction
 from PySide6.QtCore import QTimer
 from PySide6.QtCharts import QChartView
@@ -18,6 +18,7 @@ from stripchart import stripChart
 from devfysiodaq import devFysioDaq
 from mydevice import myDevice
 from settings import settings
+from display import display
 
 #-jm port = "cu.BLTH"
 #-jm port = "tty.BLTH"
@@ -45,8 +46,6 @@ class MDIWindow(QMainWindow) :
 
     self.mdi = QMdiArea()
     self.setCentralWidget(self.mdi)
-
-
 
     # create the toolbar
 
@@ -89,14 +88,6 @@ class MDIWindow(QMainWindow) :
     newAction = QAction("New",self)
     newAction.triggered.connect(self.newPressed)
     fileMenu.addAction(newAction)
-
-    cascadeAction = QAction("Cascade",self)
-    cascadeAction.triggered.connect(self.cascadePressed)
-    fileMenu.addAction(cascadeAction)
-
-    tiledAction = QAction("Tiled",self)
-    tiledAction.triggered.connect(self.tiledPressed)
-    fileMenu.addAction(tiledAction)
 
     startAction = QAction("start",self)
     startAction.triggered.connect(self.startPressed)
@@ -142,9 +133,10 @@ class MDIWindow(QMainWindow) :
   def update(self) :
     
     data = self.m_ioDevice.readAll()
-    if self.count > 0 :
-      for i in range(self.count) :
-        self.m_scope[i].update(data)
+    #-jm if self.count > 0 :
+    #-jm  for i in range(self.count) :
+    #-jm    self.m_scope[i].update(data)
+    displays.plot(data)
 
   # devicePressed
   #
@@ -195,41 +187,20 @@ class MDIWindow(QMainWindow) :
        
   # newPressed
   #
-  #     callback which is called when a new window should be created. The subwindow is created
-  #     containing a stripchart. Number of windows is incremented
         
   def newPressed(self) :
+    return
 
-    scope = stripChart(f"Data from the microphone ({self.name})")
-    self.m_scope.append(scope)
-
-    self.m_chartView = QChartView(self.m_scope[self.count].m_chart)
-
-    sub = QMdiSubWindow()
-    sub.setWidget(self.m_chartView)
-    sub.setWindowTitle("Sub Windows " + str(self.count))
-
-    self.mdi.addSubWindow(sub)
-    sub.show()
-
-    self.count = self.count + 1
-
-  # cascadePressed
-  #
-  #     callback which is called when the cascade menu item is pressed. All windows are placed
-  #     in a cascade way
+# configure
+#
+#     configures the whole setup
     
-  def cascadePressed(self) :
+def configure(settings) :
   
-    self.mdi.cascadeSubWindows()
+  print("in configure")
+  displays.configure(settings)
 
-  # tiledPressed
-  #
-  #     function which is called from the menu item <tiled>. Windows are placed tiled on the screen
-    
-  def tiledPressed(self) :
-      
-    self.mdi.tileSubWindows()
+  return
 
 # onTimeOut
 #
@@ -270,10 +241,12 @@ if __name__ == '__main__' :
   device.iniRead(deviceName)
   device.initialise()
 
-
   # create the graphical structure
 
   mdiwindow = MDIWindow(input_devices[0],device)
+  displays = display(mdiwindow.mdi)
+
+  configure(settings)
 
   # and show
 
@@ -283,6 +256,8 @@ if __name__ == '__main__' :
     
   statusbar = myStatusBar()
   mdiwindow.setStatusBar(statusbar)
+  
+  
 
   # check device is connected
 
