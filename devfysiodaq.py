@@ -48,7 +48,6 @@ class devFysioDaq(myDevice) :
 
     data = []
     data.append(int(ms))
-    print(data)
     
     self.m_arduino.sendMsg('c',data)
     return

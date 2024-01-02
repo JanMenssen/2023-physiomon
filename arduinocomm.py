@@ -40,7 +40,7 @@ class arduinoComm :
     self.m_port.flush()
     
     self.m_started = False
-
+    
     return
   
   # destructor
@@ -64,6 +64,7 @@ class arduinoComm :
       self.m_started = False
       self.sendMsg("x",[0x00])
 
+    self.rcvBuffer = QByteArray()
     return
   
   # isConneected
@@ -114,7 +115,6 @@ class arduinoComm :
     # read the incoming bytes to the buffer
     
     nbytes = self.m_port.bytesAvailable()
-    print(nbytes)
     self.rcvBuffer += self.m_port.read(nbytes)
     
     # if there are more than 7 bytes received, we know the length of the message

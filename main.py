@@ -247,7 +247,7 @@ if __name__ == '__main__' :
     
   device.iniRead(deviceName)
   device.initialise()
-  device.setSampleRate(1000)
+  device.setSampleRate(10)
 
   # create the graphical structure
 
@@ -275,7 +275,7 @@ if __name__ == '__main__' :
 
   timer = QTimer()
   timer.timeout.connect(onTimeOut)
-  timer.start(100)
+  timer.start(10)
     
   # and return until exit
 
