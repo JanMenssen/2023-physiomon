@@ -24,7 +24,7 @@
 // define the instances of the classes
 
 hostInterface   myCommander(BAUDRATE);
-adc             myADC(50);
+adc             myADC(10);
 
 // other variables
 
@@ -113,6 +113,7 @@ void returnVersion(int n, int *data) {
 
 void configure(int n, int *data) {
 
+  digitalWrite(LED_BUILTIN, HIGH);
   myADC.setSampleRate(data[0]);
   return;
 }

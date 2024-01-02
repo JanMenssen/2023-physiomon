@@ -98,6 +98,7 @@ class arduinoComm :
   def sendMsg(self,cmd,data) :
 
     outputData = encode(cmd,data)
+    print(outputData)
     self.m_port.write(outputData)
     
     return
@@ -116,7 +117,7 @@ class arduinoComm :
     
     nbytes = self.m_port.bytesAvailable()
     self.rcvBuffer += self.m_port.read(nbytes)
-    
+
     # if there are more than 7 bytes received, we know the length of the message
     
     if (len(self.rcvBuffer) >= 7) :
@@ -124,16 +125,16 @@ class arduinoComm :
       # get the position of the STX message and remove the bytes before
 
       i = 0
-      while self.rcvBuffer[i] == 0x02 :
+      while self.rcvBuffer[i] != b'\x02' :
         i = i + 1
 
       self.rcvBuffer = self.rcvBuffer[i:]
-      
+
       # check the whole message is received and decode> Keep the extra bytes in the buffer
 
       lenMsg = 2 * ord(self.rcvBuffer[2].decode()) + 5
       if (len(self.rcvBuffer) >= lenMsg) :
-        cmd,data,msgOK = decode(self.rcvBuffer)
+        cmd,data,msgOK = decode(self.rcvBuffer[0:lenMsg])
         if msgOK :
           self.rcvBuffer = self.rcvBuffer[lenMsg:]
 

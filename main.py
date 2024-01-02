@@ -209,6 +209,7 @@ def onTimeOut() :
   # if from Arduino, integer data should be converted to floats (this is tempory)
              
   data = device.read()
+
   floatData = []
   for data_index in range(len(data)) :
     value = data[data_index] / 500
@@ -217,7 +218,7 @@ def onTimeOut() :
   # and write to display and data store
     
   displays.plot(floatData)
-#-jm  datastore.write(data)
+  #-jm datastore.write(data)
   
   return
 
@@ -247,7 +248,7 @@ if __name__ == '__main__' :
     
   device.iniRead(deviceName)
   device.initialise()
-  device.setSampleRate(10)
+  device.setSampleRate(25)
 
   # create the graphical structure
 
@@ -275,7 +276,7 @@ if __name__ == '__main__' :
 
   timer = QTimer()
   timer.timeout.connect(onTimeOut)
-  timer.start(10)
+  timer.start(100)
     
   # and return until exit
 

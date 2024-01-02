@@ -48,7 +48,6 @@ class devFysioDaq(myDevice) :
 
     data = []
     data.append(int(ms))
-    
     self.m_arduino.sendMsg('c',data)
     return
   
@@ -97,7 +96,6 @@ class devFysioDaq(myDevice) :
         msgOK,cmd,data = self.m_arduino.rcvMsg()
         if (cmd == 'A') :
           tmpdata.append(data[0])   
-
     return tmpdata
 
   # edit
