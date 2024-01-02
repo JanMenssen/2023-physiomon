@@ -8,17 +8,15 @@
 #     15-dec-2023  JM  initial version
 
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow,QMdiArea, QMdiSubWindow, QMenu, QMessageBox, QToolBar
+from PySide6.QtWidgets import QApplication, QMainWindow,QMdiArea, QMenu, QToolBar
 from PySide6.QtGui import QAction
 from PySide6.QtCore import QTimer
-from PySide6.QtCharts import QChartView
-from PySide6.QtMultimedia import QAudioFormat, QAudioSource, QMediaDevices
-from statusbar import myStatusBar
-from stripchart import stripChart
+from statusbar import StatusBar
 from devfysiodaq import devFysioDaq
-from device import myDevice
+from device import device
 from settings import settings
-from display import display
+from displays import displays
+from channels import channels
 
 #-jm port = "cu.BLTH"
 #-jm port = "tty.BLTH"
@@ -37,7 +35,7 @@ class MDIWindow(QMainWindow) :
   #   - menus are created
   #   - audio device is created and coupled (should be replaced by data from arduino)
     
-  def __init__(self,audiodevice,device) :
+  def __init__(self,device) :
     super().__init__()
 
     self.count = 0
@@ -99,24 +97,11 @@ class MDIWindow(QMainWindow) :
 
     # and the statusbar
 
-    statusbar = myStatusBar()
-    self.setStatusBar(statusbar)
-    statusbar.setText("ready",3)
+    myStatusbar = StatusBar()
+    self.setStatusBar(myStatusbar)
+    myStatusbar.setText("ready",3)
 
     self.setWindowTitle("FysioMon v1.01")
-
-    # audio device
-
-    self.name = audiodevice.description()
-
-    m_formatAudio = QAudioFormat()
-    m_formatAudio.setSampleRate(8000)
-    m_formatAudio.setChannelCount(1)
-    m_formatAudio.setSampleFormat(QAudioFormat.UInt8)
-
-    self.m_audioInput = QAudioSource(audiodevice, m_formatAudio, self)
-    self.m_ioDevice = self.m_audioInput.start()
-    #-jm self.m_ioDevice.readyRead.connect(self.update)
 
   # init
   #
@@ -154,13 +139,13 @@ class MDIWindow(QMainWindow) :
 
   def startPressed(self) :
 
-    started = device.isStarted()
+    started = myDevice.isStarted()
     
     if (not started) :
-      device.setStartStop(True)
+      myDevice.setStartStop(True)
       self.statusBar().setText("device started",5)
     else :
-      device.setStartStop(False)
+      myDevice.setStartStop(False)
       self.statusBar().setText("device stopped",5)
    
     return
@@ -187,7 +172,7 @@ class MDIWindow(QMainWindow) :
 def configure(settings) :
   
   print("in configure")
-  displays.configure(settings)
+  myDisplay.configure(settings)
 
   return
 
@@ -208,7 +193,7 @@ def onTimeOut() :
 
   # if from Arduino, integer data should be converted to floats (this is tempory)
              
-  data = device.read()
+  data = myDevice.read()
 
   floatData = []
   for data_index in range(len(data)) :
@@ -217,7 +202,7 @@ def onTimeOut() :
 
   # and write to display and data store
     
-  displays.plot(floatData)
+  myDisplay.plot(floatData)
   #-jm datastore.write(data)
   
   return
@@ -228,12 +213,6 @@ if __name__ == '__main__' :
 
   app = QApplication(sys.argv)
 
-  # try to connect to the media device
-  
-  input_devices = QMediaDevices.audioInputs()
-  if not input_devices :
-    QMessageBox.warning(None,"audio","Ther is no audio input device available.")
-
   # read the settings 
   
   settings = settings()
@@ -242,22 +221,22 @@ if __name__ == '__main__' :
 
   # create the device
   
-  device = myDevice()
+  myDevice = device()
   if (deviceName == "fysiodaq") :    
-    device = devFysioDaq()
+    myDevice = devFysioDaq()
     
-  device.iniRead(deviceName)
-  device.initialise()
-  device.setSampleRate(25)
+  myDevice.iniRead(deviceName)
+  myDevice.initialise()
+  myDevice.setSampleRate(25)
 
   # create the graphical structure
 
-  mdiwindow = MDIWindow(input_devices[0],device)
-  displays = display(mdiwindow.mdi)
+  mdiwindow = MDIWindow(myDevice)
+  myDisplay = displays(mdiwindow.mdi)
   
   # create the channels
 
-  myChannels = channel()
+  myChannels = channels()
   
   # and configure
 
@@ -269,8 +248,8 @@ if __name__ == '__main__' :
 
   # create the statusbar
     
-  statusbar = myStatusBar()
-  mdiwindow.setStatusBar(statusbar)
+  myStatusbar = StatusBar()
+  mdiwindow.setStatusBar(myStatusbar)
   
   # check device is connected
 

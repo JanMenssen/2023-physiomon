@@ -1,5 +1,5 @@
 #
-# display.py
+# displays.py
 #
 #         contains the software for the graphs and update the graphs on the screen
 #
@@ -10,7 +10,7 @@ from PySide6.QtWidgets import QMdiSubWindow
 from PySide6.QtCharts import QChartView
 from stripchart import stripChart
 
-class display() :
+class displays() :
 
   # constructor
 

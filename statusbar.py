@@ -11,7 +11,7 @@ from PySide6.QtGui import QPainter, QPen
 from PySide6.QtCore import Qt 
 from datetime import datetime
 
-class myStatusBar(QStatusBar) :
+class StatusBar(QStatusBar) :
   
   # constructor
 
