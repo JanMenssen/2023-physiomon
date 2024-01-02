@@ -9,10 +9,10 @@
 
 from PySide6.QtCore import QSettings
 
-from mydevice import myDevice
+from device import device
 from arduinocomm import arduinoComm
 
-class devFysioDaq(myDevice) :
+class devFysioDaq(device) :
 
   # constructor
 

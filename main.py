@@ -16,7 +16,7 @@ from PySide6.QtMultimedia import QAudioFormat, QAudioSource, QMediaDevices
 from statusbar import myStatusBar
 from stripchart import stripChart
 from devfysiodaq import devFysioDaq
-from mydevice import myDevice
+from device import myDevice
 from settings import settings
 from display import display
 
@@ -254,6 +254,12 @@ if __name__ == '__main__' :
 
   mdiwindow = MDIWindow(input_devices[0],device)
   displays = display(mdiwindow.mdi)
+  
+  # create the channels
+
+  myChannels = channel()
+  
+  # and configure
 
   configure(settings)
 

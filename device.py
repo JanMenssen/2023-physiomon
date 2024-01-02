@@ -1,5 +1,5 @@
 #
-# myDevice.py
+# device.py
 #
 #     abstract class for the devices used. This class should be used as superclass for the specific
 #     devices
@@ -7,7 +7,7 @@
 #   modifications
 #     15-dec-2023   JM    initial version
 
-class myDevice() :
+class device() :
 
   # constructor
 

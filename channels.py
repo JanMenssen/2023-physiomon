@@ -15,7 +15,7 @@ class channels() :
 
   # configure
     
-  def conigure(self) :
+  def configure(self) :
     return
   
   # getSampleRate
