@@ -72,11 +72,20 @@ class arduinoComm :
   def isConnected(self) :
 
     msgOK = False
+    cmd = ""
     i = 0 
     
+    # because there could be data into the buffer, we flush the port before getting
+    # the info (NOTE: this doesn't work)
+
+    self.m_port.flush()
+    self.rcvBuffer = QByteArray()
+
     self.sendMsg('v',[])
-    while (msgOK == False) & ( i < 5) :
+    while ( i < 5) & (cmd != 'V') :
       msgOK,cmd,data = self.rcvMsg()
+      print(cmd)
+
       i = i + 1
 
     dataStr = ''
