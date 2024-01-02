@@ -1,5 +1,5 @@
 #
-# device.py
+# measuredevice.py
 #
 #     abstract class for the devices used. This class should be used as superclass for the specific
 #     devices
@@ -7,7 +7,9 @@
 #   modifications
 #     15-dec-2023   JM    initial version
 
-class device() :
+from PySide6.QtCore import QSettings
+
+class measureDevice() :
 
   # constructor
 
@@ -35,4 +37,22 @@ class device() :
 
   def setStartStop(self,mode) :
     self.m_started = mode
+    return
+  
+  # iniRead
+  #
+  #   read the standard values 
+  #     - analog in
+  #     - numeric in
+  #     - waveform in 
+
+  def iniRead(self,name) :
+    
+    print("--> In measureDevice.iniRead")
+     
+    settings = QSettings(QSettings.IniFormat,QSettings.UserScope,"JanSoft",name)
+
+    settings.beginGroup("algemeen")
+    settings.endGroup()
+
     return

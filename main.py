@@ -13,7 +13,7 @@ from PySide6.QtGui import QAction
 from PySide6.QtCore import QTimer
 from statusbar import StatusBar
 from devfysiodaq import devFysioDaq
-from device import device
+from measuredevice import measureDevice
 from settings import settings
 from displays import displays
 from channels import channels
@@ -221,7 +221,7 @@ if __name__ == '__main__' :
 
   # create the device
   
-  myDevice = device()
+  myDevice = measureDevice()
   if (deviceName == "fysiodaq") :    
     myDevice = devFysioDaq()
     

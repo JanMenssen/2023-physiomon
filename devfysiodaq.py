@@ -9,10 +9,10 @@
 
 from PySide6.QtCore import QSettings
 
-from device import device
+from measuredevice import measureDevice
 from arduinocomm import arduinoComm
 
-class devFysioDaq(device) :
+class devFysioDaq(measureDevice) :
 
   # constructor
 
@@ -73,6 +73,10 @@ class devFysioDaq(device) :
   #     reads the settings for the device from the specific file
 
   def iniRead(self,name) :
+
+    # read the standards values
+
+    super().iniRead(name)
 
     settings = QSettings(QSettings.IniFormat,QSettings.UserScope,"JanSoft",name)
 
