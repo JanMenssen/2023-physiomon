@@ -12,6 +12,8 @@ from PySide6.QtCore import QSettings
 from measuredevice import measureDevice
 from arduinocomm import arduinoComm
 
+ANALOG_IN = 1
+
 class devFysioDaq(measureDevice) :
 
   # constructor
@@ -92,15 +94,23 @@ class devFysioDaq(measureDevice) :
 
   def read(self) :
 
-    tmpdata = []
+    realValues = []
 
     if self.isStarted() :
       msgOK = True
       while msgOK :
         msgOK,cmd,data = self.m_arduino.rcvMsg()
         if (cmd == 'A') :
-          tmpdata.append(data[0])   
-    return tmpdata
+
+          for i in range(len(data)) :  
+            chanData = self.m_analogIn[i]['gain'] * data[i] - self.m_analogIn[i]['offset']
+            
+            # NOTE, tempory, until channels is implemented
+            
+            if (i==0) :
+              realValues.append(chanData) 
+
+    return realValues
 
   # edit
   #

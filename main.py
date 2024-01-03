@@ -182,27 +182,12 @@ def configure(settings) :
 #     NOTE : mdiwindow is known ?
     
 def onTimeOut() :
-
-  # if from io device, QbyteArray should be converted to floats
-
-  #-jm  data = mdiwindow.m_ioDevice.readAll()
-  #-jm  floatData =[]
-  #-jm for data_index in range(len(data)) :
-  #-jm   value = (ord(data[data_index]) - 128) / 128
-  #-jm  floatData.append(value) 
-
-  # if from Arduino, integer data should be converted to floats (this is tempory)
-             
-  data = myDevice.read()
-
-  floatData = []
-  for data_index in range(len(data)) :
-    value = data[data_index] / 500
-    floatData.append(value)
-
-  # and write to display and data store
-    
+ 
+  # get the data and write to display and data store         
+  
+  floatData = myDevice.read()    
   myDisplay.plot(floatData)
+  
   #-jm datastore.write(data)
   
   return
