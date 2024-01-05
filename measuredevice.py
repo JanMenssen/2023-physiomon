@@ -9,7 +9,7 @@
 
 from PySide6.QtCore import QSettings
 
-TYPE_ANALOG = 1
+TYPE_ANALOG_IN = 1
 
 class measureDevice() :
 
@@ -52,9 +52,7 @@ class measureDevice() :
   #     - waveform in 
 
   def iniRead(self,name) :
-    
-    print("--> In measureDevice.iniRead")
-     
+        
     settings = QSettings(QSettings.IniFormat,QSettings.UserScope,"JanSoft",name)
 
     settings.beginGroup("algemeen")
@@ -74,6 +72,7 @@ class measureDevice() :
       
       settings.beginGroup(keyName)
       fields["name"] = settings.value("name",1)
+      fields["sampleRate"] = 1 / float(settings.value("frequency",defaultValue = 1.0   ))
       fields["gain"] = float(settings.value("gain",defaultValue = 1.0))
       fields["offset"] = float(settings.value("offset",defaultValue = 0.0))
       settings.endGroup()
@@ -86,18 +85,29 @@ class measureDevice() :
     
     return
   
-
-  # getSignalInfo
+  # configure
   #
-  #   returns the necessary information for the data for the device. This is
-  #     - gain
-  #     - offset
-  #     - channels that are used to store the data
+  #   configures the device, using values from settings
 
-  def getSignalInfo(self,type) :
-
-    if type == TYPE_ANALOG :
-      fields = self.m_analogIn
+  def configure(self,settings) :
     
-    return fields
+    numchan = settings.m_general['numchan']
+    for i in range(numchan) :
+
+      source = settings.m_channels[i]["source"]
+      
+      # tmp is needed, else channels for all analog inpunt is updated
+      
+      if (settings.m_channels[i]["type"] == TYPE_ANALOG_IN) :
+        tmp = self.m_analogIn[source]["channels"].copy()
+        tmp.append(i)
+        self.m_analogIn[source]["channels"] = tmp
+      
+      #-jm NOTE, should be implemented
+      #-jm   
+      #-jm if (settings.m_channels[i]["type"] == TYPE_NUMERIC) :
+      #-jm  self.m_analogIn[source]["channels"].append(i)
+
+    return
+
   

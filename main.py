@@ -169,10 +169,11 @@ class MDIWindow(QMainWindow) :
 #
 #     configures the whole setup
     
-def configure(settings) :
+def init(settings) :
   
-  print("in configure")
   myDisplay.configure(settings)
+  myDevice.configure(settings)
+  myChannels.configure(settings,myDevice)
 
   return
 
@@ -185,8 +186,8 @@ def onTimeOut() :
  
   # get the data and write to display and data store         
   
-  floatData = myDevice.read()    
-  myDisplay.plot(floatData)
+  myDevice.read(myChannels)    
+  myDisplay.plot(myChannels)
   
   #-jm datastore.write(data)
   
@@ -221,11 +222,11 @@ if __name__ == '__main__' :
   
   # create the channels
 
-  myChannels = channels()
+  myChannels = channels(5)
   
   # and configure
 
-  configure(settings)
+  init(settings)
 
   # and show
 

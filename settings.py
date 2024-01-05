@@ -6,6 +6,8 @@
 #   modifications
 #     18-dec-2023   JM    initial version
 
+TYPE_ANALOG_IN = 1
+
 from PySide6.QtCore import QSettings
 
 class settings(QSettings) :
@@ -113,7 +115,9 @@ class settings(QSettings) :
       
       self.beginGroup(keyName)
       channel["name"] = self.value("name",1)
-      channel["type"] = self.value("type",defaultValue = "analog in")
+      typeSignal = self.value("type",defaultValue = "analog in")
+      if (typeSignal == 'analog in') :
+        channel["type"] = TYPE_ANALOG_IN
       channel["source"] = int(self.value("source", defaultValue = 0))
       channel["display"] = int(self.value("display",defaultValue = 0))
       self.endGroup()

@@ -19,6 +19,7 @@ class displays() :
     self.m_mdiArea = mdiArea
     self.m_graphDisplay = []
     self.m_numDisplay = 0
+    self.m_chanlist = []
 
     return
   
@@ -44,13 +45,25 @@ class displays() :
     
     self.m_graphDisplay = []
     self.m_numDisplay = 0
+    self.m_chanlist = []
 
     # and add the stripcharts
 
     self.m_numDisplay = settings.m_general["numdisp"]
-    for i in range(self.m_numDisplay) :
+    for iDisplay in range(self.m_numDisplay) :
+
+      self.m_chanlist.append([])
     
-      position,scale = settings.getDisplayInfo(i)
+      # get the channel
+
+      numChannels = settings.m_general["numchan"]
+      for iChannel in range(numChannels) :
+        if ((settings.m_channels[iChannel]["display"]-1) == iDisplay) :
+          self.m_chanlist[iDisplay].append(iChannel)
+
+      # set the display properties
+
+      position,scale = settings.getDisplayInfo(iDisplay)
 
       stripchart = stripChart("stripchart")
       #-jm stripchart.setYaxis(scale["ymin"],scale["ymax"])
@@ -62,7 +75,7 @@ class displays() :
       sub = QMdiSubWindow()
       sub.setGeometry(0,0,800,400)
       sub.setWidget(chartView)
-      sub.setWindowTitle("Sub Windows " + str(i))
+      sub.setWindowTitle("Sub Window " + str(iDisplay))
 
       self.m_mdiArea.addSubWindow(sub)
       sub.show()
@@ -73,11 +86,19 @@ class displays() :
   #
   #   update the display with data
 
-  def plot(self,data) :
+  def plot(self,channels) :
 
     if self.m_numDisplay > 0 :
+
       for iDisplay in range(self.m_numDisplay) :
-        self.m_graphDisplay[iDisplay].update(data)
+
+        # get the channel list for this display and update the display
+
+        chanList = self.m_chanlist[iDisplay]  
+        for iChannel in chanList :  
+          data = channels.readData(iChannel)
+          self.m_graphDisplay[iDisplay].update(data)
+  
     return
   
   # setStartWaveFrom
