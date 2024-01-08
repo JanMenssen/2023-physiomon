@@ -6,7 +6,7 @@
 // modifications
 //    08-jan-2024   JM    initial version 
 
-#ifdef _SETTINGS_H
+#ifndef _SETTINGS_H
 #define _SETTINGS_H
 
 class settings {

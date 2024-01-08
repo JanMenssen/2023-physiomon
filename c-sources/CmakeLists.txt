@@ -18,12 +18,16 @@ set(INSTALL_DIR "/Users/jan/")
 
   set(APPLICATION_SOURCES
     ${ROOT_DIR}/fysiomon.cpp
+    ${ROOT_DIR}/arduinocomm/rduinocomm.cpp 
+    ${ROOT_DIR}/channels/channels.cpp
     ${ROOT_DIR}/settings/settings.cpp
   )
 
 # include folders
 
   include_directories(
+    ${ROOT_DIR}/arduinocomm
+    ${ROOT_DIR}/channels
     ${ROOT_DIR}/settings
   )
 

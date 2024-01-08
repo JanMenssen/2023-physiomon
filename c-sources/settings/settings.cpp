@@ -12,5 +12,5 @@
 // constructor
 
 settings::settings() {
-  printf("in settings constructor \n");
+  printf("\n in settings constructor");
 }
