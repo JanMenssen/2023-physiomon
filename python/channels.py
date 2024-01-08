@@ -105,9 +105,6 @@ class channels() :
   def getSampleRate(self) :
     return
   
-
-
-  
   # readData
   #
   #     reads the data from the internal buffers

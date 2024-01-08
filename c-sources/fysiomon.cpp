@@ -12,10 +12,10 @@
 #include "channels.h"
 
 int main() {
-  
-  settings a;
-  arduinocomm b:
-  channels c:
 
-  printf("this is a test 2 \n");
+  settings a;
+  arduinocomm b;
+  channels c;
+
+  printf("\n this is a test\n");
 }

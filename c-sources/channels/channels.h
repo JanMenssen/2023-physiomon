@@ -13,6 +13,10 @@ class channels{
 
   public:
     channels();
+    void configure();
+    void getSampleRate();
+    void readData();
+    void writeData();
 };
 
 #endif

@@ -16,3 +16,32 @@
 channels::channels() {
   printf("\n in channels constructor");
 }
+
+// configure
+//
+//    getting the info from the <settings> and <device> class, this method configures the 
+//    buffers in the <channels> class
+
+void channels::configure() {
+}
+
+// getSampleRate
+//
+//    returns the sample getSampleRate
+
+void channels::getSampleRate() {
+}
+
+// readData
+//
+//    reads the data from a channel. This can be storage or display data
+
+void channels::readData() {
+}
+
+// writeData
+//
+//    writes data to the channel buffers. Channel number is input
+
+void channels::writeData() {
+}

@@ -13,7 +13,16 @@ class arduinocomm{
 
   public:
     arduinocomm();
-    
+    void startstop();
+    void isConnected();
+    void isStarted();
+    void sendMsg();
+    void rcvMsg();
+
+  private :
+    void encode();
+    void decode();
+
 };
 
 #endif

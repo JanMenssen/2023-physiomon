@@ -11,9 +11,18 @@
 
 class settings {
 
-  public:
+  public :
     settings();
-    
+    void initialise();
+    void iniRead();
+
+  private :
+    void readGeneral();
+    void readGeneral();
+    void readChannels();
+    void readDisplaySettings();
+    void readEventSettings();
+     
 };
 
 #endif
