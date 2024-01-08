@@ -18,11 +18,10 @@ class settings {
 
   private :
     void readGeneral();
-    void readGeneral();
     void readChannels();
     void readDisplaySettings();
     void readEventSettings();
-     
+
 };
 
 #endif
