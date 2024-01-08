@@ -1,0 +1,33 @@
+#
+# CMakeLists.txt
+#
+#     this is the cmake file for the <fysiomon> project
+#
+# modifications
+#   08-jan-2024 JM    initial version
+
+  cmake_minimum_required(VERSION 3.6)
+  project(fysiomon)
+
+# install folder
+
+set(ROOT_DIR  "/Users/jan/Library/CloudStorage/OneDrive-Personal/my projects/2023 fysiomon/c-sources")
+set(INSTALL_DIR "/Users/jan/")
+
+# application sources
+
+  set(APPLICATION_SOURCES
+    ${ROOT_DIR}/fysiomon.cpp
+    ${ROOT_DIR}/settings/settings.cpp
+  )
+
+# include folders
+
+  include_directories(
+    ${ROOT_DIR}/settings
+  )
+
+# and build and install to target folder
+
+  add_executable(fysiomon ${APPLICATION_SOURCES})
+  install(TARGETS fysiomon DESTINATION ${INSTALL_DIR})
