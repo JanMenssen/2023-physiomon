@@ -91,7 +91,7 @@ class measureDevice() :
 
   def configure(self,settings) :
     
-    numchan = settings.m_general['numchan']
+    numchan = settings.m_numchan
     for i in range(numchan) :
 
       source = settings.m_channels[i]["source"]

@@ -72,7 +72,7 @@ class channels() :
 
     # for every channel
 
-    numchan = settings.m_general["numchan"]
+    numchan = settings.m_numchan
     for i in range(numchan) :
 
       tmpBuffer = {"display" : [], "store" : [], "sampleRate" : 0 , "name" : ""}  

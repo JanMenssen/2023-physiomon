@@ -10,12 +10,13 @@ TYPE_ANALOG_IN = 1
 
 from PySide6.QtCore import QSettings
 
-class settings(QSettings) :
+class settings() :
 
   # constructor
 
   def __init__(self) :
-    super().__init__(QSettings.IniFormat,QSettings.UserScope,"JanSoft","fysiomon")
+    
+    self.m_settings = QSettings(QSettings.IniFormat,QSettings.UserScope,"JanSoft","fysiomon")
 
     #-jm self.m_general = {"numchan" : 1, "numdisp" : 1, "device" :""}
 
@@ -27,7 +28,7 @@ class settings(QSettings) :
     self.m_displays = []
     self.m_events = []
 
-    self.setFallbacksEnabled(False)
+    self.m_settings.setFallbacksEnabled(False)
     
     return
 
@@ -53,7 +54,8 @@ class settings(QSettings) :
     self._readDisplaySettings()
     self._readEventSettings()
 
-    return self.m_general["device"]
+  #-jm  return self.m_general["device"]
+    return self.m_device
   
   # getDisplayInfo
   #
@@ -81,9 +83,9 @@ class settings(QSettings) :
 
   def iniWrite(self) :
 
-    self.beginGroup("general")
-    self.setValue("numchan",self.general["numchan"])
-    self.setValue("numdisp",self.general["numdisp"])
+    self.m_settings.beginGroup("general")
+    self.m_settings.setValue("numchan",self.m_numchan)
+    self.m_settings.setValue("numdisp",self.m_numdisp)
                                          
     self.endGroup()
 
@@ -96,14 +98,13 @@ class settings(QSettings) :
 
   def _readGeneral(self) :
 
-    self.beginGroup("algemeen")
-    #-jm self.m_general["numchan"] = int(self.value("numchan",defaultValue = 1))
-    #-jm self.m_general["numdisp"] = int(self.value("numdisp",1))
-    #-jm self.m_general["device"] = self.value("device","")
-    self.m_numchan = int(self.value("numchan",defaultValue = 1))
-    self.m_numdisp = int(self.value("numdisp",1))
-    self.m_device = self.value("device","")
-    self.endGroup()
+    self.m_settings.beginGroup("algemeen")
+    self.m_numchan = int(self.m_settings.value("numchan",defaultValue = 1))
+    self.m_numdisp = int(self.m_settings.value("numdisp",1))
+    self.m_device = self.m_settings.value("device","")
+    self.m_settings.endGroup()
+
+    print(self.m_numchan)
 
     return
   
@@ -116,19 +117,17 @@ class settings(QSettings) :
     channel = {"name" : "", "type" : 0, "source" : 0, "display" : 0}
     self.m_channels = []
 
-    #-jm numchan = self.m_general["numchan"]
-    #-jm for i in range(numchan) :
     for i in range(self.m_numchan) :  
       keyName = "channel " + str(i+1)
       
-      self.beginGroup(keyName)
-      channel["name"] = self.value("name",1)
-      typeSignal = self.value("type",defaultValue = "analog in")
+      self.m_settings.beginGroup(keyName)
+      channel["name"] = self.m_settings.value("name",1)
+      typeSignal = self.m_settings.value("type",defaultValue = "analog in")
       if (typeSignal == 'analog in') :
         channel["type"] = TYPE_ANALOG_IN
-      channel["source"] = int(self.value("source", defaultValue = 0))
-      channel["display"] = int(self.value("display",defaultValue = 0))
-      self.endGroup()
+      channel["source"] = int(self.m_settings.value("source", defaultValue = 0))
+      channel["display"] = int(self.m_settings.value("display",defaultValue = 0))
+      self.m_settings.endGroup()
       
       self.m_channels.append(channel.copy())
 
@@ -143,21 +142,19 @@ class settings(QSettings) :
     display = {"top" : 0, "left" : 0, "width" : 0, "height" : 0, "ymin" : 0, "ymax" : 0, "timescale" : 10}
     self.m_displays = []
 
-    #-jm numdisp = self.m_general["numdisp"]
-    #-jm for i in range(numdisp) :
     for i in range(self.m_numdisp) :
 
       name = "display " + str(i+1)
 
-      self.beginGroup(name)
-      display["top"] = float(self.value("top",0.0))
-      display["left"] = float(self.value("left",0.0))
-      display["width"] = float(self.value("width",0.0))
-      display["height"] = float(self.value("height",0.0))
-      display["ymin"] = float(self.value("ymin",0.0))
-      display["ymax"] = float(self.value("ymax",0.0))
-      display["timescale"] = float(self.value("timescale",10))
-      self.endGroup()
+      self.m_settings.beginGroup(name)
+      display["top"] = float(self.m_settings.value("top",0.0))
+      display["left"] = float(self.m_settings.value("left",0.0))
+      display["width"] = float(self.m_settings.value("width",0.0))
+      display["height"] = float(self.m_settings.value("height",0.0))
+      display["ymin"] = float(self.m_settings.value("ymin",0.0))
+      display["ymax"] = float(self.m_settings.value("ymax",0.0))
+      display["timescale"] = float(self.m_settings.value("timescale",10))
+      self.m_settings.endGroup()
 
       self.m_displays.append(display.copy())
     
@@ -169,9 +166,9 @@ class settings(QSettings) :
 
   def _readEventSettings(self) :
 
-    self.beginGroup("events")
+    self.m_settings.beginGroup("events")
     for i in range(1,10) :
-      event = self.value(str(i),"")
+      event = self.m_settings.value(str(i),"")
       self.m_events.append(event)
-    self.endGroup()
+    self.m_settings.endGroup()
     return

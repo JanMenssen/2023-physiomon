@@ -49,14 +49,14 @@ class displays() :
 
     # and add the stripcharts
 
-    self.m_numDisplay = settings.m_general["numdisp"]
+    self.m_numDisplay = settings.m_numdisp
     for iDisplay in range(self.m_numDisplay) :
 
       self.m_chanlist.append([])
     
       # get the channel
 
-      numChannels = settings.m_general["numchan"]
+      numChannels = settings.m_numchan
       for iChannel in range(numChannels) :
         if ((settings.m_channels[iChannel]["display"]-1) == iDisplay) :
           self.m_chanlist[iDisplay].append(iChannel)
