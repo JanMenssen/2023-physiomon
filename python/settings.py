@@ -103,9 +103,7 @@ class settings() :
     self.m_numdisp = int(self.m_settings.value("numdisp",1))
     self.m_device = self.m_settings.value("device","")
     self.m_settings.endGroup()
-
-    print(self.m_numchan)
-
+    
     return
   
   # _readChannels

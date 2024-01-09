@@ -16,7 +16,7 @@ set(INSTALL_DIR "/Users/jan/")
 
 # QT packages
 
-  find_package(Qt6 REQUIRED COMPONENTS Core)
+  find_package(Qt6 REQUIRED COMPONENTS Core SerialPort)
 
 # application sources
 
@@ -31,13 +31,15 @@ set(INSTALL_DIR "/Users/jan/")
 
   include_directories(
     ${ROOT_DIR}
-    ${ROOT_DIR}/arduinocomm
-    ${ROOT_DIR}/channels
-    ${ROOT_DIR}/settings
+    ${ROOT_DIR}/arduinocomm/
+    ${ROOT_DIR}/channels/
+    ${ROOT_DIR}/settings/
+    ${Qt6Core_INCLUDE_DIRS}
+    ${Qt6SerialPort_INCLUDE_DIRS}
   )
 
 # and build and install to target folder. Link with QT
 
   add_executable(fysiomon ${APPLICATION_SOURCES})
-  target_link_libraries(fysiomon PRIVATE Qt6::Core)
+  target_link_libraries(fysiomon PRIVATE Qt6::Core Qt6::SerialPort)
   install(TARGETS fysiomon DESTINATION ${INSTALL_DIR})
