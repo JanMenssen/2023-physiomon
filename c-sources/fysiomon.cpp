@@ -13,9 +13,14 @@
 
 int main() {
 
-  settings a;
-  arduinocomm b;
-  channels c;
+  QString device;
+
+  settings mySettings;
+  arduinocomm myComm;
+  channels myChannels;
 
   printf("\n this is a test\n");
+  device = mySettings.iniRead();
+  printf("\n device name = %s",device.toStdString().c_str());
+
 }

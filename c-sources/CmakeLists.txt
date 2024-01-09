@@ -14,6 +14,10 @@
 set(ROOT_DIR  "/Users/jan/Library/CloudStorage/OneDrive-Personal/my projects/2023 fysiomon/c-sources")
 set(INSTALL_DIR "/Users/jan/")
 
+# QT packages
+
+  find_package(Qt6 REQUIRED COMPONENTS Core)
+
 # application sources
 
   set(APPLICATION_SOURCES
@@ -26,12 +30,14 @@ set(INSTALL_DIR "/Users/jan/")
 # include folders
 
   include_directories(
+    ${ROOT_DIR}
     ${ROOT_DIR}/arduinocomm
     ${ROOT_DIR}/channels
     ${ROOT_DIR}/settings
   )
 
-# and build and install to target folder
+# and build and install to target folder. Link with QT
 
   add_executable(fysiomon ${APPLICATION_SOURCES})
+  target_link_libraries(fysiomon PRIVATE Qt6::Core)
   install(TARGETS fysiomon DESTINATION ${INSTALL_DIR})

@@ -17,7 +17,12 @@ class settings(QSettings) :
   def __init__(self) :
     super().__init__(QSettings.IniFormat,QSettings.UserScope,"JanSoft","fysiomon")
 
-    self.m_general = {"numchan" : 1, "numdisp" : 1, "device" :""}
+    #-jm self.m_general = {"numchan" : 1, "numdisp" : 1, "device" :""}
+
+    self.m_numchan = 0
+    self.m_numdisp = 0
+    self.m_device = ""
+
     self.m_channels = []
     self.m_displays = []
     self.m_events = []
@@ -92,9 +97,12 @@ class settings(QSettings) :
   def _readGeneral(self) :
 
     self.beginGroup("algemeen")
-    self.m_general["numchan"] = int(self.value("numchan",defaultValue = 1))
-    self.m_general["numdisp"] = int(self.value("numdisp",1))
-    self.m_general["device"] = self.value("device","")
+    #-jm self.m_general["numchan"] = int(self.value("numchan",defaultValue = 1))
+    #-jm self.m_general["numdisp"] = int(self.value("numdisp",1))
+    #-jm self.m_general["device"] = self.value("device","")
+    self.m_numchan = int(self.value("numchan",defaultValue = 1))
+    self.m_numdisp = int(self.value("numdisp",1))
+    self.m_device = self.value("device","")
     self.endGroup()
 
     return
@@ -108,9 +116,9 @@ class settings(QSettings) :
     channel = {"name" : "", "type" : 0, "source" : 0, "display" : 0}
     self.m_channels = []
 
-    numchan = self.m_general["numchan"]
-    for i in range(numchan) :
-      
+    #-jm numchan = self.m_general["numchan"]
+    #-jm for i in range(numchan) :
+    for i in range(self.m_numchan) :  
       keyName = "channel " + str(i+1)
       
       self.beginGroup(keyName)
@@ -135,8 +143,9 @@ class settings(QSettings) :
     display = {"top" : 0, "left" : 0, "width" : 0, "height" : 0, "ymin" : 0, "ymax" : 0, "timescale" : 10}
     self.m_displays = []
 
-    numdisp = self.m_general["numdisp"]
-    for i in range(numdisp) :
+    #-jm numdisp = self.m_general["numdisp"]
+    #-jm for i in range(numdisp) :
+    for i in range(self.m_numdisp) :
 
       name = "display " + str(i+1)
 
