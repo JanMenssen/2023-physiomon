@@ -2,26 +2,35 @@
 # CMakeLists.txt
 #
 #     this is the cmake file for the <fysiomon> project
+#     see the QT documentation 
 #
 # modifications
 #   08-jan-2024 JM    initial version
 
-  cmake_minimum_required(VERSION 3.6)
-  project(fysiomon)
+  cmake_minimum_required(VERSION 3.21)
+  project(fysiomon VERSION 1.0.0 LANGUAGES CXX)
 
-# install folder
+# C++ 17 is required
+
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+  # install folder
 
 set(ROOT_DIR  "/Users/jan/Library/CloudStorage/OneDrive-Personal/my projects/2023 fysiomon/c-sources")
 set(INSTALL_DIR "/Users/jan/")
 
 # QT packages
 
-  find_package(Qt6 REQUIRED COMPONENTS Core SerialPort)
+  find_package(Qt6 REQUIRED COMPONENTS SerialPort Widgets)
+  qt_standard_project_setup()
 
 # application sources
 
   set(APPLICATION_SOURCES
     ${ROOT_DIR}/fysiomon.cpp
+    ${ROOT_DIR}/mainwindow.cpp
+    ${ROOT_DIR}/statusbar/statusbar.cpp
     ${ROOT_DIR}/arduinocomm/arduinocomm.cpp 
     ${ROOT_DIR}/channels/channels.cpp
     ${ROOT_DIR}/settings/settings.cpp
@@ -33,6 +42,7 @@ set(INSTALL_DIR "/Users/jan/")
 
   include_directories(
     ${ROOT_DIR}
+    ${ROOT_DIR}/statusbar/
     ${ROOT_DIR}/arduinocomm/
     ${ROOT_DIR}/channels/
     ${ROOT_DIR}/settings/
@@ -44,6 +54,8 @@ set(INSTALL_DIR "/Users/jan/")
 
 # and build and install to target folder. Link with QT
 
-  add_executable(fysiomon ${APPLICATION_SOURCES})
-  target_link_libraries(fysiomon PRIVATE Qt6::Core Qt6::SerialPort)
+  qt_add_executable(fysiomon ${APPLICATION_SOURCES})
+  target_link_libraries(fysiomon PRIVATE Qt6::SerialPort Qt6::Widgets)
+  set_target_properties(fysiomon PROPERTIES WIN32_EXECUTABLE ON MACOSX_BUNDLE ON)
+
   install(TARGETS fysiomon DESTINATION ${INSTALL_DIR})
