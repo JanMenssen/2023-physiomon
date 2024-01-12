@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <QSettings.h>
+#include <qDebug>
 
 #include "measuredevice.h"
 
@@ -16,6 +17,7 @@
 
 measureDevice::measureDevice() {
 
+  m_nrAnalogIn = 0;
   return;
 }
 
@@ -24,7 +26,7 @@ measureDevice::measureDevice() {
 measureDevice::~measureDevice() {
 
   if (m_analogIn != NULL) delete m_analogIn;
-  
+
   return;
 }
 
@@ -60,7 +62,7 @@ bool measureDevice::isStarted() {
 
 void measureDevice::iniRead(QString device) {
 
-  printf("\n --> in measureDevice::iniRead");
+  qDebug() << "--> in measureDevice::iniRead";
 
   QSettings *settings = NULL;
   settings = new QSettings(QSettings::IniFormat,QSettings::UserScope,"JanSoft",device);
@@ -72,9 +74,9 @@ void measureDevice::iniRead(QString device) {
   m_nrWaveIn = settings->value("numWaveformIn",0).toInt();
   m_nrNumericIn = settings->value("numNUmericIn",0).toInt();
   settings->endGroup();
-
+  
   // read the info for the analog channels
-
+ 
   if (m_analogIn != NULL) delete m_analogIn;
   m_analogIn = new analogInStruct[m_nrAnalogIn];
   
@@ -90,7 +92,6 @@ void measureDevice::iniRead(QString device) {
     m_analogIn[iChan].offset = settings->value("offset",0.0).toFloat(); 
     
     settings->endGroup();
-
   }
 
   // done remove tempory pointers

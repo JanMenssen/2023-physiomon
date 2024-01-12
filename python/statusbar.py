@@ -6,12 +6,11 @@
 #  modifications
 #     15-dec-2023   JM  initial version
 
-from PySide6.QtWidgets import QWidget,  QStatusBar
-from PySide6.QtGui import QPainter, QPen
-from PySide6.QtCore import Qt 
+from PySide6.QtWidgets import QStatusBar
+
 from datetime import datetime
 
-class StatusBar(QStatusBar) :
+class statusBarNew(QStatusBar) :
   
   # constructor
 

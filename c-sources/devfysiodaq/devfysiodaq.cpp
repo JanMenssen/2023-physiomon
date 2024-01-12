@@ -7,8 +7,9 @@
 //  modifications
 //     12-jan-2024    JM  initial version
 
-#include <stdio.h>
+
 #include <QSettings.h>
+#include <QDebug.h>
 
 #include "devfysiodaq.h"
 
@@ -31,9 +32,13 @@ devFysioDaq::~devFysioDaq() {
 //    intiialises the device driver
 
 void devFysioDaq::initialise() {
+/*
+  //-jm qDebug() << m_address;
 
   m_arduino.initialise(m_address);
+ */
   return;
+  
 }
 
 // isConnected
@@ -84,23 +89,23 @@ bool devFysioDaq::isStarted() {
 //
 //    reads the settings (numchannels, gain, offset) from the device specific *.INI file
 
-void devFysioDaq::iniRead(QString device) {
+void devFysioDaq::iniRead(QString deviceName) {
 
-  printf("\n --> in devFysioDaq::iniRead");
+  qDebug() << "--> in devFysioDaq::iniRead";
+
+  measureDevice::iniRead(deviceName);
   
-  QSettings *settings = NULL;
-  measureDevice::iniRead(device);
-  
-  settings = new QSettings(QSettings::IniFormat,QSettings::UserScope,"JanSoft",device);
+  QSettings *settings;
+  settings = new QSettings(QSettings::IniFormat,QSettings::UserScope,"JanSoft",deviceName);
   
   // read the device address
 
-  settings->beginGroup(("algemeen"));
-  m_address = settings->value("address").toString();
+  settings->beginGroup("algemeen");
+  m_address = settings->value("address","").toString();
   settings->endGroup();
 
   // clean pointers and return
-
+  
   delete settings;
   return;
 }

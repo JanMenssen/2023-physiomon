@@ -8,7 +8,9 @@
 //    08-jan-2024   JM    initial version
 
 #include "arduinocomm.h"
-#include <stdio.h>
+
+#include <QDebug.h>
+
 
 #define BAUDRATE  QSerialPort::Baud115200
 
@@ -24,7 +26,7 @@
 
 arduinoComm::arduinoComm() {
 
-  printf("\n in arduinocomm constructor");
+  qDebug() << "--> in arduinoComm";
 
   m_started = false;
 }

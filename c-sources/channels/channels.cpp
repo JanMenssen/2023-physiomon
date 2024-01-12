@@ -8,13 +8,15 @@
 //  modifications
 //    08-jan-2024   JM  initial version
 
-#include <stdio.h>
+#include <QDebug.h>
+
 #include "channels.h"
 
 // constructor
 
-channels::channels() {
-  printf("\n in channels constructor");
+channels::channels(int n) {
+  
+  qDebug() << "--> in channels";
 }
 
 // configure

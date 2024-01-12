@@ -23,12 +23,12 @@ class devFysioDaq : public measureDevice {
     void setSampleRate(int ms);
     bool isStarted();
     void setStartStop(bool start);
-    void iniRead(QString device);
+    void iniRead(QString deviceName);
     void read(); 
 
   private :
 
-    QString m_address;
+    QString m_address = "jan";
     arduinoComm m_arduino;
 
 };

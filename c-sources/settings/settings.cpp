@@ -31,9 +31,9 @@ settings::settings() {
 
 settings::~settings() {
 
-  if (m_settings != NULL) delete m_settings;
-  if (m_displays != NULL) delete m_displays;
-  if (m_channels != NULL) delete m_channels;
+  delete m_settings;
+  delete m_displays;
+  delete m_channels;
   
   return;
 }
@@ -57,7 +57,7 @@ QString settings::iniRead() {
   readChannels();
   readDisplaySettings();
   readEventSettings();
-  
+
   return(m_device);
 
 }

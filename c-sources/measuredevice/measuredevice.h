@@ -39,7 +39,6 @@ class measureDevice {
     int m_nrNumericIn = 0;
     
     analogInStruct *m_analogIn = NULL;
-
     bool m_started = false;
 
 };

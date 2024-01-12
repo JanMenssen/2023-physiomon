@@ -48,7 +48,7 @@ set(INSTALL_DIR "/Users/jan/")
     ${ROOT_DIR}/settings/
     ${ROOT_DIR}/measuredevice/
     ${ROOT_DIR}/devfysiodaq/
-    ${Qt6Core_INCLUDE_DIRS}
+    ${Qt6Widgets_INCLUDE_DIRS}
     ${Qt6SerialPort_INCLUDE_DIRS}
   )
 

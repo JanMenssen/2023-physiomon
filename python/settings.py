@@ -32,17 +32,6 @@ class settings() :
     
     return
 
-
-  # initialise
-  #
-  #     sets the *.ini file
-  #     Note : this is curretly an empty method in Python/C but due to compatibiltiy with
-  #            labView it is kept
-
-  def initialise(self) :
-    return
-  
-
   # iniRead
   #
   #   read the *.INI file

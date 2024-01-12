@@ -12,7 +12,7 @@
 class channels{
 
   public:
-    channels();
+    channels(int n);
     void configure();
     void getSampleRate();
     void readData();

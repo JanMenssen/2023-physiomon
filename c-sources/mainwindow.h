@@ -9,7 +9,10 @@
 #ifndef _MAINWINDOW_H
 #define _MAINWINDOW_H
 
-#include "statusbar.h"
+//-jm #include "statusbar.h"
+#include "channels.h"
+#include "devfysiodaq.h"
+#include "settings.h"
 
 #include <QMainWindow>
 #include <QObject>
@@ -21,7 +24,9 @@ class mainWindow : public QMainWindow {
   public :
 
     mainWindow();
+    ~mainWindow();
     void createToolBar();
+    void configure();
 
   private slots :
     
@@ -29,10 +34,12 @@ class mainWindow : public QMainWindow {
     void onDeviceInfo();
     void onTimeOut();
 
-  private :
+  private :     
 
-    statusBarNew *m_statusBar = NULL;
-     
+  settings *m_settings = NULL;
+  devFysioDaq *m_device = NULL;
+  channels *m_channels = NULL;
+
 };
 
 #endif
