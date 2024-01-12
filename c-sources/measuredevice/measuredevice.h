@@ -10,18 +10,37 @@
 #ifndef _MEASUREDEVICE_H
 #define _MEASUREDEVICE_H
 
-class measuredevice {
+#include <Qstring>
+
+struct analogInStruct {
+  QString name;
+  int sampleRate;
+  float gain;
+  float offset;
+};
+
+class measureDevice {
 
   public :
 
-    measuredevice();
-    ~measuredevice();
+    measureDevice();
+    ~measureDevice();
 
     void initialise();
     bool isStarted();
-    void setStartStop();
-    void iniRead();
+    void setStartStop(bool start);
+    void iniRead(QString device);
     void configure();
+
+  private :
+
+    int m_nrAnalogIn = 0;
+    int m_nrWaveIn = 0;
+    int m_nrNumericIn = 0;
+    
+    analogInStruct *m_analogIn = NULL;
+
+    bool m_started = false;
 
 };
 

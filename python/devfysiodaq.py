@@ -22,7 +22,7 @@ class devFysioDaq(measureDevice) :
     
     super().__init__()
     self.m_arduino = arduinoComm()
-    self.m_portName = []
+    self.m_address = []
 
   # intialise
   #
@@ -30,7 +30,7 @@ class devFysioDaq(measureDevice) :
 
   def initialise(self) :
     
-    self.m_arduino.initialise(self.m_portName)
+    self.m_arduino.initialise(self.m_address)
     return
 
   # isConnected
@@ -83,7 +83,7 @@ class devFysioDaq(measureDevice) :
     settings = QSettings(QSettings.IniFormat,QSettings.UserScope,"JanSoft",name)
 
     settings.beginGroup("algemeen")
-    self.m_portName = settings.value("address")
+    self.m_address = settings.value("address")
     settings.endGroup()
 
     return

@@ -86,7 +86,7 @@ void settings::readChannels() {
   char keyName[10];
 
   if (m_channels != NULL) delete m_channels;
-  m_channels = new channel[m_numchan];
+  m_channels = new channelStruct[m_numchan];
 
   for (int iChan = 0; iChan < m_numchan; iChan++) {
 
@@ -115,7 +115,7 @@ void settings::readDisplaySettings() {
   char keyName[9];
 
   if (m_displays != NULL) delete m_displays;
-  m_displays = new display[m_numdisp];
+  m_displays = new displayStruct[m_numdisp];
 
   for (int iDisp = 0; iDisp < m_numdisp; iDisp++) {
 

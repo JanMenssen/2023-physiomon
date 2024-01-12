@@ -8,20 +8,25 @@
 
 #include <stdio.h>
 #include "settings.h"
-#include "arduinocomm.h"
 #include "channels.h"
+#include "devfysiodaq.h"
 
 #define ADDRESS  "tty.usbmodem101"
 
 int main() {
 
-  QString device;
-
   settings mySettings;
-  arduinocomm myComm;
   channels myChannels;
 
-  printf("\n this is a test\n");
-  device = mySettings.iniRead();
+  QString device= mySettings.iniRead();
+  
+  // Note, this should be done better in the future, it should be more easy to use 
+  //       different devices
+
+  devFysioDaq *myDevice = NULL;
+  if (device == QString("fysiodaq")) myDevice = new devFysioDaq;
+
+  myDevice->iniRead(device);
+
   printf("\n device name = %s",device.toStdString().c_str());
 }

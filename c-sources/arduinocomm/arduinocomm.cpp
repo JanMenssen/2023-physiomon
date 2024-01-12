@@ -22,7 +22,7 @@
 
 // constructor
 
-arduinocomm::arduinocomm() {
+arduinoComm::arduinoComm() {
 
   printf("\n in arduinocomm constructor");
 
@@ -31,7 +31,7 @@ arduinocomm::arduinocomm() {
 
 // destructor
 //
-arduinocomm::~arduinocomm() {
+arduinoComm::~arduinoComm() {
 
   //-jm if (m_port->isOpen()) m_port->close();   // NOTE results in an segementation fault ??
   if (m_port != NULL) delete m_port;
@@ -44,7 +44,7 @@ arduinocomm::~arduinocomm() {
 //    initialises the serial port. This is a seperate routine and not in the constructor
 //    because the device address (portname) is not known when the constructor is called
 
-void arduinocomm::initialise(QString port) {
+void arduinoComm::initialise(QString port) {
 
   m_port =new QSerialPort();
 
@@ -71,7 +71,7 @@ void arduinocomm::initialise(QString port) {
 //
 //    this method start or stops the communication with the arduino
 
-void arduinocomm::startstop(bool onoff) {
+void arduinoComm::startstop(bool onoff) {
 
   int data = (onoff? 1 : 0);
   sendMsg('x',1,&data);
@@ -84,7 +84,7 @@ void arduinocomm::startstop(bool onoff) {
 //
 //    this method returns the information of the firmware in the arduino
 
-QString arduinocomm::isConnected() {
+QString arduinoComm::isConnected() {
 
   return QString("");
 }
@@ -93,7 +93,7 @@ QString arduinocomm::isConnected() {
 //
 //    return a boolean indicating the communication with the arduino is isStarted
 
-bool arduinocomm::isStarted() { 
+bool arduinoComm::isStarted() { 
 
   return m_started;
 }
@@ -102,7 +102,7 @@ bool arduinocomm::isStarted() {
 //
 //    this method sends a message to the arduino
 
-void arduinocomm::sendMsg(char cmd, int n, int *data) {
+void arduinoComm::sendMsg(char cmd, int n, int *data) {
 
   QByteArray bytesToWrite;
   encode(cmd, n, data, &bytesToWrite);
@@ -125,7 +125,7 @@ void arduinocomm::sendMsg(char cmd, int n, int *data) {
 //        - data    : received data   
 //    both <cmd> and <data> are only valid if a message is received
 
-bool arduinocomm::rcvMsg(char *cmd, int *n, int *data) {
+bool arduinoComm::rcvMsg(char *cmd, int *n, int *data) {
 
   static QByteArray rcvBuffer;
   bool msgOK = false;
@@ -155,7 +155,7 @@ bool arduinocomm::rcvMsg(char *cmd, int *n, int *data) {
 //      encodes the cmd and data to a QByteArray that can be written to the
 //      serial port
 
-void arduinocomm::encode(char cmd, int n, int *data, QByteArray *bytesToWrite) {
+void arduinoComm::encode(char cmd, int n, int *data, QByteArray *bytesToWrite) {
 
   int checksum = 0;
 
@@ -188,7 +188,7 @@ void arduinocomm::encode(char cmd, int n, int *data, QByteArray *bytesToWrite) {
 //      decodes the stream of bytes in the receive buffer to a message. Returns a 
 //      true if the message is correct decoded
 
-bool arduinocomm::decode(const QByteArray, char *cmd, int *n, int *data) {
+bool arduinoComm::decode(const QByteArray, char *cmd, int *n, int *data) {
 
   return false;
 }

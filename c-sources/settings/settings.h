@@ -14,7 +14,7 @@
 
 // the channel structure is used in the initialisation file
 
-struct channel {
+struct channelStruct {
   QString name;
   typeSignal type;
   int source;
@@ -23,7 +23,7 @@ struct channel {
 
 // the display structure is used for the position and the axis limits  of the displays
 
-struct display {
+struct displayStruct {
   float top;
   float left;
   float width;
@@ -49,8 +49,8 @@ class settings {
     int m_numdisp = 0;
     int m_numchan = 0;
     QString m_device;
-    channel *m_channels = NULL;
-    display *m_displays = NULL;
+    channelStruct *m_channels = NULL;
+    displayStruct *m_displays = NULL;
 
     void readGeneral();
     void readChannels();

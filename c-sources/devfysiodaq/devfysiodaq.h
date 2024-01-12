@@ -7,20 +7,30 @@
 #ifndef _DEVFYSIODAQ_H
 #define _DEVFYSIODAQ_H
 
-class devFysioDaq {
+#include <QString>
+#include "arduinocomm.h"
+#include "measuredevice.h"
+
+class devFysioDaq : public measureDevice {
 
   public :
 
-  devFysioDaq();
-  ~devFysioDaq();
+    devFysioDaq();
+    ~devFysioDaq();
 
-  void initialise();
-  void isConnected();
-  void setSampleRate(int ms);
-  bool isStarted();
-  void setStartStop(bool start);
-  void iniRead();
-  void read(); 
+    void initialise();
+    QString isConnected();
+    void setSampleRate(int ms);
+    bool isStarted();
+    void setStartStop(bool start);
+    void iniRead(QString device);
+    void read(); 
+
+  private :
+
+    QString m_address;
+    arduinoComm m_arduino;
+
 };
 
 #endif

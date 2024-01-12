@@ -11,11 +11,11 @@
 
 #include <QSerialPort>
 
-class arduinocomm{
+class arduinoComm{
 
   public:
-    arduinocomm();
-    ~arduinocomm();
+    arduinoComm();
+    ~arduinoComm();
 
     void initialise(QString port);
     void startstop(bool onoff);

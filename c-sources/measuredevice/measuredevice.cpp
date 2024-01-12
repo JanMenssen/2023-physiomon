@@ -7,26 +7,41 @@
 //  modifications
 //    12-JAN-2024   JM    inital version
 
+#include <stdio.h>
+#include <QSettings.h>
+
 #include "measuredevice.h"
 
 // constructor
 
-measuredevice::measuredevice() {
+measureDevice::measureDevice() {
 
   return;
 }
 
 // destructor
 
-measuredevice::~measuredevice() {
+measureDevice::~measureDevice() {
+
+  if (m_analogIn != NULL) delete m_analogIn;
   
   return;
 }
 
 // initialise
 
-void measuredevice::initialise() {
+void measureDevice::initialise() {
 
+  return;
+}
+
+// setStartStop
+//
+//    starts or stops the device
+
+void measureDevice::setStartStop(bool start) {
+
+  m_started = start;
   return;
 }
 
@@ -34,7 +49,7 @@ void measuredevice::initialise() {
 //
 //    returns a true if the device is isStarted
 
-bool measuredevice::isStarted() {
+bool measureDevice::isStarted() {
 
   return false;
 }
@@ -43,8 +58,44 @@ bool measuredevice::isStarted() {
 // 
 //    reads the general part of the device initialisation
 
-void measuredevice::iniRead() {
+void measureDevice::iniRead(QString device) {
 
+  printf("\n --> in measureDevice::iniRead");
+
+  QSettings *settings = NULL;
+  settings = new QSettings(QSettings::IniFormat,QSettings::UserScope,"JanSoft",device);
+  
+  // read the number of analog input channels, waveform input and numeric input
+
+  settings->beginGroup(("algemeen"));
+  m_nrAnalogIn = settings->value("numAnalogIn",0).toInt();
+  m_nrWaveIn = settings->value("numWaveformIn",0).toInt();
+  m_nrNumericIn = settings->value("numNUmericIn",0).toInt();
+  settings->endGroup();
+
+  // read the info for the analog channels
+
+  if (m_analogIn != NULL) delete m_analogIn;
+  m_analogIn = new analogInStruct[m_nrAnalogIn];
+  
+  for (int iChan=0; iChan < m_nrAnalogIn; iChan++) {
+
+    char keyName[12];
+    snprintf(keyName,12,"analog_in %0d",iChan+1);
+
+    settings->beginGroup(keyName);
+    m_analogIn[iChan].name = settings->value("name","").toString();
+    m_analogIn[iChan].sampleRate = settings->value("sampleRate",1).toInt();
+    m_analogIn[iChan].gain = settings->value("gain",1.0).toFloat();
+    m_analogIn[iChan].offset = settings->value("offset",0.0).toFloat(); 
+    
+    settings->endGroup();
+
+  }
+
+  // done remove tempory pointers
+
+  delete settings;  
   return;
 }
 
@@ -52,7 +103,7 @@ void measuredevice::iniRead() {
 //
 //    given the settings, configures the device handler
 
-void measuredevice::configure() {
+void measureDevice::configure() {
 
   return;
 }
