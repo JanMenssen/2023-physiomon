@@ -10,6 +10,8 @@
 #include "arduinocomm.h"
 #include <stdio.h>
 
+#define BAUDRATE  QSerialPort::Baud115200
+
 #define STX 0x02
 #define ETX 0x00
 
@@ -48,14 +50,17 @@ void arduinocomm::initialise(QString port) {
 
   m_port->setPortName(port);
   m_port->open(QIODevice::ReadWrite);
-
+  
   m_port->setBaudRate(BAUDRATE);
+
   m_port->setDataBits(QSerialPort::Data8);
   m_port->setFlowControl(QSerialPort::NoFlowControl);
   m_port->setParity(QSerialPort::NoParity);
   m_port->setStopBits(QSerialPort::OneStop);
 
   m_port->flush();
+
+  m_started = false;
 
   return;
 
@@ -67,11 +72,11 @@ void arduinocomm::initialise(QString port) {
 //    this method start or stops the communication with the arduino
 
 void arduinocomm::startstop(bool onoff) {
-/*
+
   int data = (onoff? 1 : 0);
   sendMsg('x',1,&data);
   m_started = onoff;
-*/
+
   return;
 }
 
@@ -102,6 +107,13 @@ void arduinocomm::sendMsg(char cmd, int n, int *data) {
   QByteArray bytesToWrite;
   encode(cmd, n, data, &bytesToWrite);
   m_port->write(bytesToWrite);
+
+  // tempory checky bytes written
+
+  printf("\n current length of message %d",int(bytesToWrite.size()));
+  for (int i=0;i<bytesToWrite.size();i++) {
+    printf("\n current byte %d",bytesToWrite.at(i));
+  }
 
   return;
 }

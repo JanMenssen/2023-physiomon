@@ -11,8 +11,6 @@
 
 #include <QSerialPort>
 
-#define BAUDRATE 115200
-
 class arduinocomm{
 
   public:

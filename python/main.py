@@ -213,7 +213,7 @@ if __name__ == '__main__' :
     
   myDevice.iniRead(deviceName)
   myDevice.initialise()
-  myDevice.setSampleRate(25)
+  #-jm myDevice.setSampleRate(25)
 
   # create the graphical structure
 

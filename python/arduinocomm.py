@@ -47,7 +47,8 @@ class arduinoComm :
 
   def destroy(self) :
   
-    self.m_port.close()
+    if self.m_port.isOpen() :
+      self.m_port.close()
     self.m_started = False
     return
   

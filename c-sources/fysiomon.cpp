@@ -11,6 +11,8 @@
 #include "arduinocomm.h"
 #include "channels.h"
 
+#define ADDRESS  "tty.usbmodem101"
+
 int main() {
 
   QString device;
@@ -22,5 +24,4 @@ int main() {
   printf("\n this is a test\n");
   device = mySettings.iniRead();
   printf("\n device name = %s",device.toStdString().c_str());
-
 }
