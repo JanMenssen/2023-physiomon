@@ -11,6 +11,7 @@
 #define _DISPLAYS_H
 
 #include "settings.h"
+#include "channels.h"
 
 class displays {
 
@@ -21,7 +22,7 @@ class displays {
 
     void initialise();
     void configure(settings *settings);
-    void plot();
+    void plot(channels *channels);
 
 };
 

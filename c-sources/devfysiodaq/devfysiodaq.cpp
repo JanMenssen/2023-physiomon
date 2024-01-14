@@ -112,14 +112,43 @@ void devFysioDaq::iniRead(QString deviceName) {
 
 //  read
 //
-//    reads samples (if available) from the device 
+//    reads samples (if available) from the device
+//    currenty 8 bytes could be read (device has 6 channels)
 
-void devFysioDaq::read() {
+void devFysioDaq::read(channels *channels) {
 
   char cmd;
-  int n;
-  int *data;
+  char ANALOG_CMD = 65;
+  int n=0;
+  int data[8];
 
-  bool msgOK = m_arduino.rcvMsg(&cmd,&n,data);
+  if (isStarted()) {
+
+    bool msgOK = true;
+    while (msgOK == true) {
+      
+      msgOK = m_arduino.rcvMsg(&cmd,&n,data);
+      if (cmd == ANALOG_CMD) {
+
+        for (int i=0;i<n;i++) {
+          
+          // convert to floating values
+
+          float realValue = m_analogIn[i].gain * data[i] + m_analogIn[i].offset;
+
+          // and write the data in the buffers for the connected channels
+          
+          int nchan = m_analogIn[i].nchan;
+          for (int j=0;j<nchan;j++) {
+            int iChan = m_analogIn[i].channels[j];
+            channels->writeData(iChan,realValue);
+          }
+        }
+
+      }
+    }
+
+  }
+
   return;
 }

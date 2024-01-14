@@ -10,6 +10,7 @@
 #include <QString>
 #include "arduinocomm.h"
 #include "measuredevice.h"
+#include "channels.h"
 
 class devFysioDaq : public measureDevice {
 
@@ -24,7 +25,7 @@ class devFysioDaq : public measureDevice {
     bool isStarted();
     void setStartStop(bool start);
     void iniRead(QString deviceName);
-    void read(); 
+    void read(channels *channels); 
 
   private :
 

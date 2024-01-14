@@ -37,7 +37,7 @@ class mainWindow(QMainWindow) :
     # create the toolbar and the menu
 
     self.createToolBar()
-    self.createMenus()
+    self.createMenu()
     
     # and the statusbar
 
@@ -90,25 +90,37 @@ class mainWindow(QMainWindow) :
   #
   #     the menu items are created
   
-  def createMenus(self) :
+  def createMenu(self) :
     
     bar = self.menuBar()
+    
     fileMenu = QMenu("&File", self)
-    deviceMenu = QMenu("&Device", self)
+    editMenu = QMenu("&Edit", self)
+    helpMenu = QMenu("&Help", self)
+ 
     bar.addMenu(fileMenu)
-    bar.addMenu(deviceMenu)
+    bar.addMenu(editMenu)
+    bar.addMenu(helpMenu)
 
-    newAction = QAction("New",self)
-    newAction.triggered.connect(self.newPressed)
-    fileMenu.addAction(newAction)
-
-    startAction = QAction("start",self)
+    startAction = QAction("Start",self)
     startAction.triggered.connect(self.onStart)
-    deviceMenu.addAction(startAction)
+    fileMenu.addAction(startAction)
 
-    devInfoAction = QAction("device &Info",self)
-    devInfoAction.triggered.connect(self.onDeviceInfo)
-    deviceMenu.addAction(devInfoAction)
+    saveAction = QAction("Save",self)
+    saveAction.triggered.connect(self.onSave)
+    fileMenu.addAction(saveAction)
+
+    dispSettingsChangeAction = QAction("Display",self)
+    dispSettingsChangeAction.triggered.connect(self.onDispSettingsChanged)
+    editMenu.addAction(dispSettingsChangeAction)
+
+    deviceSettingsChangeAction = QAction("Device",self)
+    deviceSettingsChangeAction.triggered.connect(self.onDeviceSettingsChanged)
+    editMenu.addAction(deviceSettingsChangeAction)
+
+    fysiomonHelpAction = QAction("Fysiomon Help",self)
+    deviceSettingsChangeAction.triggered.connect(self.onFysiomonHelp)
+    helpMenu.addAction(fysiomonHelpAction)
 
     return
 
@@ -196,8 +208,33 @@ class mainWindow(QMainWindow) :
     self.statusBar().setText(dataStr,5)
     return
        
-  # newPressed
+  # onSave
   #
         
-  def newPressed(self) :
+  def onSave(self) :
+    
+    return
+
+  # onDeviceSettingsChanged
+  #
+  #     a popup is displayed which makes it possible to edit the device settings
+
+  def onDeviceSettingsChanged(self) :
+    
+    return
+  
+  # onDispSettingsChanged
+  #
+  #     a popup is displayed which makes it possible to edit the device settings
+
+  def onDispSettingsChanged(self) :
+    
+    return
+  
+  # onFysiomonHelp
+  #
+  #     help fpr fysiomon
+
+  def onFysiomonHelp(self) :
+    
     return

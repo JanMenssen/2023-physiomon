@@ -106,5 +106,17 @@ void measureDevice::iniRead(QString device) {
 
 void measureDevice::configure(settings *settings) {
 
+
+  int numchan = settings->m_numchan;
+  for (int ichan = 0; ichan < numchan; ichan++) {
+
+    int source = settings->m_channels[ichan].source;
+
+    // add the channels to the device, so we know how to move the data
+
+    if (settings->m_channels[ichan].type == TYPE_ANALOG_IN) m_analogIn->channels[m_analogIn->nchan++] = source;
+  
+  }
+  
   return;
 }

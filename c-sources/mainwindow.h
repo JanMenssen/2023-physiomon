@@ -26,6 +26,7 @@ class mainWindow : public QMainWindow {
     mainWindow();
     ~mainWindow();
     void createToolBar();
+    void createMenu();
     void configure();
 
   private slots :
@@ -33,6 +34,9 @@ class mainWindow : public QMainWindow {
     void onStart();
     void onDeviceInfo();
     void onTimeOut();
+    void onDisplaySettingsChanged();
+    void onDeviceSettingsChanged();
+    void onFysiomonHelp();
 
   private :     
 

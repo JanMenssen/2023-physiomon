@@ -48,7 +48,7 @@ class channels{
     void configure(settings *settings, measureDevice *device);
     void getSampleRate();
     void readData();
-    void writeData();
+    void writeData(int ichan, float data);
 
   private :
 

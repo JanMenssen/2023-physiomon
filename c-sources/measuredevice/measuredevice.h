@@ -13,11 +13,15 @@
 #include <Qstring>
 #include "settings.h"
 
+// analog structure. each data channel can be onnected to 5 display/stores
+
 struct analogInStruct {
   QString name;
   int sampleRate;
   float gain;
   float offset;
+  int nchan;
+  int channels[5];
 };
 
 class measureDevice {
@@ -40,7 +44,7 @@ class measureDevice {
     analogInStruct *m_analogIn = NULL;
 
   private :
-    
+
     bool m_started = false;
 
 };

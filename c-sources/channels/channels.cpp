@@ -117,7 +117,11 @@ void channels::readData() {
 
 // channels writeData
 //
-//    writes data to the channel buffers. Channel number is input
+//    writes data to the display and store buffers. Channel number is input
 
-void channels::writeData() {
+void channels::writeData(int ichan, float data) {
+
+  m_buffers[ichan].display->write(1,&data);
+  m_buffers[ichan].store->write(1,&data);
+
 }

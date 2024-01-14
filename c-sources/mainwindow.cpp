@@ -6,6 +6,8 @@
 #include "mainwindow.h"
 #include "statusbar.h"
 
+#include <QMenuBar>
+#include <QMenu>
 #include <QToolBar>
 #include <QAction>
 #include <QTimer>
@@ -19,6 +21,7 @@ mainWindow::mainWindow() {
   
   // create graphical parts
 
+  createMenu();
   createToolBar();
 
   statusBarNew *status = new statusBarNew;
@@ -69,6 +72,41 @@ mainWindow::~mainWindow() {
 
 }
 
+// createMeneu
+//
+//    creates the menu
+
+void mainWindow::createMenu() {
+
+  QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
+  QMenu *editMenu = menuBar()->addMenu(tr(("&Edit")));
+  QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
+
+  QAction *startAction = new QAction(tr("&Start"));
+  //-jm startAction->setStatusTip("start/stop the program");
+  connect(startAction,SIGNAL(triggered()),this, SLOT(onStart()));
+  fileMenu->addAction(startAction);
+
+  QAction *saveAction = new QAction(tr("Save"));
+  //-jm saveAction->setStatusTip("save data to file");
+  connect(startAction,SIGNAL(triggered()),this, SLOT(onStart()));
+  fileMenu->addAction(saveAction);
+ 
+  QAction *dispSettingsChangeAction = new QAction(tr("Display"));
+  //-jm dispSettingsChangeAction->setStatusTip("edit display settings");
+  connect(dispSettingsChangeAction,SIGNAL(triggered()),this,SLOT(onDisplaySettingsChanged()));
+  editMenu->addAction(dispSettingsChangeAction);
+
+  QAction *deviceSettingsChangeAction = new QAction(tr("Device"));
+  //-jm deviceSettingsChangeAction->setStatusTip("edit device settings");
+  connect(deviceSettingsChangeAction,SIGNAL(triggered()),this,SLOT(onDeviceSettingsChanged()));
+  editMenu->addAction(deviceSettingsChangeAction);
+
+  QAction *fysiomonHelpAction = new QAction(tr("Fysiomon Help"));
+  connect(fysiomonHelpAction,SIGNAL(triggered()),this, SLOT(onFysiomonHelp()));
+  helpMenu->addAction(fysiomonHelpAction);  
+}
+
 // createToolBar
 //
 //    this function creates the toolbar
@@ -115,10 +153,18 @@ void mainWindow::onStart() {
   
   qDebug() << "--> onStart";
 
+  bool started = m_device->isStarted();
   statusBarNew *status = (statusBarNew *)statusBar();
-  status->setText("on start",1);
+  
+  if (!started) {
+    m_device->setStartStop(true);
+    status->setText("device is started ...",2.5);
+  } else {
+    m_device->setStartStop(false);
+    status->setText("device is stopped ...",2.5);
+  }
 
-
+  return;
 }
 
 // onDeviceInfo
@@ -141,6 +187,36 @@ void mainWindow::onTimeOut() {
 
   qDebug() << "--> onTimer";
 
+  m_device->read(m_channels);
+  m_displays->plot(m_channels);
+
   statusBarNew *status = (statusBarNew *)statusBar();
   status->setText("time out",1.0);
+}
+
+// onDeviceSettingsChanged
+//
+//    popup mennu is shown in which the device settings could be changed, only possible
+//    if program is not started
+
+void mainWindow::onDeviceSettingsChanged() {
+
+}
+
+// onDisplaySettingsChanged
+//
+//    popuwp window is shown on which the display could be changed. Only possible if the
+//    program is not started
+
+void mainWindow::onDisplaySettingsChanged() {
+
+}
+
+// onFysiomonHelp
+//
+//    help is handled
+//
+
+void mainWindow::onFysiomonHelp() {
+
 }

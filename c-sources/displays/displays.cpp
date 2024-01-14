@@ -35,6 +35,6 @@ void displays::configure(settings *settings) {
 //
 //    plots the new data
 
-void displays::plot() {
+void displays::plot(channels *channels) {
 
 }
