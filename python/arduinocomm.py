@@ -65,7 +65,13 @@ class arduinoComm :
       self.m_started = False
       self.sendMsg("x",[0x00])
 
+    # and clear everything, write, read and receive buffer
+
+    self.m_port.flush()  
+    self.m_port.readAll()
+
     self.rcvBuffer = QByteArray()
+
     return
   
   # isConneected
