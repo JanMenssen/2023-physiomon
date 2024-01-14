@@ -10,12 +10,11 @@
 #include "arduinocomm.h"
 
 #include <QDebug.h>
-
+#include <QByteArray>
 
 #define BAUDRATE  QSerialPort::Baud115200
-
-#define STX 0x02
-#define ETX 0x00
+#define STX QByteArray::fromHex("2")
+#define ETX QByteArray::fromHex("0")
 
 // define some macro's for getting the high and low byte of a word
 
@@ -26,8 +25,6 @@
 
 arduinoComm::arduinoComm() {
 
-  qDebug() << "--> in arduinoComm";
-
   m_started = false;
 }
 
@@ -35,7 +32,7 @@ arduinoComm::arduinoComm() {
 //
 arduinoComm::~arduinoComm() {
 
-  //-jm if (m_port->isOpen()) m_port->close();   // NOTE results in an segementation fault ??
+  if (m_port->isOpen()) m_port->close();  
   if (m_port != NULL) delete m_port;
 
   return;
@@ -79,6 +76,11 @@ void arduinoComm::startstop(bool onoff) {
   sendMsg('x',1,&data);
   m_started = onoff;
 
+  // clear the data in the read and write buffer
+
+  m_port->flush();
+  m_port->readAll();
+
   return;
 }
 
@@ -110,13 +112,6 @@ void arduinoComm::sendMsg(char cmd, int n, int *data) {
   encode(cmd, n, data, &bytesToWrite);
   m_port->write(bytesToWrite);
 
-  // tempory checky bytes written
-
-  printf("\n current length of message %d",int(bytesToWrite.size()));
-  for (int i=0;i<bytesToWrite.size();i++) {
-    printf("\n current byte %d",bytesToWrite.at(i));
-  }
-
   return;
 }
 
@@ -140,12 +135,13 @@ bool arduinoComm::rcvMsg(char *cmd, int *n, int *data) {
 
   if (rcvBuffer.size() >= 7) {
     
-    while (rcvBuffer.first(1).toInt() != STX) rcvBuffer = rcvBuffer.sliced(1);
+    while (rcvBuffer.first(1) != STX) rcvBuffer = rcvBuffer.sliced(1);
 
     int lenMsg = 2 * int(rcvBuffer.at(2)) + 5;
+
     if (rcvBuffer.size() > lenMsg) {
       msgOK = decode(rcvBuffer.sliced(0,lenMsg),cmd,n,data);
-      if (msgOK) rcvBuffer = rcvBuffer.sliced(lenMsg);
+      rcvBuffer = rcvBuffer.sliced(lenMsg);
     }
   }
 
@@ -163,7 +159,7 @@ void arduinoComm::encode(char cmd, int n, int *data, QByteArray *bytesToWrite) {
 
   // start of transmission
 
-  bytesToWrite->append(lowByte(STX));
+  bytesToWrite->append(STX);
   bytesToWrite->append(cmd);
   bytesToWrite->append(lowByte(n));
 
@@ -178,19 +174,39 @@ void arduinoComm::encode(char cmd, int n, int *data, QByteArray *bytesToWrite) {
   // checksum and end of transmission
 
   bytesToWrite->append(lowByte(checksum));
-  bytesToWrite->append(lowByte(ETX));
+  bytesToWrite->append(ETX);
 
   return;
 
 }
-
 
 // decode
 //
 //      decodes the stream of bytes in the receive buffer to a message. Returns a 
 //      true if the message is correct decoded
 
-bool arduinoComm::decode(const QByteArray, char *cmd, int *n, int *data) {
+bool arduinoComm::decode(const QByteArray rawData, char *cmd, int *n, int *data) {
 
-  return false;
+  unsigned char checksumCalc = 0;
+
+  // get the command and the length of the data
+
+  *cmd = rawData.at(1);
+  *n = rawData.at(2);
+
+  // decode the data to integers
+
+  for (int i=0;i<*n;i++) {
+    
+    int highByte = rawData.at(3+2*i);
+    int lowByte = rawData.at(4+2*i); 
+
+    data[i] = (highByte << 8) + lowByte;
+    checksumCalc += data[i];
+  }
+
+  // get the checksum and return a true if it is correct
+
+  unsigned char checksumMsg = rawData.at(3 + 2 * (*n));
+  return (checksumMsg == checksumCalc);
 }

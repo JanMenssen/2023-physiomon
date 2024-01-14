@@ -37,4 +37,5 @@ void displays::configure(settings *settings) {
 
 void displays::plot(channels *channels) {
 
+  return;
 }

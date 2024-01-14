@@ -31,7 +31,8 @@ class devFysioDaq : public measureDevice {
 
     QString m_address = "";
     arduinoComm m_arduino;
-
+   
+    void writeValueToAllChannels(analogInStruct *analogIn,channels *channels,int value);
 };
 
 #endif

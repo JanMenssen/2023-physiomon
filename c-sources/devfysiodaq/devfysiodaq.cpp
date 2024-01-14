@@ -32,11 +32,8 @@ devFysioDaq::~devFysioDaq() {
 //    intiialises the device driver
 
 void devFysioDaq::initialise() {
-/*
-  //-jm qDebug() << m_address;
 
   m_arduino.initialise(m_address);
- */
   return;
   
 }
@@ -91,8 +88,6 @@ bool devFysioDaq::isStarted() {
 
 void devFysioDaq::iniRead(QString deviceName) {
 
-  qDebug() << "--> in devFysioDaq::iniRead";
-
   measureDevice::iniRead(deviceName);
   
   QSettings *settings;
@@ -129,26 +124,26 @@ void devFysioDaq::read(channels *channels) {
       
       msgOK = m_arduino.rcvMsg(&cmd,&n,data);
       if (cmd == ANALOG_CMD) {
-
-        for (int i=0;i<n;i++) {
-          
-          // convert to floating values
-
-          float realValue = m_analogIn[i].gain * data[i] + m_analogIn[i].offset;
-
-          // and write the data in the buffers for the connected channels
-          
-          int nchan = m_analogIn[i].nchan;
-          for (int j=0;j<nchan;j++) {
-            int iChan = m_analogIn[i].channels[j];
-            channels->writeData(iChan,realValue);
-          }
-        }
-
+        for (int i=0;i<n;i++) writeValueToAllChannels(&m_analogIn[i],channels,data[i]);
       }
     }
-
   }
 
   return;
+}
+
+void devFysioDaq::writeValueToAllChannels(analogInStruct *analogIn, channels *channels, int value) {
+
+  // first convert do float data
+
+  //-jm float realValue = analogIn->gain * value + analogIn->offset;
+  float realValue = 1.0 * value;
+
+  int numchan = analogIn->nchan;
+  for (int i=0;i<numchan;i++) {
+    int ichan = analogIn->channels[i];
+    channels->writeData(ichan,realValue);
+  }
+
+  return;    
 }

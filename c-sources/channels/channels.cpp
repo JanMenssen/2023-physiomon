@@ -37,8 +37,16 @@ cyclicBuffer::~cyclicBuffer() {
 
 // cyclicBuffer read method
 
-void cyclicBuffer::read(int *n, float *data) {
-  
+void cyclicBuffer::read(int *n,float *data) {
+
+  int ntal = 0;
+
+  while (m_indxRead != m_indxWrite) {
+    data[ntal++] = m_data[m_indxRead++];
+    if (m_indxRead >= m_len) m_indxRead = 0;
+  }
+
+  *n = ntal;
   return;
 }
 
@@ -46,6 +54,11 @@ void cyclicBuffer::read(int *n, float *data) {
 
 void cyclicBuffer::write(int n, float *data) {
 
+  for (int i=0;i<n;i++) {
+    m_data[m_indxWrite++] = data[i];
+    if (m_indxWrite >= m_len) m_indxWrite = 0;
+  }
+  
   return;
 }
 
@@ -55,8 +68,6 @@ void cyclicBuffer::write(int n, float *data) {
 
 channels::channels(float length) {
   
-  qDebug() << "--> in channels";
-
   m_lengthInSeconds = length;
 }
 

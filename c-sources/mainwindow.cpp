@@ -84,12 +84,12 @@ void mainWindow::createMenu() {
 
   QAction *startAction = new QAction(tr("&Start"));
   //-jm startAction->setStatusTip("start/stop the program");
-  connect(startAction,SIGNAL(triggered()),this, SLOT(onStart()));
+  connect(startAction,SIGNAL(clicked()),this, SLOT(onStart()));
   fileMenu->addAction(startAction);
 
   QAction *saveAction = new QAction(tr("Save"));
   //-jm saveAction->setStatusTip("save data to file");
-  connect(startAction,SIGNAL(triggered()),this, SLOT(onStart()));
+  connect(startAction,SIGNAL(clicked()),this, SLOT(onStart()));
   fileMenu->addAction(saveAction);
  
   QAction *dispSettingsChangeAction = new QAction(tr("Display"));
@@ -150,12 +150,10 @@ void mainWindow::configure() {
 //      called when start is pressed, device is started or stopped
 
 void mainWindow::onStart() {
-  
-  qDebug() << "--> onStart";
 
   bool started = m_device->isStarted();
   statusBarNew *status = (statusBarNew *)statusBar();
-  
+ 
   if (!started) {
     m_device->setStartStop(true);
     status->setText("device is started ...",2.5);

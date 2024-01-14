@@ -53,7 +53,7 @@ void measureDevice::setStartStop(bool start) {
 
 bool measureDevice::isStarted() {
 
-  return false;
+  return m_started;
 }
 
 // iniRead
@@ -61,8 +61,6 @@ bool measureDevice::isStarted() {
 //    reads the general part of the device initialisation
 
 void measureDevice::iniRead(QString device) {
-
-  qDebug() << "--> in measureDevice::iniRead";
 
   QSettings *settings = NULL;
   settings = new QSettings(QSettings::IniFormat,QSettings::UserScope,"JanSoft",device);
@@ -110,11 +108,10 @@ void measureDevice::configure(settings *settings) {
   int numchan = settings->m_numchan;
   for (int ichan = 0; ichan < numchan; ichan++) {
 
-    int source = settings->m_channels[ichan].source;
-
     // add the channels to the device, so we know how to move the data
 
-    if (settings->m_channels[ichan].type == TYPE_ANALOG_IN) m_analogIn->channels[m_analogIn->nchan++] = source;
+    int source = settings->m_channels[ichan].source;
+    if (settings->m_channels[ichan].type == TYPE_ANALOG_IN) m_analogIn[source].channels[m_analogIn[source].nchan++] = ichan;
   
   }
   
