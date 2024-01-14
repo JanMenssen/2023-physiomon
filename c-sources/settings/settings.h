@@ -37,13 +37,13 @@ struct displayStruct {
 class settings {
 
   public :
+  
     settings();
     ~settings();
     void initialise();
     QString iniRead();
 
-  private :
-
+  
     QSettings *m_settings = NULL;
 
     int m_numdisp = 0;
@@ -51,6 +51,8 @@ class settings {
     QString m_device;
     channelStruct *m_channels = NULL;
     displayStruct *m_displays = NULL;
+
+  private :
 
     void readGeneral();
     void readChannels();

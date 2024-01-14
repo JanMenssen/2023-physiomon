@@ -104,7 +104,7 @@ void measureDevice::iniRead(QString device) {
 //
 //    given the settings, configures the device handler
 
-void measureDevice::configure() {
+void measureDevice::configure(settings *settings) {
 
   return;
 }

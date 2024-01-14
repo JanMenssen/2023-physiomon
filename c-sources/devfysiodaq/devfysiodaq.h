@@ -28,7 +28,7 @@ class devFysioDaq : public measureDevice {
 
   private :
 
-    QString m_address = "jan";
+    QString m_address = "";
     arduinoComm m_arduino;
 
 };

@@ -11,6 +11,7 @@
 #define _MEASUREDEVICE_H
 
 #include <Qstring>
+#include "settings.h"
 
 struct analogInStruct {
   QString name;
@@ -30,15 +31,16 @@ class measureDevice {
     bool isStarted();
     void setStartStop(bool start);
     void iniRead(QString device);
-    void configure();
-
-  private :
+    void configure(settings *settings);
 
     int m_nrAnalogIn = 0;
     int m_nrWaveIn = 0;
     int m_nrNumericIn = 0;
     
     analogInStruct *m_analogIn = NULL;
+
+  private :
+    
     bool m_started = false;
 
 };

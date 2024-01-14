@@ -3,8 +3,6 @@
 //
 //    implementation of the methods used for the windowing system for the project
 
-#include <stdio.h>
-
 #include "mainwindow.h"
 #include "statusbar.h"
 
@@ -40,7 +38,7 @@ mainWindow::mainWindow() {
 
   // create channels and displays and configure the program (displays currently not available)
 
-  //-jm m_displays = new displays();
+  m_displays = new displays();
   m_channels = new channels(5);
 
   configure();
@@ -66,7 +64,7 @@ mainWindow::~mainWindow() {
 
   if (m_settings != NULL) delete m_settings;
   if (m_channels != NULL) delete m_channels;
-  //-jm if (m_displays != NULL) delete m_displays;
+  if (m_displays != NULL) delete m_displays;
   if (m_device != NULL) delete m_device;
 
 }
@@ -102,9 +100,9 @@ void mainWindow::createToolBar() {
 
 void mainWindow::configure() {
 
-  //-jm m_displays->configure(m_settings);
-  //-jm m_device->configure(m_settings);
-  //-jm m_channels->configure(m_settings,m_device);
+  m_displays->configure(m_settings);
+  m_device->configure(m_settings);
+  m_channels->configure(m_settings,m_device);
 
   return;
 }

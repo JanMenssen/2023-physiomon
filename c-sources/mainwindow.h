@@ -9,7 +9,7 @@
 #ifndef _MAINWINDOW_H
 #define _MAINWINDOW_H
 
-//-jm #include "statusbar.h"
+#include "displays.h"
 #include "channels.h"
 #include "devfysiodaq.h"
 #include "settings.h"
@@ -39,6 +39,7 @@ class mainWindow : public QMainWindow {
   settings *m_settings = NULL;
   devFysioDaq *m_device = NULL;
   channels *m_channels = NULL;
+  displays *m_displays = NULL;
 
 };
 

@@ -33,6 +33,7 @@ set(INSTALL_DIR "/Users/jan/")
     ${ROOT_DIR}/statusbar/statusbar.cpp
     ${ROOT_DIR}/arduinocomm/arduinocomm.cpp 
     ${ROOT_DIR}/channels/channels.cpp
+    ${ROOT_DIR}/displays/displays.cpp
     ${ROOT_DIR}/settings/settings.cpp
     ${ROOT_DIR}/measuredevice/measuredevice.cpp
     ${ROOT_DIR}/devfysiodaq/devfysiodaq.cpp
@@ -42,12 +43,13 @@ set(INSTALL_DIR "/Users/jan/")
 
   include_directories(
     ${ROOT_DIR}
-    ${ROOT_DIR}/statusbar/
+    ${ROOT_DIR}/statusbar
     ${ROOT_DIR}/arduinocomm/
-    ${ROOT_DIR}/channels/
-    ${ROOT_DIR}/settings/
-    ${ROOT_DIR}/measuredevice/
-    ${ROOT_DIR}/devfysiodaq/
+    ${ROOT_DIR}/channels
+    ${ROOT_DIR}/settings
+    ${ROOT_DIR}/displays
+    ${ROOT_DIR}/measuredevice
+    ${ROOT_DIR}/devfysiodaq
     ${Qt6Widgets_INCLUDE_DIRS}
     ${Qt6SerialPort_INCLUDE_DIRS}
   )
