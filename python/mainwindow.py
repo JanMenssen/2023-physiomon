@@ -136,21 +136,21 @@ class mainWindow(QMainWindow) :
     # start
 
     startButton = QAction("start",self)
-    startButton.setStatusTip("start/stop the program")
+    startButton.setToolTip("start/stop the program")
     startButton.triggered.connect(self.onStart)
     toolbar.addAction(startButton)
 
     # save
 
     saveButton = QAction("save",self)
-    saveButton.setStatusTip("save the measurement")
+    saveButton.setToolTip("save the measurement")
     saveButton.triggered.connect(self.onSave)
     toolbar.addAction(saveButton)
 
     # device info
 
     deviceInfoButton = QAction("info",self)
-    deviceInfoButton.setStatusTip("device info")
+    deviceInfoButton.setToolTip("get device info")
     deviceInfoButton.triggered.connect(self.onDeviceInfo)
     toolbar.addAction(deviceInfoButton)
 

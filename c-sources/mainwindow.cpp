@@ -119,14 +119,21 @@ void mainWindow::createToolBar() {
   // start
   
   QAction *startAction = new QAction("start");
-  startAction->setStatusTip("start/stop the program");
+  startAction->setToolTip("start/stop the program");
   toolbar->addAction(startAction);
   connect(startAction,SIGNAL(triggered()),this,SLOT(onStart()));
   
+  // save 
+  
+  QAction *saveAction = new QAction("save");
+  saveAction->setToolTip("save data to file ");
+  toolbar->addAction(saveAction);
+  connect(saveAction,SIGNAL(triggered()),this,SLOT(onStart()));
+
   // device info
 
   QAction *devInfoAction = new QAction("device");
-  devInfoAction->setStatusTip("get info about the device");
+  devInfoAction->setToolTip("get info about the device");
   toolbar->addAction(devInfoAction);
   connect(devInfoAction,SIGNAL(triggered()),this,SLOT(onDeviceInfo()));
 }
