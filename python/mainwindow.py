@@ -7,13 +7,14 @@
 #  modifications
 #     12-jan-2024   JM    initial version
 
-from PySide6.QtWidgets import QMainWindow,QMdiArea, QMenu, QToolBar
+from PySide6.QtWidgets import QMainWindow,QMdiArea, QMenu, QToolBar, QWidget
 from PySide6.QtGui import QAction
 from PySide6.QtCore import QTimer
 
 from statusbar import statusBarNew
 from settings import settings
-from displays import displays
+#-jm from displays_mdi import displays
+from displays_grid import displays
 from channels import channels
 from devfysiodaq import devFysioDaq
 
@@ -29,10 +30,15 @@ class mainWindow(QMainWindow) :
     
     super().__init__()
 
-    # create the MDU subwindows
+    # create the MDU subwindows, this is only needed for the MDI implementation
     
-    self.mdi = QMdiArea()
-    self.setCentralWidget(self.mdi)
+    #-jm self.mdi = QMdiArea()
+    #-jm self.setCentralWidget(self.mdi)
+
+    # there is also a central widget implementation
+
+    central_widget = QWidget()
+    self.setCentralWidget(central_widget)
 
     # create the toolbar and the menu
 
@@ -57,7 +63,8 @@ class mainWindow(QMainWindow) :
 
     # create the channels and display and configure the program
 
-    self.m_displays =  displays(self.mdi)
+    #-jm self.m_displays = displays(self.mdi)
+    self.m_displays = displays(central_widget)
     self.m_channels = channels(5)
 
     self.configure()
