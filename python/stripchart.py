@@ -16,7 +16,7 @@ class stripChart :
 
   # constructor
   
-  def __init__(self,chartTitle) :
+  def __init__(self) :
     super().__init__()
 
     self.m_series = QLineSeries()
@@ -27,7 +27,7 @@ class stripChart :
     self.m_axisX = QValueAxis()
     self.m_axisX.setRange(0,SAMPLE_COUNT)
     self.m_axisX.setLabelFormat("%g")
-    self.m_axisX.setTitleText("Samples")
+    self.m_axisX.setTitleText("seconds")
     self.m_axisX.setTitleBrush(Qt.cyan)
     self.m_axisX.setGridLineVisible(False)
     self.m_axisX.setLabelsColor(Qt.cyan)
@@ -54,9 +54,6 @@ class stripChart :
     #-jm name = device.description()
     #-jm self.m_chart.setTitle(f"Data from the microphone ({name})")
     
-    self.m_chart.setTitle(chartTitle)
-    self.m_chart.setTitleBrush(Qt.yellow)
-
     self.m_buffer = [QPointF(x, 0) for x in range(SAMPLE_COUNT)]
     self.m_series.append(self.m_buffer)
 

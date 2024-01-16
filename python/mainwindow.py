@@ -7,7 +7,7 @@
 #  modifications
 #     12-jan-2024   JM    initial version
 
-from PySide6.QtWidgets import QMainWindow,QMdiArea, QMenu, QToolBar, QWidget
+from PySide6.QtWidgets import QMainWindow,QMdiArea, QMenu, QToolBar, QWidget, QGridLayout, QPushButton, QLabel, QLineEdit
 from PySide6.QtGui import QAction
 from PySide6.QtCore import QTimer
 
@@ -37,9 +37,9 @@ class mainWindow(QMainWindow) :
 
     # there is also a central widget implementation
 
-    central_widget = QWidget()
-    self.setCentralWidget(central_widget)
-
+    centralWidget = QWidget()
+    self.setCentralWidget(centralWidget)
+    
     # create the toolbar and the menu
 
     self.createToolBar()
@@ -64,11 +64,12 @@ class mainWindow(QMainWindow) :
     # create the channels and display and configure the program
 
     #-jm self.m_displays = displays(self.mdi)
-    self.m_displays = displays(central_widget)
+
+    self.m_displays = displays(centralWidget)
     self.m_channels = channels(5)
 
     self.configure()
-
+    
     # set the timer
 
     self.m_timer = QTimer()

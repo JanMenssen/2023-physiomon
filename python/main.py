@@ -9,7 +9,7 @@
 #     12-jan-2024  JM  a lot of changes, stuff moved to mainWindow
 
 import sys
-from PySide6.QtWidgets import QApplication\
+from PySide6.QtWidgets import QApplication
 
 from mainwindow import mainWindow
       

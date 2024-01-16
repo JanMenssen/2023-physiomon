@@ -7,21 +7,27 @@
 #   modifications
 #     16-jan-2024 JM    initial version
 
-from PySide6.QtWidgets import QMdiSubWindow
+from PySide6.QtWidgets import QGridLayout,QWidget
 from PySide6.QtCharts import QChartView
 from stripchart import stripChart
+
+RESOLUTION = 0.05
 
 class displays() :
 
   # constructor
 
-  def __init__(self,central_widget) :
+  def __init__(self,centralWidget) :
 
-    self.m_central_widget = central_widget
     self.m_graphDisplay = []
     self.m_numDisplay = 0
     self.m_chanlist = []
 
+    self.m_layout = QGridLayout()
+    self.m_layout.setHorizontalSpacing(0)
+    self.m_layout.setVerticalSpacing(0)
+    centralWidget.setLayout(self.m_layout)
+      
     return
   
   # initialise
@@ -37,13 +43,13 @@ class displays() :
   #   sets the number of required displays on the screen 
 
   def configure(self,settings) :
-
+  
     # clear the current settings
 
-    #-jm allGraphDisplays = self.m_mdiArea.subWindowList()
-    #-jm for curGraphDisplay in allGraphDisplays :
-    #-jm  self.m_mdiArea.removeSubWindow(curGraphDisplay)
-    
+    nWidgets = self.m_layout.count()
+    for item in range(nWidgets) :
+      self.m_layout.removeItem(item)
+  
     self.m_graphDisplay = []
     self.m_numDisplay = 0
     self.m_chanlist = []
@@ -51,6 +57,10 @@ class displays() :
     # and add the stripcharts
 
     self.m_numDisplay = settings.m_numdisp
+    
+    maxcol = 0
+    maxrow = 0
+
     for iDisplay in range(self.m_numDisplay) :
 
       self.m_chanlist.append([])
@@ -59,27 +69,48 @@ class displays() :
 
       numChannels = settings.m_numchan
       for iChannel in range(numChannels) :
+
         if ((settings.m_channels[iChannel]["display"]-1) == iDisplay) :
           self.m_chanlist[iDisplay].append(iChannel)
 
-      # set the display properties
+      self.m_graphDisplay.append(stripChart())
+    
+      # set the widget at the position, we assume to have a grid layout of 20 x 20, this means each
+      # relative position should divided by 0.05
 
-      #-jm position,scale = settings.getDisplayInfo(iDisplay)
+      position,scale = settings.getDisplayInfo(iDisplay)
 
-      stripchart = stripChart("stripchart")
-      #-jm stripchart.setYaxis(scale["ymin"],scale["ymax"])
-                    
-      self.m_graphDisplay.append(stripchart)
+      irow = round(position["top"] / RESOLUTION)
+      nrow = round(position["height"] / RESOLUTION)
+      icol = round(position["left"] / RESOLUTION)
+      ncol = round(position["width"] / RESOLUTION)
 
-      chartView = QChartView(stripchart.m_chart)
+      # display is waveform        
+      
+      chartView = QChartView(self.m_graphDisplay[iDisplay].m_chart)
+      self.m_layout.addWidget(chartView,irow,icol,nrow,ncol)
 
-      sub = QMdiSubWindow()
-      sub.setGeometry(0,0,800,400)
-      sub.setWidget(chartView)
-      sub.setWindowTitle("Sub Window " + str(iDisplay))
+      # display is numeric, numeric should be added  
 
-      #-jm self.m_mdiArea.addSubWindow(sub)
-      #-j sub.show()
+    
+      # calculate max position
+
+      if ((icol + ncol) > maxcol) :
+        maxcol = icol + ncol
+      if ((irow + nrow) > maxrow) :
+        maxrow = irow + nrow
+
+    # add items if necessary, to get a grid of 1/RESOLUTION x 1/RSOLUTION 
+        
+    irow = maxrow
+    icol = maxcol
+    nrow = 1/RESOLUTION - irow
+    ncol = 1/RESOLUTION - icol
+     
+    if nrow > 0 :
+      self.m_layout.addWidget(QWidget(),irow,nrow,0,int(1/RESOLUTION))
+    if ncol > 0 :
+      self.m_layout.addWidget(QWidget(),0,int(1/RESOLUTION),icol,ncol)
 
     return
   
@@ -96,10 +127,15 @@ class displays() :
         # get the channel list for this display and update the display
 
         chanList = self.m_chanlist[iDisplay]  
+
+        # if display is analog
+
         for iChannel in chanList :  
           data = channels.readData(iChannel)
           self.m_graphDisplay[iDisplay].update(data)
   
+        # if display is numeric
+          
     return
   
   # setStartWaveFrom
