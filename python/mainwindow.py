@@ -78,7 +78,7 @@ class mainWindow(QMainWindow) :
 
     # and set ready
 
-    self.setWindowTitle("FysioMon v1.01")
+    self.setWindowTitle("PhysioMon v0.1")
     self.statusBar().setText("ready ...",5.0)
 
   # configure
@@ -126,7 +126,7 @@ class mainWindow(QMainWindow) :
     deviceSettingsChangeAction.triggered.connect(self.onDeviceSettingsChanged)
     editMenu.addAction(deviceSettingsChangeAction)
 
-    fysiomonHelpAction = QAction("Fysiomon Help",self)
+    fysiomonHelpAction = QAction("PhysioMon Help",self)
     deviceSettingsChangeAction.triggered.connect(self.onFysiomonHelp)
     helpMenu.addAction(fysiomonHelpAction)
 

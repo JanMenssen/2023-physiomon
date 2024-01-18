@@ -1,5 +1,5 @@
 //
-// fysiomon.cpp
+// physiomon.cpp
 //
 //      main file of the fysiomon project
 //
@@ -8,7 +8,7 @@
 
 #include "mainwindow.h"
 #include <QApplication>
-  
+
 // and main program
 
 int main(int argc, char **argv) {

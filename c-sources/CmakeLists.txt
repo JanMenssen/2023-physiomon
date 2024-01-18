@@ -28,7 +28,7 @@ set(INSTALL_DIR "/Users/jan/")
 # application sources
 
   set(APPLICATION_SOURCES
-    ${ROOT_DIR}/fysiomon.cpp
+    ${ROOT_DIR}/physiomon.cpp
     ${ROOT_DIR}/mainwindow.cpp
     ${ROOT_DIR}/statusbar/statusbar.cpp
     ${ROOT_DIR}/channels/channels.cpp

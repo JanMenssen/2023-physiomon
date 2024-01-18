@@ -1,5 +1,5 @@
 //
-// fysiomon.h
+// physiomon.h
 //
 //    this is the header file for the main program
 //
