@@ -7,7 +7,7 @@
 #  modifications
 #     12-jan-2024   JM    initial version
 
-from PySide6.QtWidgets import QMainWindow,QMdiArea, QMenu, QToolBar, QWidget, QGridLayout, QPushButton, QLabel, QLineEdit
+from PySide6.QtWidgets import QMainWindow, QMenu, QToolBar, QWidget
 from PySide6.QtGui import QAction
 from PySide6.QtCore import QTimer
 
@@ -16,7 +16,7 @@ from settings import settings
 #-jm from displays_mdi import displays
 from displays_grid import displays
 from channels import channels
-from devPhysioDaq import devPhysioDaq
+from devphysiodaq import devPhysioDaq
 
 class mainWindow(QMainWindow) :
 
@@ -55,7 +55,7 @@ class mainWindow(QMainWindow) :
     self.m_settings = settings()
     deviceName = self.m_settings.iniRead()
 
-    if (deviceName == "physiodaq") :    
+    if (deviceName == "fysiodaq") :    
       self.m_device = devPhysioDaq()
     
     self.m_device.iniRead(deviceName)

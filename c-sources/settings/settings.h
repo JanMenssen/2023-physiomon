@@ -10,7 +10,7 @@
 #define _SETTINGS_H
 
 #include <QSettings>
-#include "fysiomon.h"
+#include "physiomon.h"
 
 // the channel structure is used in the initialisation file
 

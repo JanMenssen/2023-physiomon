@@ -11,7 +11,7 @@
 
 #include "displays.h"
 #include "channels.h"
-#include "devPhysioDaq.h"
+#include "devphysiodaq.h"
 #include "settings.h"
 
 #include <QMainWindow>

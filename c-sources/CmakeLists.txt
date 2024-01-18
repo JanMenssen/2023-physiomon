@@ -36,7 +36,7 @@ set(INSTALL_DIR "/Users/jan/")
     ${ROOT_DIR}/settings/settings.cpp
     ${ROOT_DIR}/arduinocomm/arduinocomm.cpp 
     ${ROOT_DIR}/measuredevice/measuredevice.cpp
-    ${ROOT_DIR}/devphysiodaq/devphysioqaq.cpp
+    ${ROOT_DIR}/devphysiodaq/devphysiodaq.cpp
   )
 
 # include folders
