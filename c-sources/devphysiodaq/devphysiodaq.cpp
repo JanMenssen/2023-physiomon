@@ -11,7 +11,7 @@
 #include <QSettings.h>
 #include <QDebug.h>
 
-#include "devPhysioDaq.h"
+#include "devphysiodaq.h"
 
 // constructor
 
