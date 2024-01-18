@@ -1,7 +1,7 @@
 //
-// devFysioDaq
+// devPhysioDaq
 //
-//    implementation of the <devFysioDaq> device driver. This device is an arduino and samples the analog ports, data
+//    implementation of the <devPhysioDaq> device driver. This device is an arduino and samples the analog ports, data
 //    is transfered to the host using the <arduinocomm> protocol
 //
 //  modifications
@@ -11,18 +11,18 @@
 #include <QSettings.h>
 #include <QDebug.h>
 
-#include "devfysiodaq.h"
+#include "devPhysioDaq.h"
 
 // constructor
 
-devFysioDaq::devFysioDaq() {
+devPhysioDaq::devPhysioDaq() {
 
   return;
 }
 
 // destructor
 
-devFysioDaq::~devFysioDaq() {
+devPhysioDaq::~devPhysioDaq() {
   
   return;
 }
@@ -31,7 +31,7 @@ devFysioDaq::~devFysioDaq() {
 //
 //    intiialises the device driver
 
-void devFysioDaq::initialise() {
+void devPhysioDaq::initialise() {
 
   m_arduino.initialise(m_address);
   return;
@@ -42,7 +42,7 @@ void devFysioDaq::initialise() {
 //
 //    checks if the device is connected and returns a string with device info
 
-QString devFysioDaq::isConnected() {
+QString devPhysioDaq::isConnected() {
   
   QString devInfo = m_arduino.isConnected();
   return devInfo;
@@ -52,7 +52,7 @@ QString devFysioDaq::isConnected() {
 //
 //    sets the sample rate of the arduino
 
-void devFysioDaq::setSampleRate(int ms) {
+void devPhysioDaq::setSampleRate(int ms) {
 
   int data = ms;
   m_arduino.sendMsg('c',1,&data);
@@ -64,7 +64,7 @@ void devFysioDaq::setSampleRate(int ms) {
 //
 //    starts or stops the device
 
-void devFysioDaq::setStartStop(bool started) {
+void devPhysioDaq::setStartStop(bool started) {
 
   measureDevice::setStartStop(started);
   m_arduino.startstop(started);
@@ -76,7 +76,7 @@ void devFysioDaq::setStartStop(bool started) {
 //
 //    returns a TRUE if the device is started, else a FALSE is returned
 
-bool devFysioDaq::isStarted() {
+bool devPhysioDaq::isStarted() {
 
   bool on = measureDevice::isStarted();
   return on;
@@ -86,7 +86,7 @@ bool devFysioDaq::isStarted() {
 //
 //    reads the settings (numchannels, gain, offset) from the device specific *.INI file
 
-void devFysioDaq::iniRead(QString deviceName) {
+void devPhysioDaq::iniRead(QString deviceName) {
 
   measureDevice::iniRead(deviceName);
   
@@ -110,7 +110,7 @@ void devFysioDaq::iniRead(QString deviceName) {
 //    reads samples (if available) from the device
 //    currenty 8 bytes could be read (device has 6 channels)
 
-void devFysioDaq::read(channels *channels) {
+void devPhysioDaq::read(channels *channels) {
 
   char cmd;
   char ANALOG_CMD = 65;
@@ -132,7 +132,7 @@ void devFysioDaq::read(channels *channels) {
   return;
 }
 
-void devFysioDaq::writeValueToAllChannels(analogInStruct *analogIn, channels *channels, int value) {
+void devPhysioDaq::writeValueToAllChannels(analogInStruct *analogIn, channels *channels, int value) {
 
   // first convert do float data
 

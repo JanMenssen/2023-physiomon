@@ -34,7 +34,7 @@ mainWindow::mainWindow() {
  
   // Note, this should be done better, device should be set
 
-  m_device = new devFysioDaq();
+  m_device = new devPhysioDaq();
   
   m_device->iniRead(deviceName);
   m_device->initialise();

@@ -1,5 +1,5 @@
 //
-// devFysioDaq
+// devPhysioDaq
 //
 //    analog input from an Arduino. Currently it supports the following commands
 //

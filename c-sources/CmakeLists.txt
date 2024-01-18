@@ -17,7 +17,7 @@
 
   # install folder
 
-set(ROOT_DIR  "/Users/jan/Library/CloudStorage/OneDrive-Personal/my projects/2023 fysiomon/c-sources")
+set(ROOT_DIR  "/Users/jan/Library/CloudStorage/OneDrive-Personal/my projects/2024 physiomon/c-sources")
 set(INSTALL_DIR "/Users/jan/")
 
 # QT packages
@@ -36,7 +36,7 @@ set(INSTALL_DIR "/Users/jan/")
     ${ROOT_DIR}/settings/settings.cpp
     ${ROOT_DIR}/arduinocomm/arduinocomm.cpp 
     ${ROOT_DIR}/measuredevice/measuredevice.cpp
-    ${ROOT_DIR}/devfysiodaq/devfysiodaq.cpp
+    ${ROOT_DIR}/devphysiodaq/devphysioqaq.cpp
   )
 
 # include folders
@@ -49,7 +49,7 @@ set(INSTALL_DIR "/Users/jan/")
     ${ROOT_DIR}/displays
     ${ROOT_DIR}/arduinocomm/
     ${ROOT_DIR}/measuredevice
-    ${ROOT_DIR}/devfysiodaq
+    ${ROOT_DIR}/devphysiodaq
     ${Qt6Widgets_INCLUDE_DIRS}
     ${Qt6SerialPort_INCLUDE_DIRS}
   )

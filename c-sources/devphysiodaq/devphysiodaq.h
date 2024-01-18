@@ -1,23 +1,23 @@
 //
-// devFysioDaq
+// devPhysioDaq
 //
-//    header file for hte <devFysioDaq> device, an arduino than samples analog ports arduino
+//    header file for hte <devPhysioDaq> device, an arduino than samples analog ports arduino
 //    transfer the raw data to the host using the seriol ports
 
-#ifndef _DEVFYSIODAQ_H
-#define _DEVFYSIODAQ_H
+#ifndef _devPhysioDaq_H
+#define _devPhysioDaq_H
 
 #include <QString>
 #include "arduinocomm.h"
 #include "measuredevice.h"
 #include "channels.h"
 
-class devFysioDaq : public measureDevice {
+class devPhysioDaq : public measureDevice {
 
   public :
 
-    devFysioDaq();
-    ~devFysioDaq();
+    devPhysioDaq();
+    ~devPhysioDaq();
 
     void initialise();
     QString isConnected();

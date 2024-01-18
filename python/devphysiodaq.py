@@ -1,11 +1,12 @@
 # 
-# devFysioDaq
+# devPhysioDaq
 #
 #     driver for the <FysioDaq> device, an Arduino that samples analog ports and transfers the raw value
 #     using the serial port
 #
 #   modifications
 #     15-dec-2023   JM    initial version
+#     18-jan-2024   JM    renamed from devPhysioDaq to devphysiodaq
 
 from PySide6.QtCore import QSettings
 
@@ -14,7 +15,7 @@ from arduinocomm import arduinoComm
 
 TYPE_ANALOG_IN = 1
 
-class devFysioDaq(measureDevice) :
+class devPhysioDaq(measureDevice) :
 
   # constructor
 

@@ -11,7 +11,7 @@
 
 #include "displays.h"
 #include "channels.h"
-#include "devfysiodaq.h"
+#include "devPhysioDaq.h"
 #include "settings.h"
 
 #include <QMainWindow>
@@ -41,7 +41,7 @@ class mainWindow : public QMainWindow {
   private :     
 
   settings *m_settings = NULL;
-  devFysioDaq *m_device = NULL;
+  devPhysioDaq *m_device = NULL;
   channels *m_channels = NULL;
   displays *m_displays = NULL;
 

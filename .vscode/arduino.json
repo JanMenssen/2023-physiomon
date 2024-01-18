@@ -1,6 +1,6 @@
 {
-    "board": "arduino:avr:uno",
-    "programmer": "avrisp",
-    "sketch": "devFysioDaq/devFysioDaq.ino",
+    "board": "arduino:renesas_uno:unor4wifi",
+    "programmer": "cmsis-dap",
+    "sketch": "devPhysioDaq/devPhysioDaq.ino",
     "port": "/dev/tty.usbmodem101"
 }

@@ -16,7 +16,7 @@ from settings import settings
 #-jm from displays_mdi import displays
 from displays_grid import displays
 from channels import channels
-from devfysiodaq import devFysioDaq
+from devPhysioDaq import devPhysioDaq
 
 class mainWindow(QMainWindow) :
 
@@ -55,8 +55,8 @@ class mainWindow(QMainWindow) :
     self.m_settings = settings()
     deviceName = self.m_settings.iniRead()
 
-    if (deviceName == "fysiodaq") :    
-      self.m_device = devFysioDaq()
+    if (deviceName == "physiodaq") :    
+      self.m_device = devPhysioDaq()
     
     self.m_device.iniRead(deviceName)
     self.m_device.initialise()
@@ -126,9 +126,9 @@ class mainWindow(QMainWindow) :
     deviceSettingsChangeAction.triggered.connect(self.onDeviceSettingsChanged)
     editMenu.addAction(deviceSettingsChangeAction)
 
-    fysiomonHelpAction = QAction("PhysioMon Help",self)
-    deviceSettingsChangeAction.triggered.connect(self.onFysiomonHelp)
-    helpMenu.addAction(fysiomonHelpAction)
+    PhysiomonHelpAction = QAction("PhysioMon Help",self)
+    deviceSettingsChangeAction.triggered.connect(self.onPhysiomonHelp)
+    helpMenu.addAction(PhysiomonHelpAction)
 
     return
 
@@ -243,6 +243,6 @@ class mainWindow(QMainWindow) :
   #
   #     help fpr fysiomon
 
-  def onFysiomonHelp(self) :
+  def onPhysiomonHelp(self) :
     
     return
