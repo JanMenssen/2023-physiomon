@@ -89,7 +89,7 @@ void mainWindow::createMenu() {
 
   QAction *saveAction = new QAction(tr("Save"));
   //-jm saveAction->setStatusTip("save data to file");
-  connect(startAction,SIGNAL(clicked()),this, SLOT(onStart()));
+  connect(startAction,SIGNAL(clicked()),this, SLOT(onSave()));
   fileMenu->addAction(saveAction);
  
   QAction *dispSettingsChangeAction = new QAction(tr("Display"));
@@ -102,9 +102,9 @@ void mainWindow::createMenu() {
   connect(deviceSettingsChangeAction,SIGNAL(triggered()),this,SLOT(onDeviceSettingsChanged()));
   editMenu->addAction(deviceSettingsChangeAction);
 
-  QAction *fysiomonHelpAction = new QAction(tr("Fysiomon Help"));
-  connect(fysiomonHelpAction,SIGNAL(triggered()),this, SLOT(onFysiomonHelp()));
-  helpMenu->addAction(fysiomonHelpAction);  
+  QAction *physiomonHelpAction = new QAction(tr("Physiomon Help"));
+  connect(physiomonHelpAction,SIGNAL(triggered()),this, SLOT(onPhysiomonHelp()));
+  helpMenu->addAction(physiomonHelpAction);  
 }
 
 // createToolBar
@@ -128,8 +128,22 @@ void mainWindow::createToolBar() {
   QAction *saveAction = new QAction("save");
   saveAction->setToolTip("save data to file ");
   toolbar->addAction(saveAction);
-  connect(saveAction,SIGNAL(triggered()),this,SLOT(onStart()));
+  connect(saveAction,SIGNAL(triggered()),this,SLOT(onSave()));
 
+  // display settings
+
+  QAction *changeDisplayAction = new QAction("display");
+  changeDisplayAction->setToolTip("change display settings");
+  toolbar->addAction(changeDisplayAction);
+  connect(changeDisplayAction,SIGNAL(triggered()),this,SLOT(onDisplaySettingsChanged()));
+  
+  // device settings
+
+  QAction *changeDeviceAction = new QAction("device");
+  changeDeviceAction->setToolTip("change display settings");
+  toolbar->addAction(changeDeviceAction);
+  connect(changeDeviceAction,SIGNAL(triggered()),this,SLOT(onDeviceSettingsChanged()));
+  
   // device info
 
   QAction *devInfoAction = new QAction("device");
@@ -172,6 +186,18 @@ void mainWindow::onStart() {
   return;
 }
 
+// onSave
+//
+//      called when save button is presed
+
+void mainWindow::onSave() {
+  
+  qDebug() << "--> on save";
+
+  statusBarNew *status = (statusBarNew *)statusBar();
+  status->setText("on save pressed",1.0);
+}
+
 // onDeviceInfo
 //
 //      called when device is pressed. the version from the device is asked
@@ -206,6 +232,8 @@ void mainWindow::onTimeOut() {
 
 void mainWindow::onDeviceSettingsChanged() {
 
+  statusBarNew *status = (statusBarNew *)statusBar();
+  status->setText("on device settings pressed",1.0);
 }
 
 // onDisplaySettingsChanged
@@ -214,7 +242,9 @@ void mainWindow::onDeviceSettingsChanged() {
 //    program is not started
 
 void mainWindow::onDisplaySettingsChanged() {
-
+  
+  statusBarNew *status = (statusBarNew *)statusBar();
+  status->setText("on display settings pressed",1.0);
 }
 
 // onFysiomonHelp
@@ -222,6 +252,8 @@ void mainWindow::onDisplaySettingsChanged() {
 //    help is handled
 //
 
-void mainWindow::onFysiomonHelp() {
-
+void mainWindow::onPhysiomonHelp() {
+  
+  statusBarNew *status = (statusBarNew *)statusBar();
+  status->setText("on help pressed",1.0);
 }

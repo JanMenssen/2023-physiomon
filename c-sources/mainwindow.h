@@ -32,11 +32,12 @@ class mainWindow : public QMainWindow {
   private slots :
     
     void onStart();
+    void onSave();
     void onDeviceInfo();
     void onTimeOut();
     void onDisplaySettingsChanged();
     void onDeviceSettingsChanged();
-    void onFysiomonHelp();
+    void onPhysiomonHelp();
 
   private :     
 

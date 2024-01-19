@@ -155,6 +155,20 @@ class mainWindow(QMainWindow) :
     saveButton.triggered.connect(self.onSave)
     toolbar.addAction(saveButton)
 
+    # change display settings
+
+    changeDisplayButton = QAction("display",self)
+    changeDisplayButton.setToolTip("change display settings")
+    changeDisplayButton.triggered.connect(self.onDispSettingsChanged)
+    toolbar.addAction(changeDisplayButton)
+
+    # change device settings
+
+    changeDeviceButton = QAction("device",self)
+    changeDeviceButton.setToolTip("change device settings")
+    changeDeviceButton.triggered.connect(self.onDeviceSettingsChanged)
+    toolbar.addAction(changeDeviceButton)
+    
     # device info
 
     deviceInfoButton = QAction("info",self)
@@ -229,6 +243,7 @@ class mainWindow(QMainWindow) :
 
   def onDeviceSettingsChanged(self) :
     
+    self.statusBar().setText("device settings changed",5)
     return
   
   # onDispSettingsChanged
@@ -237,6 +252,7 @@ class mainWindow(QMainWindow) :
 
   def onDispSettingsChanged(self) :
     
+    self.statusBar().setText("display settings changed",5)
     return
   
   # onFysiomonHelp
