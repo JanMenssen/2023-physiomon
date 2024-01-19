@@ -16,7 +16,7 @@ class settings() :
 
   def __init__(self) :
     
-    self.m_settings = QSettings(QSettings.IniFormat,QSettings.UserScope,"JanSoft","fysiomon")
+    self.m_settings = QSettings(QSettings.IniFormat,QSettings.UserScope,"JanSoft","physiomon")
 
     #-jm self.m_general = {"numchan" : 1, "numdisp" : 1, "device" :""}
 

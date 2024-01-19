@@ -13,18 +13,21 @@
 //    06-feb-2017    JM   now returned
 //    15-feb-2017    JM   Interrupts are now handled in intr1ms and callback is used
 //    18-feb-2017    JM   TimerOne library is used instead of intr1ms, intr1ms obsolete
+//    18-jan-2024    JM   renamed to <devPhysioDaq>
+//    19-jan-2024    JM   for timing general <irqTimer> class is used
 
 // include necessary classes
 
 #include "Arduino.h"
 #include "adc.h"
 #include "hostinterface.h"
-#include <TimerOne.h>
+#include "irqTimer.h"
 
 // define the instances of the classes
 
 hostInterface   myCommander(BAUDRATE);
 adc             myADC(10);
+irqTimer        myTimer;
 
 // other variables
 
@@ -52,6 +55,8 @@ void timerISR();
 
 void setup() {
 
+  bool retcode = false;
+
   // set LED at startup off
 
   pinMode(LED_BUILTIN, OUTPUT);
@@ -66,8 +71,8 @@ void setup() {
 
   // and setup and enable the timer interrupt routine
 
-  Timer1.initialize(1000);
-  Timer1.attachInterrupt(timerISR); 
+  retcode = myTimer.init(1000,timerISR);
+  retcode = myTimer.start();
 }
 
 
@@ -99,9 +104,9 @@ void loop() {
 
 void returnVersion(int n, int *data) {
  
-  int retData[23] = {65, 114, 100, 117, 105, 110, 111, 32, 45, 32, 70, 121, 115, 105, 111, 68, 97, 113, 32, 118, 48, 46, 56};
+  int retData[24] = {65, 114, 100, 117, 105, 110, 111, 32, 45, 32, 80, 104, 121, 115, 105, 111, 68, 97, 113, 32, 118, 50, 46, 48};
 
-  myCommander.sendCmd('V', 23, retData);
+  myCommander.sendCmd('V', 24, retData);
   
   return;
 }

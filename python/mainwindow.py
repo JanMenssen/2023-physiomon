@@ -55,7 +55,7 @@ class mainWindow(QMainWindow) :
     self.m_settings = settings()
     deviceName = self.m_settings.iniRead()
 
-    if (deviceName == "fysiodaq") :    
+    if (deviceName == "physiodaq") :    
       self.m_device = devPhysioDaq()
     
     self.m_device.iniRead(deviceName)

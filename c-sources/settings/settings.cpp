@@ -17,7 +17,7 @@
 
 settings::settings() {
 
-  m_settings = new QSettings(QSettings::IniFormat,QSettings::UserScope,"JanSoft","fysiomon");
+  m_settings = new QSettings(QSettings::IniFormat,QSettings::UserScope,"JanSoft","physiomon");
   
   m_numchan = 0;
   m_numdisp = 0;
