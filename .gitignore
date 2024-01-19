@@ -1,5 +1,6 @@
 # genernal files
 .DS_Store
+c-sources/devphysiodaq/build-devphysiodaq_ui-Qt_6_6_1_for_macOS-Debug
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
