@@ -13,7 +13,7 @@
 #include <QByteArray>
 
 #define BAUDRATE  QSerialPort::Baud115200
-\
+
 #define STX QByteArray::fromHex("2")
 #define ETX QByteArray::fromHex("0")
 

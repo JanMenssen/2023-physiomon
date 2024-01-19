@@ -11,7 +11,6 @@
 
 #ifndef ADC_H
 #define ADC_H
-
 #define MAX_ADC_CHANNELS 6
 
 class adc {

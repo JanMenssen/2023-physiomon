@@ -8,7 +8,7 @@
 #   08-jan-2024 JM    initial version
 
   cmake_minimum_required(VERSION 3.21)
-  project(fysiomon VERSION 1.0.0 LANGUAGES CXX)
+  project(physiomon VERSION 1.0.0 LANGUAGES CXX)
 
 # C++ 17 is required
 
@@ -56,8 +56,8 @@ set(INSTALL_DIR "/Users/jan/")
 
 # and build and install to target folder. Link with QT
 
-  qt_add_executable(fysiomon ${APPLICATION_SOURCES})
-  target_link_libraries(fysiomon PRIVATE Qt6::SerialPort Qt6::Widgets)
-  set_target_properties(fysiomon PROPERTIES WIN32_EXECUTABLE ON MACOSX_BUNDLE ON)
+  qt_add_executable(physiomon ${APPLICATION_SOURCES})
+  target_link_libraries(physiomon PRIVATE Qt6::SerialPort Qt6::Widgets)
+  set_target_properties(physiomon PROPERTIES WIN32_EXECUTABLE ON MACOSX_BUNDLE ON)
 
-  install(TARGETS fysiomon DESTINATION ${INSTALL_DIR})
+  install(TARGETS physiomon DESTINATION ${INSTALL_DIR})
