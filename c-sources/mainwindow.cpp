@@ -10,6 +10,7 @@
 #include <QMenu>
 #include <QToolBar>
 #include <QAction>
+#include <QShortcut>
 #include <QTimer>
 #include "QDebug"
 
@@ -23,6 +24,7 @@ mainWindow::mainWindow() {
 
   createMenu();
   createToolBar();
+  createEventKeys();
 
   statusBarNew *status = new statusBarNew;
   setStatusBar(status);
@@ -70,6 +72,16 @@ mainWindow::~mainWindow() {
   if (m_displays != NULL) delete m_displays;
   if (m_device != NULL) delete m_device;
 
+  if (keyF1 != NULL) delete keyF1;
+  if (keyF2 != NULL) delete keyF2;
+  if (keyF3 != NULL) delete keyF3;
+  if (keyF4 != NULL) delete keyF4;
+  if (keyF5 != NULL) delete keyF5;
+  if (keyF6 != NULL) delete keyF6;
+  if (keyF7 != NULL) delete keyF7;
+  if (keyF8 != NULL) delete keyF8;
+  if (keyF9 != NULL) delete keyF9;
+  if (keyF10 != NULL) delete keyF10;
 }
 
 // createMeneu
@@ -150,6 +162,43 @@ void mainWindow::createToolBar() {
   devInfoAction->setToolTip("get info about the device");
   toolbar->addAction(devInfoAction);
   connect(devInfoAction,SIGNAL(triggered()),this,SLOT(onDeviceInfo()));
+}
+
+// createEventKeys
+//
+//    this function handles the F1-F10 events
+
+void mainWindow::createEventKeys() {
+
+  keyF1 = new QShortcut(QKeySequence(Qt::Key_F1), this);
+  connect(keyF1,SIGNAL(activated()),this,SLOT(onEvent()));
+  
+  keyF2 = new QShortcut(QKeySequence(Qt::Key_F2), this);
+  connect(keyF2,SIGNAL(activated()),this,SLOT(onEvent()));
+
+  keyF3 = new QShortcut(QKeySequence(Qt::Key_F3), this);
+  connect(keyF3,SIGNAL(activated()),this,SLOT(onEvent()));
+
+  keyF4 = new QShortcut(QKeySequence(Qt::Key_F4), this);
+  connect(keyF4,SIGNAL(activated()),this,SLOT(onEvent()));
+
+  keyF5 = new QShortcut(QKeySequence(Qt::Key_F5), this);
+  connect(keyF5,SIGNAL(activated()),this,SLOT(onEvent()));
+
+  keyF6 = new QShortcut(QKeySequence(Qt::Key_F6), this);
+  connect(keyF6,SIGNAL(activated()),this,SLOT(onEvent()));
+
+  keyF7 = new QShortcut(QKeySequence(Qt::Key_F7), this);
+  connect(keyF7,SIGNAL(activated()),this,SLOT(onEvent()));
+
+  keyF8 = new QShortcut(QKeySequence(Qt::Key_F8), this);
+  connect(keyF8,SIGNAL(activated()),this,SLOT(onEvent()));
+    
+  keyF9 = new QShortcut(QKeySequence(Qt::Key_F9), this);
+  connect(keyF9,SIGNAL(activated()),this,SLOT(onEvent()));
+
+  keyF10 = new QShortcut(QKeySequence(Qt::Key_F10), this);
+  connect(keyF10,SIGNAL(activated()),this,SLOT(onEvent()));
 }
 
 // configure
@@ -244,7 +293,35 @@ void mainWindow::onDeviceSettingsChanged() {
 void mainWindow::onDisplaySettingsChanged() {
   
   statusBarNew *status = (statusBarNew *)statusBar();
-  status->setText("on display settings pressed",1.0);
+  status->setText("on display settings pressed",5.0);
+}
+
+// onEvent 
+//
+//    this function is called when an event is happened (key pressed)
+
+void mainWindow::onEvent() {
+
+  qDebug() << "--> on event";
+  
+  QString eventStr;
+
+  // get the sender for this event handle It
+
+  QObject* obj = sender();
+  if( obj == keyF1) eventStr = m_settings->getEventString(0);
+  if( obj == keyF2) eventStr = m_settings->getEventString(1);
+  if( obj == keyF3) eventStr = m_settings->getEventString(2);
+  if( obj == keyF4) eventStr = m_settings->getEventString(3);
+  if( obj == keyF5) eventStr = m_settings->getEventString(4);
+  if( obj == keyF6) eventStr = m_settings->getEventString(5);
+  if( obj == keyF7) eventStr = m_settings->getEventString(6);
+  if( obj == keyF8) eventStr = m_settings->getEventString(7);
+  if( obj == keyF9) eventStr = m_settings->getEventString(8);
+  if( obj == keyF10) eventStr = m_settings->getEventString(9);
+
+  statusBarNew *status = (statusBarNew *)statusBar();
+  status->setText(eventStr,5.0);
 }
 
 // onFysiomonHelp

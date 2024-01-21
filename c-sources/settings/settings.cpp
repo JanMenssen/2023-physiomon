@@ -31,9 +31,9 @@ settings::settings() {
 
 settings::~settings() {
 
-  delete m_settings;
-  delete m_displays;
-  delete m_channels;
+  //-jm if (m_displays != NULL) delete m_displays;
+  //-jm if (m_channels != NULL) delete m_channels;
+  //-jm if (m_events != NULL) delete m_events;
   
   return;
 }
@@ -60,6 +60,15 @@ QString settings::iniRead() {
 
   return(m_device);
 
+}
+
+// getEventString
+//
+//    returns the event string beloning by the event
+
+QString settings::getEventString(int iEvent) {
+
+  return m_events[iEvent];
 }
 
 // readGeneral
@@ -140,4 +149,21 @@ void settings::readDisplaySettings() {
 //    this (private) method reads the events labels
 
 void settings::readEventSettings() {
+
+  char eventNr[3];
+  char eventStr[9];
+
+  if (m_events != NULL) delete m_events;
+  m_events = new QString[10];
+
+  for (int iEvent=0;iEvent<10;iEvent++) {
+ 
+    snprintf(eventNr,3,"%d",iEvent+1);
+    snprintf(eventStr,9,"event %d",iEvent+1);
+
+    m_settings->beginGroup("events");
+    m_events[iEvent] = m_settings->value(eventNr,"").toString();
+    if (m_events[iEvent] == "") m_events[iEvent] = eventStr;
+    m_settings->endGroup();
+  }
 }

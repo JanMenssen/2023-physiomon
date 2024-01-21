@@ -8,8 +8,8 @@
 #     12-jan-2024   JM    initial version
 
 from PySide6.QtWidgets import QMainWindow, QMenu, QToolBar, QWidget
-from PySide6.QtGui import QAction
-from PySide6.QtCore import QTimer
+from PySide6.QtGui import QAction, QShortcut, QKeySequence
+from PySide6.QtCore import QTimer, Qt, QObject
 
 from statusbar import statusBarNew
 from settings import settings
@@ -44,7 +44,8 @@ class mainWindow(QMainWindow) :
 
     self.createToolBar()
     self.createMenu()
-    
+    self.createEventKeys()
+
     # and the statusbar
 
     myStatusBar = statusBarNew()
@@ -178,6 +179,45 @@ class mainWindow(QMainWindow) :
 
     return
   
+  # createEventKeys
+  #
+  #     sets the function kesy F1-F10 for an event
+
+
+  def createEventKeys(self) :
+
+    self.keyF1 = QShortcut(QKeySequence(Qt.Key_F1),self)
+    self.keyF1.activated.connect(self.onEvent)
+
+    self.keyF2 = QShortcut(QKeySequence(Qt.Key_F2),self)
+    self.keyF2.activated.connect(self.onEvent)
+
+    self.keyF3 = QShortcut(QKeySequence(Qt.Key_F3),self)
+    self.keyF3.activated.connect(self.onEvent)
+
+    self.keyF4 = QShortcut(QKeySequence(Qt.Key_F4),self)
+    self.keyF4.activated.connect(self.onEvent)
+
+    self.keyF5 = QShortcut(QKeySequence(Qt.Key_F5),self)
+    self.keyF5.activated.connect(self.onEvent)
+
+    self.keyF6 = QShortcut(QKeySequence(Qt.Key_F6),self)
+    self.keyF6.activated.connect(self.onEvent)
+
+    self.keyF7 = QShortcut(QKeySequence(Qt.Key_F7),self)
+    self.keyF7.activated.connect(self.onEvent)
+
+    self.keyF8 = QShortcut(QKeySequence(Qt.Key_F8),self)
+    self.keyF8.activated.connect(self.onEvent)
+
+    self.keyF9 = QShortcut(QKeySequence(Qt.Key_F9),self)
+    self.keyF9.activated.connect(self.onEvent)
+
+    self.keyF10 = QShortcut(QKeySequence(Qt.Key_F10),self)
+    self.keyF10.activated.connect(self.onEvent)
+    
+    return
+
   # onTimeOut
   #
   #     is called when a timeout occurs at the timer
@@ -255,6 +295,41 @@ class mainWindow(QMainWindow) :
     self.statusBar().setText("display settings changed",5)
     return
   
+  # onEvent
+  #
+  #     function is called when an event key is pressed
+
+  def onEvent(self) :
+    
+    eventStr = "no event found"
+    # get the event string
+
+    if (QObject.sender(self) == self.keyF1) :
+      eventStr = self.m_settings.getEventString(0)
+    if (QObject.sender(self) == self.keyF2) :
+      eventStr = self.m_settings.getEventString(1)
+    if (QObject.sender(self) == self.keyF3) :
+      eventStr = self.m_settings.getEventString(2)
+    if (QObject.sender(self) == self.keyF4) :
+      eventStr = self.m_settings.getEventString(3)
+    if (QObject.sender(self) == self.keyF5) :
+      eventStr = self.m_settings.getEventString(4)
+    if (QObject.sender(self) == self.keyF6) :
+      eventStr = self.m_settings.getEventString(5)
+    if (QObject.sender(self) == self.keyF7) :
+      eventStr = self.m_settings.getEventString(6)
+    if (QObject.sender(self) == self.keyF8) :
+      eventStr = self.m_settings.getEventString(7)
+    if (QObject.sender(self) == self.keyF9) :
+      eventStr = self.m_settings.getEventString(8)
+    if (QObject.sender(self) == self.keyF10) :
+      eventStr = self.m_settings.getEventString(9)
+
+    # and display it andd store the event
+
+    self.statusBar().setText(eventStr,5)
+    return
+
   # onFysiomonHelp
   #
   #     help fpr fysiomon

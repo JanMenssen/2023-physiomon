@@ -32,6 +32,14 @@ class settings() :
     
     return
 
+  # getEventString
+  #
+  #   returns the event string belonging to the event
+
+  def getEventString(self,key) :
+  
+    return self.m_events[key] 
+  
   # iniRead
   #
   #   read the *.INI file
@@ -154,8 +162,8 @@ class settings() :
   def _readEventSettings(self) :
 
     self.m_settings.beginGroup("events")
-    for i in range(1,10) :
-      event = self.m_settings.value(str(i),"")
+    for i in range(1,11) :
+      event = self.m_settings.value(str(i),"event " + str(i))
       self.m_events.append(event)
     self.m_settings.endGroup()
     return

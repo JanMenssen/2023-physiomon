@@ -42,6 +42,7 @@ class settings {
     ~settings();
     void initialise();
     QString iniRead();
+    QString getEventString(int iEvent);
 
   
     QSettings *m_settings = NULL;
@@ -51,6 +52,7 @@ class settings {
     QString m_device;
     channelStruct *m_channels = NULL;
     displayStruct *m_displays = NULL;
+    QString *m_events = NULL;
 
   private :
 

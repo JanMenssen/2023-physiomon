@@ -16,6 +16,7 @@
 
 #include <QMainWindow>
 #include <QObject>
+#include <QShortcut>
 
 class mainWindow : public QMainWindow {
 
@@ -25,8 +26,6 @@ class mainWindow : public QMainWindow {
 
     mainWindow();
     ~mainWindow();
-    void createToolBar();
-    void createMenu();
     void configure();
 
   private slots :
@@ -37,9 +36,27 @@ class mainWindow : public QMainWindow {
     void onTimeOut();
     void onDisplaySettingsChanged();
     void onDeviceSettingsChanged();
+    void onEvent();
     void onPhysiomonHelp();
 
-  private :     
+  private :    
+  
+    void createToolBar();
+    void createMenu();
+    void createEventKeys();
+
+  // function keys are shortcuts for events
+   
+  QShortcut *keyF1 = NULL;
+  QShortcut *keyF2 = NULL;
+  QShortcut *keyF3 = NULL;
+  QShortcut *keyF4 = NULL;
+  QShortcut *keyF5 = NULL;
+  QShortcut *keyF6 = NULL;
+  QShortcut *keyF7 = NULL;
+  QShortcut *keyF8 = NULL;
+  QShortcut *keyF9 = NULL;
+  QShortcut *keyF10 = NULL;
 
   settings *m_settings = NULL;
   devPhysioDaq *m_device = NULL;
