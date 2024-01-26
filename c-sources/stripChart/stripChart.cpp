@@ -7,7 +7,7 @@
 // modifications
 //    26-jan-2024  JM   initial version
 
-#include "stripChart.h"
+#include "stripchart.h"
 
 // constructor
 

@@ -10,7 +10,7 @@
 #ifndef _STRIPCHART_H
 #define _STRIPCHART_H
 
-#include "baseChart.h"
+#include "basechart.h"
 
 class stripChart: public baseChart {
 

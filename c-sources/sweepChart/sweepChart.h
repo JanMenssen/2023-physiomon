@@ -10,7 +10,7 @@
 #ifndef _SWEEPCHART_H
 #define _SWEEPCHART_H
 
-#include "baseChart.h"
+#include "basechart.h"
 
 class sweepChart: public baseChart {
 
