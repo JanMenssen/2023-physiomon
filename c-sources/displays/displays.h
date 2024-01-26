@@ -12,9 +12,7 @@
 
 #include "settings.h"
 #include "channels.h"
-#include "stripchart.h"
-#include "sweepchart.h"
-#include "stripchart.h"
+#include "basechart.h"
 
 #include <QWidget>
 #include <QGridLayout>

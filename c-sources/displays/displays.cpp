@@ -8,9 +8,9 @@
 //    14-jan-2024   JM  initial version
 
 #include "displays.h"
-#include "stripChart.h"
-#include "sweepChart.h"
-#include "scopeChart.h"
+#include "stripchart.h"
+#include "sweepchart.h"
+#include "scopechart.h"
 
 // we use a 20x20 grid this means a resolution of 0.05
 

@@ -7,7 +7,7 @@
 // modifications
 //    26-jan-2024  JM   initial version
 
-#include "scopeChart.h"
+#include "scopechart.h"
 
 // constructor
 

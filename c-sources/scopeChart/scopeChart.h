@@ -10,7 +10,7 @@
 #ifndef _SCOPECHART_H
 #define _SCOPECHART_H
 
-#include "scopechart.h"
+#include "basechart.h"
 
 class scopeChart: public baseChart {
 

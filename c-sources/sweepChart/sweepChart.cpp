@@ -7,7 +7,7 @@
 //  modifications
 //    26-jan-2025   JM    initial version
 
-#include "sweepChart.h"
+#include "sweepchart.h"
 
 // constructor
 
