@@ -24,7 +24,7 @@ class mainWindow : public QMainWindow {
 
   public :
 
-    mainWindow();
+    mainWindow(int width, int heigth);
     ~mainWindow();
     void configure();
 

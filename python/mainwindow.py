@@ -18,6 +18,8 @@ from displays_grid import displays
 from channels import channels
 from devphysiodaq import devPhysioDaq
 
+MAX_CHANNELS = 5
+
 class mainWindow(QMainWindow) :
 
   # constructor
@@ -67,7 +69,7 @@ class mainWindow(QMainWindow) :
     #-jm self.m_displays = displays(self.mdi)
 
     self.m_displays = displays(centralWidget)
-    self.m_channels = channels(5)
+    self.m_channels = channels(MAX_CHANNELS)
 
     self.configure()
     
@@ -79,7 +81,7 @@ class mainWindow(QMainWindow) :
 
     # and set ready
 
-    self.setWindowTitle("PhysioMon v0.1")
+    self.setWindowTitle("PhysioMon v3.01")
     self.statusBar().setText("ready ...",5.0)
 
   # configure

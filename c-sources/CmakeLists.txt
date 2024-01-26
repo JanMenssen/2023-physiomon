@@ -22,7 +22,7 @@ set(INSTALL_DIR "/Users/jan/")
 
 # QT packages
 
-  find_package(Qt6 REQUIRED COMPONENTS SerialPort Widgets)
+  find_package(Qt6 REQUIRED COMPONENTS SerialPort Widgets Charts)
   qt_standard_project_setup()
 
 # application sources
@@ -34,6 +34,10 @@ set(INSTALL_DIR "/Users/jan/")
     ${ROOT_DIR}/channels/channels.cpp
     ${ROOT_DIR}/displays/displays.cpp
     ${ROOT_DIR}/settings/settings.cpp
+    ${ROOT_DIR}/baseChart/baseChart.cpp 
+    ${ROOT_DIR}/stripChart/stripChart.cpp
+    ${ROOT_DIR}/sweepChart/sweepChart.cpp
+    ${ROOT_DIR}/scopeChart/scopeChart.cpp   
     ${ROOT_DIR}/arduinocomm/arduinocomm.cpp 
     ${ROOT_DIR}/measuredevice/measuredevice.cpp
     ${ROOT_DIR}/devphysiodaq/devphysiodaq.cpp
@@ -47,7 +51,11 @@ set(INSTALL_DIR "/Users/jan/")
     ${ROOT_DIR}/channels
     ${ROOT_DIR}/settings
     ${ROOT_DIR}/displays
-    ${ROOT_DIR}/arduinocomm/
+    ${ROOT_DIR}/arduinocomm
+    ${ROOT_DIR}/baseChart
+    ${ROOT_DIR}/sweepChart
+    ${ROOT_DIR}/stripChart
+    ${ROOT_DIR}/scopeChart
     ${ROOT_DIR}/measuredevice
     ${ROOT_DIR}/devphysiodaq
     ${Qt6Widgets_INCLUDE_DIRS}
@@ -57,7 +65,7 @@ set(INSTALL_DIR "/Users/jan/")
 # and build and install to target folder. Link with QT
 
   qt_add_executable(physiomon ${APPLICATION_SOURCES})
-  target_link_libraries(physiomon PRIVATE Qt6::SerialPort Qt6::Widgets)
+  target_link_libraries(physiomon PRIVATE Qt6::SerialPort Qt6::Widgets Qt6::Charts)
   set_target_properties(physiomon PROPERTIES WIN32_EXECUTABLE ON MACOSX_BUNDLE ON)
 
   install(TARGETS physiomon DESTINATION ${INSTALL_DIR})

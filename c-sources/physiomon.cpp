@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
 
   // setup the graphical parts
 
-  mainWindow myWindow;
+  mainWindow myWindow(1300,750);
   myWindow.show();
 
   // close choosen, leave program 

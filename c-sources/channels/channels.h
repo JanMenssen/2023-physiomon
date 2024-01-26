@@ -12,6 +12,8 @@
 #include "settings.h"
 #include "measuredevice.h"
 
+#define MAX_CHANNELS 5
+
 // cyclic buffer stores the samples
 
 class cyclicBuffer {

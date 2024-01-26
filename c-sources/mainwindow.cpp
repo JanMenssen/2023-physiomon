@@ -5,6 +5,9 @@
 
 #include "mainwindow.h"
 #include "statusbar.h"
+#include "channels.h"
+#include "displays.h"
+#include "devphysiodaq.h"
 
 #include <QMenuBar>
 #include <QMenu>
@@ -12,14 +15,18 @@
 #include <QAction>
 #include <QShortcut>
 #include <QTimer>
-#include "QDebug"
+#include <QDebug>
+#include <QWidget>
+
 
 // constructor
 
-mainWindow::mainWindow() {
+mainWindow::mainWindow(int width, int height) {
 
-  // create the subwindows
+  // first set the size
   
+  resize(width,height);
+
   // create graphical parts
 
   createMenu();
@@ -41,10 +48,14 @@ mainWindow::mainWindow() {
   m_device->iniRead(deviceName);
   m_device->initialise();
 
-  // create channels and displays and configure the program (displays currently not available)
+  // create channels and displays and configure the program (displays currently not available). displays 
+  // are created on the centralWidget
 
-  m_displays = new displays();
-  m_channels = new channels(5);
+  QWidget *centralWidget = new QWidget();
+  setCentralWidget(centralWidget);
+
+  m_displays = new displays(centralWidget);
+  m_channels = new channels(MAX_CHANNELS);
 
   configure();
 
@@ -56,7 +67,7 @@ mainWindow::mainWindow() {
 
   // and set ready
 
-  setWindowTitle("fysiomon v1.01");
+  setWindowTitle("PhysioMon v3.01");
   status->setText("ready ...",5.0);
 
 }

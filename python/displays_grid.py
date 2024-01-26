@@ -92,7 +92,6 @@ class displays() :
 
       # display is numeric, numeric should be added  
 
-    
       # calculate max position
 
       if ((icol + ncol) > maxcol) :
