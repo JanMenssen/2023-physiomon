@@ -32,7 +32,7 @@ void sweepChart::setTimeAxis(float nsec) {
   qDebug() << "-->in sweepchart::setTimexAxis";
   baseChart::setTimeAxis(nsec);
 
-  m_npoints = int(nsec * 1000);
+  m_npoints = int(nsec * 500);
 
   // clear the buffer
 
@@ -59,7 +59,7 @@ void sweepChart::update(int nchan, int nsamples, float *data) {
 
   for (int isample = 0 ; isample < nsamples ; isample++) {
 
-    tmp.setX((i + isample) * 5.00 / m_npoints);
+    tmp.setX((i + isample) * 10.00 / m_npoints);
     tmp.setY(data[isample]);
 
     m_series->append(tmp);

@@ -118,7 +118,7 @@ void displays::configure(settings *settings) {
     // and set the graphic
 
     m_dispContents[iDisp].chart->setYaxis(-500, 500);
-    m_dispContents[iDisp].chart->setTimeAxis(5.0);
+    m_dispContents[iDisp].chart->setTimeAxis(10.0);
 
   }
 
