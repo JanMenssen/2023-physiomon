@@ -15,8 +15,6 @@
 stripChart::stripChart(int nchan) : baseChart(nchan) {
 
   qDebug() << "--> stripChart::stripChart";
-  m_series = getSeries();
-
 }
 
 // destructor

@@ -26,7 +26,6 @@ class sweepChart: public baseChart {
     int m_npoints = 0;
     QLineSeries *m_series = NULL;
     int m_sampleRate = 1000;
-    QList<QPointF> m_buffer;  
 };
 
 #endif

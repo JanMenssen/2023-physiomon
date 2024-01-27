@@ -14,8 +14,8 @@
 sweepChart::sweepChart(int nchan) : baseChart(nchan) {
 
   qDebug() << "--> sweepChart::sweepchart";
-  m_series = getSeries();
 }
+
 // destructor
 
 sweepChart::~sweepChart() {
@@ -32,37 +32,41 @@ void sweepChart::setTimeAxis(float nsec) {
   qDebug() << "-->in sweepchart::setTimexAxis";
   baseChart::setTimeAxis(nsec);
 
-  m_npoints = int(nsec * 500);
+  // clear the data m_series
 
-  // clear the buffer
-
-  //-jm m_series->clear();
-
+  m_series->clear();
 }
 
 // update
 
 void sweepChart::update(int nchan, int nsamples, float *data) {
 
-  QPointF tmp;
-  
-  // ask the number of samples in the buffer, clear it if it is fileld
+  int indx = m_series->count();
 
-  int i = m_series->count();
+  // sweep back if we are on the end of the graph
 
-  if (i >= m_npoints) {
-    i = 0;
+  if (indx >= m_pntsInGraph[nchan]) {
+    indx = 0;
     m_series->clear();
   }
+  
+  // downsample the data
 
-  // note currently we update the screen for every point, this should be disabled
+  m_downSampler->getData(&nsamples,data);
 
-  for (int isample = 0 ; isample < nsamples ; isample++) {
+  // and place the data in the buffer
 
-    tmp.setX((i + isample) * 10.00 / m_npoints);
-    tmp.setY(data[isample]);
+  QPointF tmp;
 
-    m_series->append(tmp);
-  }  
+  for (int i = 0 ; i < nsamples ; i++) {
 
+    tmp.setX(((indx + i) * m_deltaT[nchan]));
+    tmp.setY(data[i]);
+    
+    m_buffer.append(tmp);
+  }
+
+  // and append the new data to the series 
+
+  m_series->append(m_buffer);
 }

@@ -16,7 +16,34 @@
 #include <QChart>
 #include <QLineSeries>
 #include <QValueAxis>
+#include <QList>
+#include <QPointF>
 
+// to speed up the updating of the graph, some defines are set. These are
+//    - the maxumum number of channels for each display is set
+//    - downsampling is performed so the max number of sample points to update the graph
+//      is limited
+//    - a downsample class is created iwht a buffer of a number of samples
+
+#define MAX_CHANNELS_IN_DISPLAY 3
+#define MAX_POINTS_IN_GRAPH 2500
+#define SIZE_DOWNSAMPLE_BUFFER 100
+
+// downsampling class 
+
+class downSampler {
+
+  public :
+    downSampler(int factor);
+    ~downSampler();
+    void getData(int *n, float *data);
+
+  private :
+    int m_decimateFactor = 0;
+    int m_posInBuffer = 0;
+    float m_buffer[SIZE_DOWNSAMPLE_BUFFER]; 
+
+};
 
 class baseChart {
 
@@ -28,14 +55,23 @@ class baseChart {
     virtual void setTimeAxis(float nsec);
     virtual void update(int chan, int nsamples, float *data) {};
     QChart *getChart();
-    QLineSeries *getSeries();
 
+    // some members are set to public, so they can be easy accessed by th child classes
+
+    int m_pntsInGraph[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
+    int m_numchan = 0;
+    float m_deltaT[MAX_CHANNELS_IN_DISPLAY] = {0.0, 0.0, 0.0};
+    QLineSeries *m_series = NULL;   
+    QList<QPointF> m_buffer;
+    downSampler *m_downSampler = NULL;
+  
   private :
 
-    QChart *m_chart = NULL;
-    QLineSeries *m_series = NULL;    
+    int m_sampleRate[MAX_CHANNELS_IN_DISPLAY] = {1000, 1000, 1000};
+    QChart *m_chart = NULL;  
     QValueAxis *m_axisX = NULL;
     QValueAxis *m_axisY = NULL;
+    
 };
 
 #endif
