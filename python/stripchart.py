@@ -34,7 +34,7 @@ class stripChart :
 
     self.m_axisY = QValueAxis()
     #-jm self.m_axisY.setRange(-1,1)
-    self.setYaxis(-1,1)
+    self.setYaxis(-500,500)
     self.m_axisY.setTitleText("audio level")
     self.m_axisY.setTitleBrush(Qt.cyan)
     self.m_axisY.setGridLineVisible(False)

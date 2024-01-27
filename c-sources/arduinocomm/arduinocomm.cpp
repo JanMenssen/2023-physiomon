@@ -73,7 +73,7 @@ void arduinoComm::initialise(QString port) {
 
 void arduinoComm::startstop(bool onoff) {
 
-  int data = (onoff? 1 : 0);
+  short data = (onoff? 1 : 0);
   sendMsg('x',1,&data);
   m_started = onoff;
 
@@ -107,7 +107,7 @@ bool arduinoComm::isStarted() {
 //
 //    this method sends a message to the arduino
 
-void arduinoComm::sendMsg(char cmd, int n, int *data) {
+void arduinoComm::sendMsg(char cmd, int n, short *data) {
 
   QByteArray bytesToWrite;
   encode(cmd, n, data, &bytesToWrite);
@@ -123,7 +123,7 @@ void arduinoComm::sendMsg(char cmd, int n, int *data) {
 //        - data    : received data   
 //    both <cmd> and <data> are only valid if a message is received
 
-bool arduinoComm::rcvMsg(char *cmd, int *n, int *data) {
+bool arduinoComm::rcvMsg(char *cmd, int *n, short *data) {
 
   static QByteArray rcvBuffer;
   bool msgOK = false;
@@ -154,7 +154,7 @@ bool arduinoComm::rcvMsg(char *cmd, int *n, int *data) {
 //      encodes the cmd and data to a QByteArray that can be written to the
 //      serial port
 
-void arduinoComm::encode(char cmd, int n, int *data, QByteArray *bytesToWrite) {
+void arduinoComm::encode(char cmd, int n, short *data, QByteArray *bytesToWrite) {
 
   int checksum = 0;
 
@@ -186,9 +186,9 @@ void arduinoComm::encode(char cmd, int n, int *data, QByteArray *bytesToWrite) {
 //      decodes the stream of bytes in the receive buffer to a message. Returns a 
 //      true if the message is correct decoded
 
-bool arduinoComm::decode(const QByteArray rawData, char *cmd, int *n, int *data) {
+bool arduinoComm::decode(const QByteArray rawData, char *cmd, int *n, short *data) {
 
-  unsigned char checksumCalc = 0;
+  short checksumCalc = 0;
 
   // get the command and the length of the data
 
@@ -199,15 +199,16 @@ bool arduinoComm::decode(const QByteArray rawData, char *cmd, int *n, int *data)
 
   for (int i=0;i<*n;i++) {
     
-    int highByte = rawData.at(3+2*i);
-    int lowByte = rawData.at(4+2*i); 
-
+    uint8_t highByte = rawData.at(3+2*i);
+    uint8_t lowByte = rawData.at(4+2*i); 
     data[i] = (highByte << 8) + lowByte;
     checksumCalc += data[i];
   }
+  checksumCalc = lowByte(checksumCalc);
 
   // get the checksum and return a true if it is correct
 
-  unsigned char checksumMsg = rawData.at(3 + 2 * (*n));
+  uint8_t checksumMsg = rawData.at(3 + 2 * (*n));
+ 
   return (checksumMsg == checksumCalc);
 }

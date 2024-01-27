@@ -76,8 +76,9 @@ void adc::readADC() {
     // use the simulator, no analog ports are read
 
     mBusy = true;
-    for (int i=0;i<MAX_ADC_CHANNELS;i++) mData[i] = mDummy++;
-    if (mDummy > 1000) mDummy = 0;
+    // for (int i=0;i<MAX_ADC_CHANNELS;i++) mData[i] = mDummy++;
+    for (int i=0;i<MAX_ADC_CHANNELS;i++) mData[i] = -300 + mDummy++;
+    if (mDummy > 600) mDummy = 0;
     mBusy = false;
     mAvailable = true;
 

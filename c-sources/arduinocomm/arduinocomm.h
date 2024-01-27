@@ -21,16 +21,16 @@ class arduinoComm{
     void startstop(bool onoff);
     QString isConnected();
     bool isStarted();
-    void sendMsg(char cmd, int n, int *data);
-    bool rcvMsg(char *cmd, int *n, int *data);
+    void sendMsg(char cmd, int n, short *data);
+    bool rcvMsg(char *cmd, int *n, short *data);
 
   private :
 
     QSerialPort *m_port = NULL;
     bool m_started;
   
-    void encode(char cmd, int n, int *data, QByteArray *bytesToWrite);
-    bool decode(const QByteArray, char *cmd, int *len, int *data);
+    void encode(char cmd, int n, short *data, QByteArray *bytesToWrite);
+    bool decode(const QByteArray, char *cmd, int *len, short *data);
 
 };
 

@@ -17,7 +17,7 @@
 
 struct analogInStruct {
   QString name;
-  int sampleRate;
+  float sampleRate;
   float gain;
   float offset;
   int nchan;

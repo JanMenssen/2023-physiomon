@@ -24,16 +24,18 @@ class baseChart {
   
     baseChart(int nchan);
     ~baseChart();
-    QChart * getChart();
+    void setYaxis(float ymin, float ymax);
+    virtual void setTimeAxis(float nsec);
+    virtual void update(int chan, int nsamples, float *data) {};
+    QChart *getChart();
+    QLineSeries *getSeries();
 
   private :
 
     QChart *m_chart = NULL;
-    QLineSeries **m_series = NULL;
+    QLineSeries *m_series = NULL;    
     QValueAxis *m_axisX = NULL;
     QValueAxis *m_axisY = NULL;
-
-
 };
 
 #endif

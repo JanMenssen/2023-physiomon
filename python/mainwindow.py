@@ -28,9 +28,10 @@ class mainWindow(QMainWindow) :
   #   - menus are created
 
     
-  def __init__(self) :
+  def __init__(self,width,height) :
     
     super().__init__()
+    self.resize(width,height)
 
     # create the MDU subwindows, this is only needed for the MDI implementation
     

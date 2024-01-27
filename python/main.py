@@ -19,7 +19,7 @@ if __name__ == '__main__' :
 
   # create the graphical structure and show
 
-  myWindow = mainWindow()
+  myWindow = mainWindow(1300,750)
   myWindow.show()
 
   # and return until exit

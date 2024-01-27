@@ -49,7 +49,8 @@ class channels{
   
     void configure(settings *settings, measureDevice *device);
     void getSampleRate();
-    void readData();
+    void readDisplay(int nchan, int *nSamples, float *data);
+    void readStore(int nchan, int *nSamples, float *data);
     void writeData(int ichan, float data);
 
   private :

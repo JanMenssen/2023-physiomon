@@ -40,7 +40,7 @@ cyclicBuffer::~cyclicBuffer() {
 void cyclicBuffer::read(int *n,float *data) {
 
   int ntal = 0;
-
+  
   while (m_indxRead != m_indxWrite) {
     data[ntal++] = m_data[m_indxRead++];
     if (m_indxRead >= m_len) m_indxRead = 0;
@@ -97,7 +97,7 @@ void channels::configure(settings *settings, measureDevice *device) {
 
         if (source == ianalog) {
 
-          int sampleRate = device->m_analogIn[ianalog].sampleRate;
+          float sampleRate = device->m_analogIn[ianalog].sampleRate;
           int buflen = int(m_lengthInSeconds / sampleRate);
 
           m_buffers[ichan].sampleRate = sampleRate;
@@ -119,11 +119,22 @@ void channels::configure(settings *settings, measureDevice *device) {
 void channels::getSampleRate() {
 }
 
-// channels readData
+// readDisplay
 //
-//    reads the data from a channel. This can be storage or display data
+//    reads the data for the display from a channel
 
-void channels::readData() {
+void channels::readDisplay(int ichan, int *nSamples, float *data) {
+
+  m_buffers[ichan].display->read(nSamples, data);
+}
+
+// readStore
+//
+//    reads the data for the storage from a channel
+
+void channels::readStore(int ichan, int *nSamples, float *data) {
+
+  m_buffers[ichan].store->read(nSamples, data);
 }
 
 // channels writeData

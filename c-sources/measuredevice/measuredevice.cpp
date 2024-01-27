@@ -9,7 +9,6 @@
 
 #include <stdio.h>
 #include <QSettings.h>
-#include <qDebug>
 
 #include "measuredevice.h"
 
@@ -85,7 +84,7 @@ void measureDevice::iniRead(QString device) {
 
     settings->beginGroup(keyName);
     m_analogIn[iChan].name = settings->value("name","").toString();
-    m_analogIn[iChan].sampleRate = settings->value("sampleRate",1).toInt();
+    m_analogIn[iChan].sampleRate = 1.0 / settings->value("frequency",1000).toFloat();
     m_analogIn[iChan].gain = settings->value("gain",1.0).toFloat();
     m_analogIn[iChan].offset = settings->value("offset",0.0).toFloat(); 
     

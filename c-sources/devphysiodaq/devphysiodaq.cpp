@@ -54,7 +54,7 @@ QString devPhysioDaq::isConnected() {
 
 void devPhysioDaq::setSampleRate(int ms) {
 
-  int data = ms;
+  short data = ms;
   m_arduino.sendMsg('c',1,&data);
   
   return;
@@ -115,7 +115,7 @@ void devPhysioDaq::read(channels *channels) {
   char cmd;
   char ANALOG_CMD = 65;
   int n=0;
-  int data[8];
+  short data[8];
 
   if (isStarted()) {
 
@@ -127,18 +127,20 @@ void devPhysioDaq::read(channels *channels) {
         for (int i=0;i<n;i++) writeValueToAllChannels(&m_analogIn[i],channels,data[i]);
       }
     }
+
   }
 
   return;
 }
 
-void devPhysioDaq::writeValueToAllChannels(analogInStruct *analogIn, channels *channels, int value) {
+void devPhysioDaq::writeValueToAllChannels(analogInStruct *analogIn, channels *channels, short value) {
 
   // first convert do float data
 
-  //-jm float realValue = analogIn->gain * value + analogIn->offset;
-  float realValue = 1.0 * value;
+  // float realValue = analogIn->gain * value + analogIn->offset;
 
+  float realValue = 1.0 * value;
+  
   int numchan = analogIn->nchan;
   for (int i=0;i<numchan;i++) {
     int ichan = analogIn->channels[i];

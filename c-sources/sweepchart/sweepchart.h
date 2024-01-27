@@ -17,8 +17,16 @@ class sweepChart: public baseChart {
   public :
 
     sweepChart(int nchan);
-    ~sweepChart();
+    ~sweepChart(); 
+    void setTimeAxis(float nsec);
     void update(int nchan, int nsamples, float *data);
+
+  private :
+
+    int m_npoints = 0;
+    QLineSeries *m_series = NULL;
+    int m_sampleRate = 1000;
+    QList<QPointF> m_buffer;  
 };
 
 #endif

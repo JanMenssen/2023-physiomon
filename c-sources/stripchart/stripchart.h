@@ -12,13 +12,25 @@
 
 #include "basechart.h"
 
+#include <QPointF>
+#include <QList>
+
 class stripChart: public baseChart {
 
   public :
 
     stripChart(int nchan);
     ~stripChart();
+    void setTimeAxis(float nsec);
     void update(int nchan, int nsamples, float *data);
+
+  private :
+
+    float *m_dataValues = NULL;
+    QLineSeries *m_series = NULL;
+    long m_npoints = 0;
+    int m_sampleRate = 1000;
+    QList<QPointF> m_buffer;  
 };
 
 #endif

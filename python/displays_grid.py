@@ -107,10 +107,10 @@ class displays() :
     ncol = 1/RESOLUTION - icol
      
     if nrow > 0 :
-      self.m_layout.addWidget(QWidget(),irow,nrow,0,int(1/RESOLUTION))
+      self.m_layout.addWidget(QWidget(),irow,0,nrow,int(1/RESOLUTION))
     if ncol > 0 :
-      self.m_layout.addWidget(QWidget(),0,int(1/RESOLUTION),icol,ncol)
-
+      self.m_layout.addWidget(QWidget(),0,icol,int(1/RESOLUTION),ncol)
+      
     return
   
   # plot

@@ -62,14 +62,13 @@ mainWindow::mainWindow(int width, int height) {
   // create the timer
 
   QTimer *myTimer = new QTimer();
-  myTimer->start(2500);
+  myTimer->start(100);
   connect(myTimer,SIGNAL(timeout()),this,SLOT(onTimeOut()));
 
   // and set ready
 
   setWindowTitle("PhysioMon v3.01");
   status->setText("ready ...",5.0);
-
 }
  
 // destructor
@@ -107,12 +106,12 @@ void mainWindow::createMenu() {
 
   QAction *startAction = new QAction(tr("&Start"));
   //-jm startAction->setStatusTip("start/stop the program");
-  connect(startAction,SIGNAL(clicked()),this, SLOT(onStart()));
+  connect(startAction,SIGNAL(triggered()),this, SLOT(onStart()));
   fileMenu->addAction(startAction);
 
   QAction *saveAction = new QAction(tr("Save"));
   //-jm saveAction->setStatusTip("save data to file");
-  connect(startAction,SIGNAL(clicked()),this, SLOT(onSave()));
+  connect(startAction,SIGNAL(triggered()),this, SLOT(onSave()));
   fileMenu->addAction(saveAction);
  
   QAction *dispSettingsChangeAction = new QAction(tr("Display"));
@@ -276,13 +275,13 @@ void mainWindow::onDeviceInfo() {
 
 void mainWindow::onTimeOut() {
 
-  qDebug() << "--> onTimer";
+  //-jm qDebug() << "--> onTimer";
 
   m_device->read(m_channels);
   m_displays->plot(m_channels);
 
-  statusBarNew *status = (statusBarNew *)statusBar();
-  status->setText("time out",1.0);
+  //-jm statusBarNew *status = (statusBarNew *)statusBar();
+  //-jm status->setText("time out",1.0);
 }
 
 // onDeviceSettingsChanged

@@ -9,6 +9,7 @@
 
 from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo 
 from PySide6.QtCore import QByteArray, QIODevice
+import struct
 
 BAUDRATE = 115200
 
@@ -187,19 +188,18 @@ def encode(cmd,data) :
 
 def decode(inputData) :
 
-  data = []
-
   # get command and lenght of the message
 
   cmd = inputData[1].decode()
   lenMsg = ord(inputData[2].decode())
   
-  for i in range(lenMsg) :
-   value = int.from_bytes(inputData[4+(2*i)],byteorder = 'big',signed = False)
-   data.append(value)
+  # get the data
 
-  # checksum ok ?
-
+  dataSlice = inputData[3:-2]
+  data = [int.from_bytes(dataSlice[i:i+2], byteorder = "big",signed = True) for i in range(0, len(dataSlice), 2)]
+  
+  # checksum OK ?
+  
   checksum = inputData[-2:-1]
   msgOK = (checksum == (sum(data) & 0x00FF).to_bytes(1,'big'))
 

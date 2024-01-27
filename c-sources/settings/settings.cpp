@@ -121,14 +121,14 @@ void settings::readChannels() {
 
 void settings::readDisplaySettings() {
 
-  char keyName[9];
+  char keyName[10];
 
   if (m_displays != NULL) delete m_displays;
   m_displays = new displayStruct[m_numdisp];
 
   for (int iDisp = 0; iDisp < m_numdisp; iDisp++) {
 
-    snprintf(keyName,9,"display %0d",iDisp+1);
+    snprintf(keyName,10,"display %0d",iDisp+1);
 
     m_settings->beginGroup(keyName);
     
