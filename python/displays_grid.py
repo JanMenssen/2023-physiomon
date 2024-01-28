@@ -63,9 +63,9 @@ class displays() :
     maxcol = 0
     maxrow = 0
 
-    for iDisp in range(settings.m_numDisplay) :
+    for iDisp in range(self.m_numDisplay) :
 
-      curDisplay = settings.m_dispays[iDisp]
+      curDisplay = settings.m_displays[iDisp]
 
       self.m_chanlist.append([])
     
@@ -78,12 +78,15 @@ class displays() :
           self.m_chanlist[iDisp].append(iChannel)
 
       # mode for the display
-      if (curDisplay["mode"].lower == "sweep") :
-        self.m_grapDisplay.append(sweepChart())
-      if ((curDisplay["mode"].lower) == "scope") :
-        self.m_grapDisplay.append(scopeChart())
-      if ((curDisplay["mode"].lower) == "strip") :
-        self.m_grapDisplay.append(stripChart())
+
+      nchan = len(self.m_chanlist[iDisp])
+
+      if (curDisplay["mode"].lower() == 'sweep') :
+        self.m_graphDisplay.append(sweepChart(nchan))
+      if (curDisplay["mode"].lower() == 'scope') :
+        self.m_graphDisplay.append(scopeChart(nchan))
+      if (curDisplay["mode"].lower() == 'strip') :
+        self.m_graphDisplay.append(stripChart(nchan))
    
     
       # set the widget at the position, we assume to have a grid layout of 20 x 20, this means each
@@ -97,10 +100,11 @@ class displays() :
 
       # display is waveform        
       
-      chartView = QChartView(self.m_graphDisplay[iDisplay].m_chart)
+      chartView = QChartView(self.m_graphDisplay[iDisp].m_chart)
       self.m_layout.addWidget(chartView,irow,icol,nrow,ncol)
 
       # display is numeric, numeric should be added  
+
 
       # calculate max position
 
@@ -109,6 +113,11 @@ class displays() :
       if ((irow + nrow) > maxrow) :
         maxrow = irow + nrow
 
+      # and set the axis
+        
+      self.m_graphDisplay[iDisp].setYaxis(curDisplay['ymin'],curDisplay["ymax"])
+      self.m_graphDisplay[iDisp].setTimeAxis(curDisplay["timescale"])
+      
     # add items if necessary, to get a grid of 1/RESOLUTION x 1/RSOLUTION 
         
     irow = maxrow
@@ -120,8 +129,11 @@ class displays() :
       self.m_layout.addWidget(QWidget(),irow,0,nrow,int(1/RESOLUTION))
     if ncol > 0 :
       self.m_layout.addWidget(QWidget(),0,icol,int(1/RESOLUTION),ncol)
+
+    # and set the axis
+
       
-    return
+  
   
   # plot
   #
@@ -136,12 +148,13 @@ class displays() :
         # get the channel list for this display and update the display
 
         chanList = self.m_chanlist[iDisplay]  
+        nchan = len(chanList)
 
         # if display is analog
 
-        for iChannel in chanList :  
+        for iChannel, i in zip(chanList,range(nchan)) :  
           data = channels.readData(iChannel)
-          self.m_graphDisplay[iDisplay].update(data)
+          self.m_graphDisplay[iDisplay].update(i,data)
   
         # if display is numeric
           

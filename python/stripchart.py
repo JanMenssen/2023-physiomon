@@ -8,7 +8,7 @@
 #    26-jan-2024  JM   initial version
 
 from basechart import baseChart
-from pySide6.QtCore import QPointF
+from PySide6.QtCore import QPointF
 
 MAX_POINTS_IN_GRAPH = 2500
 
@@ -17,11 +17,16 @@ class stripChart(baseChart) :
   # constructor
 
   def __init__(self,nchan) :
-    super().__init__()
+    super().__init__(nchan)
+    
+    self.m_first = []
+    self.m_curIndx = []
+    self.m_buffer = [[]]
 
-    for i in range[nchan] :
-      self.m_first[i] = True
-      self.m_buffer[i].reserve(MAX_POINTS_IN_GRAPH)
+    for i in range(nchan) :
+      self.m_first.append(True)
+      self.m_curIndx.append(0)
+      self.m_buffer.append([])
 
   # setTimeAxis
   #
@@ -29,11 +34,11 @@ class stripChart(baseChart) :
     
   def setTimeAxis(self,nsec) :
 
-    baseChart.setTimeAxis(nsec)
+    super().setTimeAxis(nsec)
 
     for i in range(self.m_numchan) :
       
-      self.m_first = True
+      self.m_first[i] = True
       self.m_buffer[i].clear()
       self.m_curIndx[i] = 0
   
@@ -47,12 +52,13 @@ class stripChart(baseChart) :
 
     curIndx = self.m_curIndx[nchan]     
     deltaT = self.m_deltaT[nchan]
+    maxIndx = self.m_pntsInGraph[nchan]
     
     # sweep back at the end of the scrren
 
     if (curIndx >= maxIndx) :
-      self.m_pntsInGraph[chan] = self.m_buffer[nchan].count()
-      curIndx = 0
+      self.m_pntsInGraph[nchan] = len(self.m_buffer[nchan])
+      maxIndx = self.m_pntsInGraph[nchan]
       self.m_first[nchan] = False
 
     maxIndx = self.m_pntsInGraph[nchan]
@@ -61,11 +67,11 @@ class stripChart(baseChart) :
       
     # the first points differ from the points after the screen is cleared when the right is reached
 
-    nsamples = data.size    
+    nsamples = len(data)    
     if (self.m_first[nchan] == True) :
 
       for i in range(nsamples) :
-        self.buffer[nchan].append(QPointF((curIndx * deltaT),data[i]))
+        self.m_buffer[nchan].append(QPointF((curIndx * deltaT),data[i]))
         curIndx += 1
 
     else :
@@ -73,23 +79,26 @@ class stripChart(baseChart) :
       # shift samples
   
       for i in range(maxIndx - nsamples) :
-        tmp = self.m_buffer[nchan].at(i + nsamples)
-        self.buffer[nchan].replace(i,tmp)
-      curIndx = maxIndx - nsamples
+        tmp = self.m_buffer[nchan][i + nsamples]
+        tmp.setX(i * deltaT)
+        self.m_buffer[nchan][i] = tmp
 
       # and add new samples
-
-      for i in range(nsamples)
+      
+      curIndx = maxIndx - nsamples
+      for i in range(nsamples) :
         
         tmp = QPointF((curIndx * deltaT),data[i])
-        self.buffer[nchan].replace(tmp)
+        self.m_buffer[nchan][i] = tmp
         
-        if (curIndx > maxIndx) :
+        if (curIndx < maxIndx) :
+          curIndx += 1
+        else :
           curIndx = 0
 
     # and replace the new data to the series
 
-    self.m_series[nchan].replace(self.m_buffer[nchan])
+    self.m_series.replace(self.m_buffer[nchan])
     self.m_curIndx[nchan] = curIndx
 
 

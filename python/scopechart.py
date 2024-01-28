@@ -8,7 +8,7 @@
 #    26-jan-2024  JM   initial version
 
 from basechart import baseChart
-from pySide6.QtCore import QPointF
+from PySide6.QtCore import QPointF
 
 MAX_POINTS_IN_GRAPH = 2500
 
@@ -17,11 +17,16 @@ class scopeChart(baseChart) :
   # constructor
 
   def __init__(self,nchan) :
-    super().__init__()
+    super().__init__(nchan)
 
-    for i in range[nchan] :
-      self.m_first[i] = True
-      self.m_buffer[i].reserve(MAX_POINTS_IN_GRAPH)
+    self.m_first = []
+    self.m_curIndx = []
+    self.m_buffer = [[]]
+
+    for i in range(nchan) :
+      self.m_first.append(True)
+      self.m_curIndx.append(0)
+      self.m_buffer.append([])
 
   # setTimeAxis
   #
@@ -29,11 +34,11 @@ class scopeChart(baseChart) :
     
   def setTimeAxis(self,nsec) :
 
-    baseChart.setTimeAxis(nsec)
+    super().setTimeAxis(nsec)
 
     for i in range(self.m_numchan) :
       
-      self.m_first = True
+      self.m_first[i]= True
       self.m_buffer[i].clear()
       self.m_curIndx[i] = 0
   
@@ -58,22 +63,26 @@ class scopeChart(baseChart) :
     # downSample (Note : should be added)
       
     # the first points differ from the points after the screen is cleared when the right is reached
-      
+
+    nsamples = len(data)      
     if (self.m_first[nchan] == True) :
 
-      for i in range(data.size) :
-        self.buffer[nchan].append(QPointF((curIndx * deltaT),data[i]))
+      for i in range(nsamples) :
+        self.m_buffer[nchan].append(QPointF((curIndx * deltaT),data[i]))
         curIndx += 1
 
     else :
       
-      for i in range(data.size) :
-        self.m_buffer[nchan].replace(curIndx,QPointF((curIndx * deltaT),data[i]))
-        curIndx += 1
+      for i in range(nsamples) :
+        self.m_buffer[nchan][curIndx] = QPointF((curIndx * deltaT),data[i])
+        if (curIndx < maxIndx) :
+          curIndx += 1
+        else :
+          curIndx = 0
 
     # and replace the new data to the series
 
-    self.m_series[nchan].replace(self.m_buffer[nchan])
+    self.m_series.replace(self.m_buffer[nchan])
     self.m_curIndx[nchan] = curIndx
 
 

@@ -107,8 +107,7 @@ class devPhysioDaq(measureDevice) :
 
           for i in range(len(data)) :  
             
-            chanData = 1.0 * data[i]
-            #-jm chanData = self.m_analogIn[i]['gain'] * data[i] + self.m_analogIn[i]['offset']
+            chanData = self.m_analogIn[i]['gain'] * data[i] + self.m_analogIn[i]['offset']
             usedChannels = self.m_analogIn[i]['channels']
 
             for chan in usedChannels :
