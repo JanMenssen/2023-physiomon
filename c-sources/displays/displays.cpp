@@ -7,6 +7,7 @@
 //  modifications
 //    14-jan-2024   JM  initial version
 
+#include "physiomon.h"
 #include "displays.h"
 #include "stripchart.h"
 #include "sweepchart.h"
@@ -67,6 +68,8 @@ void displays::configure(settings *settings) {
 
   for (int iDisp = 0; iDisp < m_numDisplays ; iDisp++) {
   
+    displayStruct curDisplay = settings->m_displays[iDisp];
+    
     // find the channels for the current display
 
     for (int iChan = 0 ; iChan < numchan ; iChan++) {
@@ -75,22 +78,20 @@ void displays::configure(settings *settings) {
         m_dispContents[iDisp].chanlist[m_dispContents[iDisp].nchan++] = iChan;
       }   
     }
-   
-    // tempory code because there is no mode set in the structure
-    //-jm viewMode mode = settings->m_displays(iDisp).viewMode;
+     
+    // hwo to diplay the data
 
-    viewMode mode = MODE_SWEEP;
-    switch (mode) {
+    switch (curDisplay.mode) {
 
-      case MODE_STRIP :
+      case DISPLAY_MODE_STRIP :
         m_dispContents[iDisp].chart = new stripChart(m_dispContents[iDisp].nchan);
         break;
 
-      case MODE_SWEEP :
+      case DISPLAY_MODE_SWEEP :
         m_dispContents[iDisp].chart = new sweepChart(m_dispContents[iDisp].nchan);
         break;
 
-      case MODE_SCOPE :
+      case DISPLAY_MODE_SCOPE :
         m_dispContents[iDisp].chart = new scopeChart(m_dispContents[iDisp].nchan);
         break;
 
@@ -101,8 +102,6 @@ void displays::configure(settings *settings) {
 
     // calculate the position. we use a gridview of RESOLUTION * RESOLUTION, calculate the column and rows
     // of thc current display
-
-    displayStruct curDisplay = settings->m_displays[iDisp];
     
     irow = round(curDisplay.top / RESOLUTION);
     icol = round(curDisplay.left / RESOLUTION);
@@ -117,8 +116,8 @@ void displays::configure(settings *settings) {
 
     // and set the graphic
 
-    m_dispContents[iDisp].chart->setYaxis(-500, 500);
-    m_dispContents[iDisp].chart->setTimeAxis(10.0);
+    m_dispContents[iDisp].chart->setYaxis(curDisplay.ymin, curDisplay.ymax);
+    m_dispContents[iDisp].chart->setTimeAxis(curDisplay.timescale);
 
   }
 
@@ -143,19 +142,22 @@ void displays::plot(channels *channels) {
 
   float data[100];          // max 100 samples can be read
   int nSamples = 0;       
+  dispSettingStruct dispSettings;
 
   for (int iDisp = 0; iDisp < m_numDisplays ; iDisp++) {
 
+    dispSettings = m_dispContents[iDisp];
+
     // a display can have more channels, do it for all channels
 
-    int numchan = m_dispContents[iDisp].nchan;
-    for (int ichan=0;ichan < numchan; ichan++) {
+    for (int ichan = 0;ichan < dispSettings.nchan; ichan++) {
 
-      int curchan = m_dispContents[iDisp].chanlist[ichan];
+      int curchan = dispSettings.chanlist[ichan];
       
       channels->readDisplay(curchan,&nSamples,data);
-      m_dispContents[iDisp].chart->update(curchan,nSamples,data);
+      dispSettings.chart->update(ichan,nSamples,data);
     }   
+    dispSettings.chart->finishUpdate();
   }  
 
   return;

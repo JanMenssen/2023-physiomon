@@ -140,6 +140,11 @@ void settings::readDisplaySettings() {
     m_displays[iDisp].ymax = m_settings->value("ymax",0.0).toFloat();
     m_displays[iDisp].timescale = m_settings->value("timescale",0.0).toFloat();
     
+    QString mode = m_settings->value("update mode","sweep").toString();
+    if (mode.toLower() == QString("scope")) m_displays[iDisp].mode = DISPLAY_MODE_SCOPE;
+    if (mode.toLower() == QString("sweep")) m_displays[iDisp].mode = DISPLAY_MODE_SWEEP;
+    if (mode.toLower() == QString("strip")) m_displays[iDisp].mode = DISPLAY_MODE_STRIP;
+
     m_settings->endGroup();
   }
 }

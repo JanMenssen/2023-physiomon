@@ -22,10 +22,8 @@ class sweepChart: public baseChart {
     void update(int nchan, int nsamples, float *data);
 
   private :
-
-    int m_npoints = 0;
-    QLineSeries *m_series = NULL;
-    int m_sampleRate = 1000;
+  
+    int m_curIndx[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
 };
 
 #endif

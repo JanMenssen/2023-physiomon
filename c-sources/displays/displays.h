@@ -10,6 +10,7 @@
 #ifndef _DISPLAYS_H
 #define _DISPLAYS_H
 
+#include "physiomon.h"
 #include "settings.h"
 #include "channels.h"
 #include "basechart.h"
@@ -18,7 +19,7 @@
 #include <QGridLayout>
 #include <QChartView>
 
-enum viewMode {MODE_STRIP = 0, MODE_SWEEP = 1, MODE_SCOPE = 2};
+
 
 struct dispSettingStruct {
   int nchan = 0;

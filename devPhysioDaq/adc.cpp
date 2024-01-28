@@ -77,8 +77,8 @@ void adc::readADC() {
 
     mBusy = true;
     // for (int i=0;i<MAX_ADC_CHANNELS;i++) mData[i] = mDummy++;
-    for (int i=0;i<MAX_ADC_CHANNELS;i++) mData[i] = -300 + mDummy++;
-    if (mDummy > 600) mDummy = 0;
+    for (int i=0;i<MAX_ADC_CHANNELS;i++) mData[i] = mDummy++;
+    if (mDummy > 1024) mDummy = 0;
     mBusy = false;
     mAvailable = true;
 

@@ -31,6 +31,7 @@ struct displayStruct {
   float ymin;
   float ymax;
   float timescale;
+  viewMode mode;
 };
 
 

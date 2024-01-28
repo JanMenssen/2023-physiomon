@@ -26,11 +26,9 @@ class stripChart: public baseChart {
 
   private :
 
-    float *m_dataValues = NULL;
-    QLineSeries *m_series = NULL;
-    long m_npoints = 0;
-    int m_sampleRate = 1000;
-    QList<QPointF> m_buffer;  
+    bool m_first[MAX_CHANNELS_IN_DISPLAY] = {true, true, true};
+    int m_curIndx[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
+ 
 };
 
 #endif

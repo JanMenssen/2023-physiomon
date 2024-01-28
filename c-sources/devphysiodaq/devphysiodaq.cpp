@@ -137,10 +137,8 @@ void devPhysioDaq::writeValueToAllChannels(analogInStruct *analogIn, channels *c
 
   // first convert do float data
 
-  // float realValue = analogIn->gain * value + analogIn->offset;
-
-  float realValue = 1.0 * value;
-  
+  float realValue = analogIn->gain * value + analogIn->offset;
+    
   int numchan = analogIn->nchan;
   for (int i=0;i<numchan;i++) {
     int ichan = analogIn->channels[i];

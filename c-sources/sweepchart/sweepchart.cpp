@@ -10,10 +10,12 @@
 #include "sweepchart.h"
 
 // constructor
+// 
+//    allocate memory for the points buffer -> faster
 
 sweepChart::sweepChart(int nchan) : baseChart(nchan) {
-
-  qDebug() << "--> sweepChart::sweepchart";
+  
+  for (int i=0;i<nchan;i++) m_buffer[i].reserve(SIZE_DOWNSAMPLE_BUFFER);
 }
 
 // destructor
@@ -29,44 +31,49 @@ sweepChart::~sweepChart() {
 
 void sweepChart::setTimeAxis(float nsec) {
 
-  qDebug() << "-->in sweepchart::setTimexAxis";
   baseChart::setTimeAxis(nsec);
-
-  // clear the data m_series
-
-  m_series->clear();
+  for (int i=0;i<MAX_CHANNELS_IN_DISPLAY;i++) m_curIndx[i] = 0;
+  
 }
 
 // update
 
 void sweepChart::update(int nchan, int nsamples, float *data) {
 
-  int indx = m_series->count();
+  // faster
+
+  int curIndx = m_curIndx[nchan];           
+  int maxIndx = m_pntsInGraph[nchan];
+  double deltaT = m_deltaT[nchan];
+  QVector<QPointF> *buffer = &m_buffer[nchan];
 
   // sweep back if we are on the end of the graph
 
-  if (indx >= m_pntsInGraph[nchan]) {
-    indx = 0;
-    m_series->clear();
+  if (curIndx >= maxIndx) {
+    curIndx = 0;
+    m_series[nchan].clear();
   }
   
   // downsample the data
 
-  m_downSampler->getData(&nsamples,data);
+  m_downSampler[nchan].getData(&nsamples,data);
 
-  // and place the data in the buffer
+  // and place the data in the (cleared) buffer
 
   QPointF tmp;
+  buffer->clear();
 
   for (int i = 0 ; i < nsamples ; i++) {
 
-    tmp.setX(((indx + i) * m_deltaT[nchan]));
+    tmp.setX(((curIndx++) * deltaT));
     tmp.setY(data[i]);
     
-    m_buffer.append(tmp);
+    buffer->append(tmp);
   }
 
-  // and append the new data to the series 
+  // and append the new data to the series, this is not faster as append point for point
+  // so m_buffer is in fact not needed. However, in stripchart and scopechart 
 
-  m_series->append(m_buffer);
+  m_series[nchan].append(buffer[nchan]);
+  m_curIndx[nchan] = curIndx;
 }

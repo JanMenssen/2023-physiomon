@@ -14,7 +14,6 @@
 
 stripChart::stripChart(int nchan) : baseChart(nchan) {
 
-  qDebug() << "--> stripChart::stripChart";
 }
 
 // destructor
@@ -30,58 +29,80 @@ stripChart::~stripChart() {
 
 void stripChart::setTimeAxis(float nsec) {
 
-  qDebug() << "-->in stripchart::setTimexAxis";
   baseChart::setTimeAxis(nsec);
 
-  m_npoints = nsec * m_sampleRate;
+  for (int i=0;i<MAX_CHANNELS_IN_DISPLAY;i++) {
+   
+    m_first[i] = true; 
+    m_buffer[i].clear();
+    m_curIndx[i] = 0;
 
-  // tempory fill the buffer
-
-  float x = 0;
-  float y = 0;
-  
-  m_buffer.clear();
-
-  m_npoints = 1000;
-  
-  m_dataValues = new float[m_npoints];
-
-  for (long i=0;i<m_npoints;i++) {
-    
-    x = 10.0 * i / (float(m_npoints));
-    y = i / (float(m_npoints));
-    m_dataValues[i] = y;
-
-    m_buffer.append(QPointF(x,y));
   }
-
-  m_series->append(m_buffer);
-
 }
 
 // update
 
 void stripChart::update(int nchan, int nsamples, float *data) {
 
-  // store first value
+  QPointF tmp;
 
-  float firstValue = m_dataValues[0];
-  long n = m_npoints - 1;
+  // locally variables are faster
 
-  // and shift all samples one position
+  int curIndx = m_curIndx[nchan];           
+  int maxIndx = m_pntsInGraph[nchan];
+  double deltaT = m_deltaT[nchan];
+  QVector<QPointF> *buffer = &m_buffer[nchan];
 
-  for (long i = 0; i < n; i++) {
-    m_dataValues[i] = m_dataValues[i+1];
-    m_buffer[i].setY(m_dataValues[i]);
+  // at display overlap, index in buffer should be 0 and not first display
+
+  if (curIndx >= maxIndx) {
+    maxIndx = m_pntsInGraph[nchan] = buffer->count();
+    m_first[nchan] = false;
   }
+
+  // downsample the data
+
+  m_downSampler[nchan].getData(&nsamples,data);
+
+  // the first points differs, display is empty and buffer is empty
   
-  // add first value at the end of the buffer
+  if(m_first[nchan]) {
 
-  m_dataValues[n] = firstValue;
-  m_buffer[n].setY(firstValue);
+    for (int i = 0 ; i < nsamples ; i++) {
 
-  // and replace the buffer
+      tmp.setX(((curIndx++) *deltaT));
+      tmp.setY(data[i]);
+    
+      buffer->append(tmp);
+  }
 
-  m_series->replace(m_buffer);
-  
+  } else {
+    
+    // shift samples
+
+    for (int i = 0 ; i < (maxIndx - nsamples) ; i++) {
+
+      tmp = buffer->at(i+nsamples);
+      tmp.setX(i * deltaT);
+      
+      buffer->replace(i,tmp);
+    }
+    curIndx = maxIndx - nsamples;
+    
+    // and add new samples
+
+    for (int i = 0 ; i < nsamples ; i++) {
+
+      tmp.setX(((curIndx) * deltaT));
+      tmp.setY(data[i]);
+    
+      buffer->replace(curIndx++,tmp);
+      curIndx = (curIndx > maxIndx ? 0 : curIndx); 
+    }
+  }
+
+  // and replace the series with the new data
+
+  m_series[nchan].replace(m_buffer[nchan]);
+  m_curIndx[nchan] = curIndx;
 }
