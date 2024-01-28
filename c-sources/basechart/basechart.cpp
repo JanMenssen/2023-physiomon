@@ -207,7 +207,6 @@ QValueAxis *baseChart::getXaxisRef() {
 
 void baseChart::setTimeAxis(float nsec) {
 
-
   // set the axis
 
   m_axisX->setRange(0,nsec);

@@ -14,6 +14,7 @@
 
 stripChart::stripChart(int nchan) : baseChart(nchan) {
 
+  for (int i=0;i<nchan;i++) m_buffer[i].reserve(MAX_POINTS_IN_GRAPH);
 }
 
 // destructor

@@ -10,6 +10,8 @@
 from PySide6.QtWidgets import QGridLayout,QWidget
 from PySide6.QtCharts import QChartView
 from stripchart import stripChart
+from sweepchart import sweepChart
+from scopechart import scopeChart
 
 RESOLUTION = 0.05
 
@@ -61,7 +63,9 @@ class displays() :
     maxcol = 0
     maxrow = 0
 
-    for iDisplay in range(self.m_numDisplay) :
+    for iDisp in range(settings.m_numDisplay) :
+
+      curDisplay = settings.m_dispays[iDisp]
 
       self.m_chanlist.append([])
     
@@ -70,20 +74,26 @@ class displays() :
       numChannels = settings.m_numchan
       for iChannel in range(numChannels) :
 
-        if ((settings.m_channels[iChannel]["display"]-1) == iDisplay) :
-          self.m_chanlist[iDisplay].append(iChannel)
+        if ((settings.m_channels[iChannel]["display"]-1) == iDisp) :
+          self.m_chanlist[iDisp].append(iChannel)
 
-      self.m_graphDisplay.append(stripChart())
+      # mode for the display
+      if (curDisplay["mode"].lower == "sweep") :
+        self.m_grapDisplay.append(sweepChart())
+      if ((curDisplay["mode"].lower) == "scope") :
+        self.m_grapDisplay.append(scopeChart())
+      if ((curDisplay["mode"].lower) == "strip") :
+        self.m_grapDisplay.append(stripChart())
+   
     
       # set the widget at the position, we assume to have a grid layout of 20 x 20, this means each
       # relative position should divided by 0.05
 
-      position,scale = settings.getDisplayInfo(iDisplay)
 
-      irow = round(position["top"] / RESOLUTION)
-      nrow = round(position["height"] / RESOLUTION)
-      icol = round(position["left"] / RESOLUTION)
-      ncol = round(position["width"] / RESOLUTION)
+      irow = round(curDisplay["top"] / RESOLUTION)
+      nrow = round(curDisplay["height"] / RESOLUTION)
+      icol = round(curDisplay["left"] / RESOLUTION)
+      ncol = round(curDisplay["width"] / RESOLUTION)
 
       # display is waveform        
       

@@ -13,7 +13,7 @@
 
 scopeChart::scopeChart(int nchan) : baseChart(nchan) {
   
-  for (int i=0;i<nchan;i++) m_buffer[i].reserve(SIZE_DOWNSAMPLE_BUFFER);
+  for (int i=0;i<nchan;i++) m_buffer[i].reserve(MAX_POINTS_IN_GRAPH);
 
   // create a red line reference for the current position
 

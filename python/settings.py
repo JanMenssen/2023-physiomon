@@ -54,26 +54,6 @@ class settings() :
   #-jm  return self.m_general["device"]
     return self.m_device
   
-  # getDisplayInfo
-  #
-  #     returns the position and the scale setting for the display with index i
-
-  def getDisplayInfo(self,i) :
-
-    position = {"top" : 0,"left" : 0, "height" : 0, "width" : 0}
-    scale = {"ymin" : 0, "ymax" : 0, "time" : 0}
-
-    position["top"] = self.m_displays[i]["top"]
-    position["left"] = self.m_displays[i]["left"]
-    position["height"] = self.m_displays[i]["height"]
-    position["width"] = self.m_displays[i]["width"]   
-
-    scale["ymin"] = self.m_displays[i]["ymin"]
-    scale["ymax"] = self.m_displays[i]["ymax"]
-    scale["time"] = self.m_displays[i]["timescale"]
-    
-    return position,scale
-
   # iniWrite
   #
   #     writes the current configuration
@@ -134,7 +114,7 @@ class settings() :
 
   def _readDisplaySettings(self) :
 
-    display = {"top" : 0, "left" : 0, "width" : 0, "height" : 0, "ymin" : 0, "ymax" : 0, "timescale" : 10}
+    display = {"top" : 0, "left" : 0, "width" : 0, "height" : 0, "ymin" : 0, "ymax" : 0, "timescale" : 10, "mode" : ""}
     self.m_displays = []
 
     for i in range(self.m_numdisp) :
@@ -149,6 +129,7 @@ class settings() :
       display["ymin"] = float(self.m_settings.value("ymin",0.0))
       display["ymax"] = float(self.m_settings.value("ymax",0.0))
       display["timescale"] = float(self.m_settings.value("timescale",10))
+      display["mode"] = self.m_settings.value("mode","sweep")
       self.m_settings.endGroup()
 
       self.m_displays.append(display.copy())
