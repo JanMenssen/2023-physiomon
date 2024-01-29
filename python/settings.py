@@ -17,6 +17,7 @@ class settings() :
   def __init__(self) :
     
     self.m_settings = QSettings(QSettings.IniFormat,QSettings.UserScope,"JanSoft","physiomon")
+    print(self.m_settings.fileName())
 
     #-jm self.m_general = {"numchan" : 1, "numdisp" : 1, "device" :""}
 
@@ -129,7 +130,7 @@ class settings() :
       display["ymin"] = float(self.m_settings.value("ymin",0.0))
       display["ymax"] = float(self.m_settings.value("ymax",0.0))
       display["timescale"] = float(self.m_settings.value("timescale",10))
-      display["mode"] = self.m_settings.value("mode","strip")
+      display["mode"] = self.m_settings.value("update mode","strip")
       self.m_settings.endGroup()
 
       self.m_displays.append(display.copy())
