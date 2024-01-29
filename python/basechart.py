@@ -24,12 +24,23 @@ class downSampler :
   def __init__(self) :
     super().__init__()
 
+    self.m_buffer = []
+    self.m_decimateFactor = 1
+
   def setRate(self,rate) :
+
+    self.m_decimateFactor = rate
     return
   
-  def getData(self,data) :
-    return  
+  def getData(self,data) : 
 
+    if (self.m_decimateFactor > 1) :
+      
+      self.m_buffer.extend(data)
+      data = self.m_buffer[::self.m_decimateFactor]
+      self.m_buffer[:(self.m_decimateFactor * len(data))] = []
+
+    return data
 
 # ----------------------------------------------------------------------
 #   baseChart
@@ -46,12 +57,14 @@ class baseChart :
     self.m_sampleRate = []
     self.m_deltaT = []
     self.m_pntsInGraph = []
+    self.m_downSampler = []
 
     for i in range(nchan) :
       self.m_sampleRate.append(500)
       self.m_deltaT.append(1/500)
       self.m_pntsInGraph.append(0)
-  
+      self.m_downSampler.append(downSampler())
+
     self.m_chart = QChart()
 
     self.m_axisX = QValueAxis()
@@ -109,12 +122,18 @@ class baseChart :
 
     self.m_axisX.setRange(0,nsec)
 
+    # calculte the reduction factor in plots on the screen 
+
     for i in range(self.m_numchan) :
-    #-jm 
-    #-jm   rate = round((nsec * self.m_sampleRate[i]) / MAX_POINTS_IN_GRAPH)
-    #-jm  self.m_pntsInGraph[i] = round(nsec * self.m_sampleRate[i] / rate)
-      self.m_pntsInGraph[i] = 2500
-    #-jm  self.m_deltaT[i] = rate / self.m_sampleRate[i]
+ 
+      rate = round(nsec * self.m_sampleRate[i] / MAX_POINTS_IN_GRAPH)
+      if rate > 0 : 
+        self.m_pntsInGraph[i] = round(nsec * self.m_sampleRate[i] / rate)
+      else :
+        self.m_pntsInGraph[i] = MAX_POINTS_IN_GRAPH
+      self.m_deltaT[i] = rate / self.m_sampleRate[i]
+
+      self.m_downSampler[i].setRate(rate)
 
     # and clear the data series
       

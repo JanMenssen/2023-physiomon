@@ -129,7 +129,7 @@ class settings() :
       display["ymin"] = float(self.m_settings.value("ymin",0.0))
       display["ymax"] = float(self.m_settings.value("ymax",0.0))
       display["timescale"] = float(self.m_settings.value("timescale",10))
-      display["mode"] = self.m_settings.value("mode","strip")
+      display["mode"] = self.m_settings.value("mode","scope")
       self.m_settings.endGroup()
 
       self.m_displays.append(display.copy())

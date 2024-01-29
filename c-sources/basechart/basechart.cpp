@@ -216,7 +216,7 @@ void baseChart::setTimeAxis(float nsec) {
   for (int i = 0;i < m_numchan; i++) {
 
     int rate = round((nsec * m_sampleRate[i]) / MAX_POINTS_IN_GRAPH);
-    m_pntsInGraph[i] = round(nsec * m_sampleRate[i] / rate);
+    m_pntsInGraph[i] = (rate > 0 ? round(nsec * m_sampleRate[i] / rate) : MAX_POINTS_IN_GRAPH);
     m_deltaT[i] = double(rate) / m_sampleRate[i];
 
     m_downSampler[i].setRate(rate);

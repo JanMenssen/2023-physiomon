@@ -7,7 +7,7 @@
 # modifications
 #    26-jan-2024  JM   initial version
 
-from basechart import baseChart
+from basechart import baseChart, downSampler
 from PySide6.QtCore import QPointF
 
 MAX_POINTS_IN_GRAPH = 2500
@@ -60,7 +60,9 @@ class scopeChart(baseChart) :
       curIndx = 0
       self.m_first[nchan] = False
 
-    # downSample (Note : should be added)
+    # downSample
+    
+    data = self.m_downSampler[nchan].getData(data)
       
     # the first points differ from the points after the screen is cleared when the right is reached
 

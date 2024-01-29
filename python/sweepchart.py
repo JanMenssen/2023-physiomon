@@ -56,8 +56,10 @@ class sweepChart(baseChart) :
       curIndx = 0
       self.m_series.clear()
 
-    # downSample (Note : should be added)
+    # downSample 
       
+    data = self.m_downSampler[nchan].getData(data)
+    
     # place the data in the (cleared) buffer
       
     self.m_buffer[nchan].clear()

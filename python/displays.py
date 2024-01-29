@@ -1,5 +1,5 @@
 #
-# displays_grid.py
+# displays.py
 #
 #         contains the software for the graphs and update the graphs on the screen. This in the
 #         grid implementation 

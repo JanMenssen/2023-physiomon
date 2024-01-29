@@ -14,7 +14,7 @@ from PySide6.QtCore import QTimer, Qt, QObject
 from statusbar import statusBarNew
 from settings import settings
 #-jm from displays_mdi import displays
-from displays_grid import displays
+from displays import displays
 from channels import channels
 from devphysiodaq import devPhysioDaq
 

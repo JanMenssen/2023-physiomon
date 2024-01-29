@@ -63,7 +63,9 @@ class stripChart(baseChart) :
 
     maxIndx = self.m_pntsInGraph[nchan]
 
-    # downSample (Note : should be added)
+    # downSample 
+
+    data = self.m_downSampler[nchan].getData(data)
       
     # the first points differ from the points after the screen is cleared when the right is reached
 
