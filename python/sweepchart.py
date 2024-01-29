@@ -54,12 +54,12 @@ class sweepChart(baseChart) :
 
     if (curIndx >= maxIndx) :
       curIndx = 0
-      self.m_series.clear()
+      self.m_series[nchan].clear()
 
     # downSample 
-      
+ 
     data = self.m_downSampler[nchan].getData(data)
-    
+
     # place the data in the (cleared) buffer
       
     self.m_buffer[nchan].clear()
@@ -71,7 +71,7 @@ class sweepChart(baseChart) :
 
     # and append the new data to the series
 
-    self.m_series.append(self.m_buffer[nchan])
+    self.m_series[nchan].append(self.m_buffer[nchan])
     self.m_curIndx[nchan] = curIndx
 
 

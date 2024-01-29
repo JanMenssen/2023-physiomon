@@ -132,9 +132,7 @@ class displays() :
 
     # and set the axis
 
-      
-  
-  
+    
   # plot
   #
   #   update the display with data
@@ -150,19 +148,10 @@ class displays() :
         chanList = self.m_chanlist[iDisplay]  
         nchan = len(chanList)
 
-        # if display is analog
-
         for iChannel, i in zip(chanList,range(nchan)) :  
           data = channels.readData(iChannel)
           self.m_graphDisplay[iDisplay].update(i,data)
-  
-        # if display is numeric
+          self.m_graphDisplay[iDisplay].finishUpdate()
           
     return
   
-  # setStartWaveFrom
-  #
-  #   sets the start time of the data
-
-  def setStartWaveform(self) :
-    return

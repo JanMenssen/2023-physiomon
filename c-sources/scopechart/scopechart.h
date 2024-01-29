@@ -19,6 +19,7 @@ class scopeChart: public baseChart {
     scopeChart(int nchan);
     ~scopeChart();
     void setTimeAxis(float nsec);
+    void setYaxis(float ymin, float ymax);
     void update(int nchan, int nsamples, float *data);
     void finishUpdate();
 
@@ -27,8 +28,8 @@ class scopeChart: public baseChart {
     bool m_first[MAX_CHANNELS_IN_DISPLAY] = {true, true, true};
     int m_curIndx[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
 
-    QLineSeries *m_curPositionLine = NULL;
-    int m_yLimit[2] = {0,0};
+    QLineSeries *m_scopeLine = NULL;
+    int m_yLimits[2] = {0,0};
 
 };
 

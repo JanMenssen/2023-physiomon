@@ -76,6 +76,7 @@ void displays::configure(settings *settings) {
     
       if ((settings->m_channels[iChan].display-1) == iDisp) {
         m_dispContents[iDisp].chanlist[m_dispContents[iDisp].nchan++] = iChan;
+   //-jm NITE, add colors and labels
       }   
     }
      
@@ -118,7 +119,8 @@ void displays::configure(settings *settings) {
 
     m_dispContents[iDisp].chart->setYaxis(curDisplay.ymin, curDisplay.ymax);
     m_dispContents[iDisp].chart->setTimeAxis(curDisplay.timescale);
-
+    //-jm m_dispContents[iDisp].chart->setColors()
+    //-jm m_dispContents[iDisp].chart->setLablels();
   }
 
   // check there is space left in the grid and fill it up with an empty

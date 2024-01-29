@@ -82,21 +82,22 @@ class baseChart :
     self.m_chart.legend().hide()
     self.m_chart.setBackgroundVisible(False)
 
-    self.m_series = QLineSeries()
-
-    # create for every channe q QLineSeries object and attach the series to the axis
+    # create for every channe a QLineSeries object and attach the series to the axis
 
     self.m_chart.removeAllSeries()
-
     self.m_numchan = nchan
 
-    #-jm for ichan in range(self.m_numchan) :
+    self.m_series = []
 
-    #-jm  self.m_series.append(QLineSeries())
-    self.m_chart.addSeries(self.m_series)
+    for ichan in range(self.m_numchan) :
+      self.m_series.append(QLineSeries())
 
-    self.m_series.attachAxis(self.m_axisX)
-    self.m_series.attachAxis(self.m_axisY)
+    for ichan in range(self.m_numchan) :
+
+      self.m_chart.addSeries(self.m_series[ichan])
+
+      self.m_series[ichan].attachAxis(self.m_axisX)
+      self.m_series[ichan].attachAxis(self.m_axisY)
 
   # setYaxis
   #
@@ -127,16 +128,37 @@ class baseChart :
     for i in range(self.m_numchan) :
  
       rate = round(nsec * self.m_sampleRate[i] / MAX_POINTS_IN_GRAPH)
-      if rate > 0 : 
-        self.m_pntsInGraph[i] = round(nsec * self.m_sampleRate[i] / rate)
-      else :
-        self.m_pntsInGraph[i] = MAX_POINTS_IN_GRAPH
+      if (rate == 0) : 
+        rate = 1
+      self.m_pntsInGraph[i] = round(nsec * self.m_sampleRate[i] / rate)
       self.m_deltaT[i] = rate / self.m_sampleRate[i]
 
       self.m_downSampler[i].setRate(rate)
 
-    # and clear the data series
+      # and clear the data series
       
-    self.m_series.clear()  
-    #-jm [self.m_series[i].clear for i in range(self.m_numchan)]
+      self.m_series[i].clear()  
+
+  # getXaxisRef
+  #
+  #     returns the reference to the X axis   
+
+  def getXaxisRef(self) :
+    return self.m_axisX
+
+  # getXaxisRef
+  #
+  #     returns the reference to the X axis   
+
+  def getYaxisRef(self) :
+    return self.m_axisY
+
+  # finshUpdate
+  #
+  #   empty function, only needed for scope display
+
+  def finishUpdate(self) :
+    return
+  
+      
 

@@ -24,6 +24,8 @@
 struct dispSettingStruct {
   int nchan = 0;
   int chanlist[5];
+  //jm enum colors 
+  //jm labels ?
   baseChart *chart = NULL;
 };
 

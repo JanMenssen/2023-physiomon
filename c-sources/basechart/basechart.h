@@ -26,7 +26,7 @@
 //    - a downsample class is created iwht a buffer of a number of samples
 
 #define MAX_CHANNELS_IN_DISPLAY 3
-#define MAX_POINTS_IN_GRAPH 500
+#define MAX_POINTS_IN_GRAPH 2500
 #define SIZE_DOWNSAMPLE_BUFFER 2500
 
 // downsampling class 
@@ -54,13 +54,14 @@ class baseChart {
   
     baseChart(int nchan);
     ~baseChart();
-    void setYaxis(float ymin, float ymax);
+
     void getYaxis(float *ymin, float *ymax);
 
     QValueAxis *getYaxisRef();
     QValueAxis *getXaxisRef();
     QChart *getChart();
 
+    virtual void setYaxis(float ymin, float ymax);
     virtual void setTimeAxis(float nsec);
     virtual void update(int chan, int nsamples, float *data) {};
     virtual void finishUpdate() {};

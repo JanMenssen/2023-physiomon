@@ -56,8 +56,8 @@ void stripChart::update(int nchan, int nsamples, float *data) {
 
   // at display overlap, index in buffer should be 0 and not first display
 
-  if (curIndx >= maxIndx) {
-    maxIndx = m_pntsInGraph[nchan] = buffer->count();
+  if ((curIndx >= maxIndx) && (m_first[nchan])) {
+    maxIndx = m_pntsInGraph[nchan] = m_series[nchan].count();
     m_first[nchan] = false;
   }
 

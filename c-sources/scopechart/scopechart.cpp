@@ -17,17 +17,18 @@ scopeChart::scopeChart(int nchan) : baseChart(nchan) {
 
   // create a red line reference for the current position
 
-  QChart *chart = getChart();
   QValueAxis *x_axis = getXaxisRef();
   QValueAxis *y_axis = getYaxisRef();
 
-  //-jm m_chart->addSeries(m_curPositionLine);
-  //-jm m_curPositionLine->attachAxis(x_axis);
-  //-jm m_curPositionLine->attachAxis(y_axis);
-  
-  
-  //-jm m_yLimit[0] = y_axis->min();
-  //-jm m_yLimit[1] = y_axis->max();
+  m_scopeLine = new QLineSeries();
+  m_chart->addSeries(m_scopeLine);
+  m_scopeLine->attachAxis(x_axis);
+  m_scopeLine->attachAxis(y_axis);
+
+  QPen pen = m_scopeLine->pen();
+  pen.setWidth(1);
+  pen.setColor("red");
+  m_scopeLine->setPen(pen);
 
 }
 
@@ -55,7 +56,19 @@ void scopeChart::setTimeAxis(float nsec) {
 
   }
 }
+// setYaxis
+//
+//    the scope chart has a specific setYaxis function because the values should be 
+//    known for the red line seperating the future and the parameters
 
+void scopeChart::setYaxis(float ymin,float ymax) {
+
+  baseChart::setYaxis(ymin,ymax);
+
+  m_yLimits[0] = ymin;
+  m_yLimits[1] = ymax;
+}
+//
 // update
 
 void scopeChart::update(int nchan, int nsamples, float *data) {
@@ -71,10 +84,13 @@ void scopeChart::update(int nchan, int nsamples, float *data) {
 
   // at display overlap, index in buffer should be 0 and not first display
 
-  if (curIndx >= maxIndx) {
+  if (curIndx > maxIndx) {
     curIndx = 0;
-    m_first[nchan] = false;
-  }
+    if (m_first[nchan]) {
+      m_first[nchan] = false;
+      maxIndx = m_pntsInGraph[nchan] = m_series->count();
+    }  
+  } 
 
   // downsample the data
 
@@ -100,7 +116,7 @@ void scopeChart::update(int nchan, int nsamples, float *data) {
       tmp.setY(data[i]);
     
       buffer->replace(curIndx++,tmp);
-      curIndx = (curIndx > maxIndx ? 0 : curIndx); 
+      curIndx = (curIndx >= maxIndx ? 0 : curIndx); 
     }
   }
 
@@ -118,9 +134,11 @@ void scopeChart::finishUpdate() {
 
   QVector<QPointF> posline;
 
-  posline.append(QPointF(m_curIndx[0],m_yLimit[0]));
-  posline.append(QPointF(m_curIndx[0],m_yLimit[1]));
+  if (!m_first[0]) {
 
-//=jm  m_curPositionLine->replace(posline);
+    posline.append(QPointF((m_curIndx[0] * m_deltaT[0]),m_yLimits[0]));
+    posline.append(QPointF((m_curIndx[0] * m_deltaT[0]),m_yLimits[1]));
 
+    m_scopeLine->replace(posline);
+  }
 }

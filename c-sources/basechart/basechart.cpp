@@ -149,7 +149,6 @@ baseChart::baseChart(int nchan) {
   for (int ichan = 0; ichan < m_numchan; ichan++) {
 
     m_chart->addSeries(&m_series[ichan]);
-
     m_series[ichan].attachAxis(m_axisX);
     m_series[ichan].attachAxis(m_axisY);
   }
@@ -216,7 +215,8 @@ void baseChart::setTimeAxis(float nsec) {
   for (int i = 0;i < m_numchan; i++) {
 
     int rate = round((nsec * m_sampleRate[i]) / MAX_POINTS_IN_GRAPH);
-    m_pntsInGraph[i] = (rate > 0 ? round(nsec * m_sampleRate[i] / rate) : MAX_POINTS_IN_GRAPH);
+    if (rate == 0) rate = 1;
+    m_pntsInGraph[i] = round(nsec * m_sampleRate[i] / rate);
     m_deltaT[i] = double(rate) / m_sampleRate[i];
 
     m_downSampler[i].setRate(rate);

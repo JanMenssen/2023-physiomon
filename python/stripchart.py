@@ -56,12 +56,10 @@ class stripChart(baseChart) :
     
     # sweep back at the end of the scrren
 
-    if (curIndx >= maxIndx) :
-      self.m_pntsInGraph[nchan] = len(self.m_buffer[nchan])
+    if (curIndx >= maxIndx) and (self.m_first[nchan] == True) :
+      self.m_pntsInGraph[nchan] = self.m_series[nchan].count()
       maxIndx = self.m_pntsInGraph[nchan]
       self.m_first[nchan] = False
-
-    maxIndx = self.m_pntsInGraph[nchan]
 
     # downSample 
 
@@ -81,26 +79,21 @@ class stripChart(baseChart) :
       # shift samples
   
       for i in range(maxIndx - nsamples) :
-        tmp = self.m_buffer[nchan][i + nsamples]
-        tmp.setX(i * deltaT)
-        self.m_buffer[nchan][i] = tmp
-
+        self.m_buffer[nchan][i] = QPointF((i * deltaT),  self.m_buffer[nchan][i + nsamples].y())
+      
       # and add new samples
       
       curIndx = maxIndx - nsamples
       for i in range(nsamples) :
-        
-        tmp = QPointF((curIndx * deltaT),data[i])
-        self.m_buffer[nchan][i] = tmp
-        
-        if (curIndx < maxIndx) :
-          curIndx += 1
-        else :
+       
+        self.m_buffer[nchan][curIndx] = QPointF((curIndx * deltaT),data[i])
+        curIndx += 1
+        if (curIndx > maxIndx) :
           curIndx = 0
 
     # and replace the new data to the series
 
-    self.m_series.replace(self.m_buffer[nchan])
+    self.m_series[nchan].replace(self.m_buffer[nchan])
     self.m_curIndx[nchan] = curIndx
 
 
