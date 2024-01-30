@@ -1,19 +1,24 @@
 %
-% settings
+% physiomon_settings
 %
-%       creates a cyclic buffer
+%   reads the <physiomon> *.ini file and stores this information into 
+%          - m_channels
+%          - m_displays
+%          - m_events
+%
+%   to avoid conflicts with the matlab <settings> this class is named <physiomon_settings>
 %
 % modifications
 %   25-jan-2024   JM    initial version
 
-classdef settings
+classdef physiomon_settings
 
   properties (Access = private)
     
     m_filename = [];
     m_channels = [];
     m_displays = [];
-    m_events = [];
+    m_events = repmat("",10,1);
 
   end
 
@@ -21,7 +26,7 @@ classdef settings
   
     %% constructor
 
-    function obj = settings()
+    function obj = physiomon_settings()
     
       % constructor of the class, sets the filename. location is dependent of the
       % operating system
@@ -47,8 +52,8 @@ classdef settings
 
       tmpStruct = ini2struct(obj.m_filename);
       
-      numChan = tmpStruct.algemeen.numchan;
-      numDisp = tmpStruct.algemeen.numdisp;
+      numChan = round(str2double(tmpStruct.algemeen.numchan));
+      numDisp = round(str2double(tmpStruct.algemeen.numdisp));
       numEvents = 10;
 
       obj = obj.readDisplays(tmpStruct,numDisp);
@@ -72,11 +77,11 @@ classdef settings
       %
       % <m_channels> is an internal private member of the class
 
-      obj.m_channels = repmat(struct('name',[],'type',[],'source',[],'display',[]),numChannels);
+      obj.m_channels = repmat(struct('name',[],'type',[],'source',[],'display',[]),numChannels,1);
 
       for iChan = 1:numChannels
 
-        field = ['channel' numstr(ichan)];
+        field = ['channel' num2str(iChan)];
 
         obj.m_channels(iChan).name = tmpStruct.(field).name;
         switch lower(tmpStruct.(field).type) 
@@ -85,8 +90,8 @@ classdef settings
             obj.m_channels(iChan).type = 1;
         end
 
-        obj.m_channels(iChan).source = tmpStruct.(field).source;
-        obj.m_channels(iChan).display = tmpStruct.(field).display;
+        obj.m_channels(iChan).source = str2double(tmpStruct.(field).source);
+        obj.m_channels(iChan).display = str2double(tmpStruct.(field).display);
       
       end
     end
@@ -102,19 +107,30 @@ classdef settings
       %
       % <m_displays> is an internal private member of the class
 
-      obj.m_displays = repmat(struct('top',[],'left',[],'width',[],'height',[],'ymin',[],'ymax',[],'timescale',[]),numDisplays);
+      obj.m_displays = repmat(struct('top',[],'left',[],'width',[],'height',[],'ymin',[],'ymax',[],'timescale',[],'mode',[]),numDisplays,1);
 
       for iDisplay = 1:numDisplays
       
-        field = ['displays' num2str(iDisplay)];
+        field = ['display' num2str(iDisplay)];
 
-        obj.m_displays(iDisplay).top = tmpStruct.(field).top;
-        obj.m_displays(iDisplay).left = tmpStruct.(field).left;
-        obj.m_displays(iDisplay).width = tmpStruct.(field).width;
-        obj.m_displays(iDisplay).height = tmpStruct.(field).height;
-        obj.m_displays(iDisplay).ymin = tmpStruct.(field).ymin;        
-        obj.m_displays(iDisplay).ymax = tmpStruct.(field).ymax;        
-        obj.m_displays(iDisplay).timescale = tmpStruct.(field).timescale;
+        obj.m_displays(iDisplay).top = str2double(tmpStruct.(field).top);
+        obj.m_displays(iDisplay).left = str2double(tmpStruct.(field).left);
+        obj.m_displays(iDisplay).width = str2double(tmpStruct.(field).width);
+        obj.m_displays(iDisplay).height = str2double(tmpStruct.(field).height);
+        obj.m_displays(iDisplay).ymin = str2double(tmpStruct.(field).ymin);        
+        obj.m_displays(iDisplay).ymax = str2double(tmpStruct.(field).ymax);        
+        obj.m_displays(iDisplay).timescale = str2double(tmpStruct.(field).timescale);
+
+        switch (lower(tmpStruct.(field).updatemode))
+          
+          case 'scope'
+            obj.m_displays(iDisplay).mode = 1;
+          case 'sweep'
+            obj.m_displays(iDisplay).mode = 2;
+          case 'strip'
+            obj.m_displays(iDisplay).mode = 3;
+
+        end
 
       end
 
@@ -132,19 +148,14 @@ classdef settings
       % <m_events> is an internal private member of the class. If the event number in the
       % *.INI file is not found a default string "this is event <nr>" is added
 
+      for iEvent = 1:numEvents, obj.m_events(iEvent) = ['this is event ' num2str(iEvent)]; end
+
       for iEvent = 1:numEvents
-
-        field = ['x' numstr(iEvents)];
-
-        if isfield(tmpStruct.events,field)
-          obj.m_events(iEvent) = tmpStruct.events.(field);
-        else
-          obj.m_events(iEvent) = ['this is event ' numstr(iEvent)];
-        end
-      
+        field = ['x' num2str(iEvent)];
+        if isfield(tmpStruct.events,field), obj.m_events(iEvent) = tmpStruct.events.(field); end
       end
-
     end
+
 
   end
 end
