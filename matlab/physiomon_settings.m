@@ -13,7 +13,7 @@
 
 classdef physiomon_settings
 
-  properties (Access = private)
+  properties (GetAccess = public)
     
     m_filename = [];
     m_channels = [];
@@ -36,7 +36,7 @@ classdef physiomon_settings
 
     %% iniRead
 
-    function obj = iniRead(obj)
+    function [obj,devicename] = iniRead(obj)
     
       % reads the *.INI file and make 3 structures, depending on the information in the *.INI
       % file
@@ -45,10 +45,11 @@ classdef physiomon_settings
       %     - m_events      : contains information for the events
       %
       %
-      %   syntax : obj = iniRead(obj)
+      %   syntax : [obj,devicdename] = iniRead(obj)
       %
       % this method differs from the one used in Qt (python and C++). No defaults values
-      % are given except for the event structure
+      % are given except for the event structure. <devicename> is returned, the name of
+      % the device (and so the device *.INI file)
 
       tmpStruct = ini2struct(obj.m_filename);
       
@@ -60,6 +61,7 @@ classdef physiomon_settings
       obj = obj.readChannels(tmpStruct,numChan);
       obj = obj.readEvents(tmpStruct,numEvents);
       
+      devicename = tmpStruct.algemeen.device;
     end
 
   end
@@ -81,17 +83,17 @@ classdef physiomon_settings
 
       for iChan = 1:numChannels
 
-        field = ['channel' num2str(iChan)];
+        section = ['channel' num2str(iChan)];
 
-        obj.m_channels(iChan).name = tmpStruct.(field).name;
-        switch lower(tmpStruct.(field).type) 
+        obj.m_channels(iChan).name = tmpStruct.(section).name;
+        switch lower(tmpStruct.(section).type) 
 
           case "analog in" 
             obj.m_channels(iChan).type = 1;
         end
 
-        obj.m_channels(iChan).source = str2double(tmpStruct.(field).source);
-        obj.m_channels(iChan).display = str2double(tmpStruct.(field).display);
+        obj.m_channels(iChan).source = str2double(tmpStruct.(section).source);
+        obj.m_channels(iChan).display = str2double(tmpStruct.(section).display);
       
       end
     end
@@ -111,17 +113,17 @@ classdef physiomon_settings
 
       for iDisplay = 1:numDisplays
       
-        field = ['display' num2str(iDisplay)];
+        section = ['display' num2str(iDisplay)];
 
-        obj.m_displays(iDisplay).top = str2double(tmpStruct.(field).top);
-        obj.m_displays(iDisplay).left = str2double(tmpStruct.(field).left);
-        obj.m_displays(iDisplay).width = str2double(tmpStruct.(field).width);
-        obj.m_displays(iDisplay).height = str2double(tmpStruct.(field).height);
-        obj.m_displays(iDisplay).ymin = str2double(tmpStruct.(field).ymin);        
-        obj.m_displays(iDisplay).ymax = str2double(tmpStruct.(field).ymax);        
-        obj.m_displays(iDisplay).timescale = str2double(tmpStruct.(field).timescale);
+        obj.m_displays(iDisplay).top = str2double(tmpStruct.(section).top);
+        obj.m_displays(iDisplay).left = str2double(tmpStruct.(section).left);
+        obj.m_displays(iDisplay).width = str2double(tmpStruct.(section).width);
+        obj.m_displays(iDisplay).height = str2double(tmpStruct.(section).height);
+        obj.m_displays(iDisplay).ymin = str2double(tmpStruct.(section).ymin);        
+        obj.m_displays(iDisplay).ymax = str2double(tmpStruct.(section).ymax);        
+        obj.m_displays(iDisplay).timescale = str2double(tmpStruct.(section).timescale);
 
-        switch (lower(tmpStruct.(field).updatemode))
+        switch (lower(tmpStruct.(section).updatemode))
           
           case 'scope'
             obj.m_displays(iDisplay).mode = 1;
