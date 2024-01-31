@@ -7,7 +7,8 @@
 %         - the device writes data to the channel
 %         - the display and storage engine reads data from the channel
 %
-%     this class makes use of the <cyclicbuffer. class
+%     this class makes use of the <cyclicbuffer> class
+%
 % modifications
 %   31-jan-2024   JM    initial version
 
