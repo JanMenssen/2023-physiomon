@@ -9,7 +9,7 @@
   if ~isdeployed
     
     if (ispc)
-      addpath('C:\users\z558043\OneDrive - Radboudumc\my matlab');
+      addpath('C:\Users\z558043\OneDrive - Radboudumc\my matlab')
     end
 
     if (ismac)
