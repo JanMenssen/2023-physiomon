@@ -83,6 +83,7 @@ class mainWindow(QMainWindow) :
     # and set ready
 
     self.setWindowTitle("PhysioMon v3.01")
+    self.setStyleSheet("background-color: black;")
     self.statusBar().setText("ready ...",5.0)
 
   # configure

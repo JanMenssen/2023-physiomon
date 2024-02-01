@@ -71,8 +71,9 @@ class stripChart(baseChart) :
     if (self.m_first[nchan] == True) :
 
       for i in range(nsamples) :
-        self.m_buffer[nchan].append(QPointF((curIndx * deltaT),data[i]))
-        curIndx += 1
+        if (curIndx < maxIndx) :
+          self.m_buffer[nchan].append(QPointF((curIndx * deltaT),data[i]))
+          curIndx += 1
 
     else :
       
@@ -90,6 +91,14 @@ class stripChart(baseChart) :
         curIndx += 1
         if (curIndx > maxIndx) :
           curIndx = 0
+
+    # tempory to debug
+          
+      if (nsamples > 0) :
+        x = maxIndx - nsamples
+        print("-------------------------------------")
+        for i in range(20) :
+          print(self.m_buffer[nchan][i-10].x())
 
     # and replace the new data to the series
 
