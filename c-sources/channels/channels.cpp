@@ -98,7 +98,7 @@ void channels::configure(settings *settings, measureDevice *device) {
         if (source == ianalog) {
 
           float sampleRate = device->m_analogIn[ianalog].sampleRate;
-          int buflen = int(m_lengthInSeconds / sampleRate);
+          int buflen = int(m_lengthInSeconds * sampleRate);
 
           m_buffers[ichan].sampleRate = sampleRate;
           m_buffers[ichan].display = new cyclicBuffer(buflen);
