@@ -5,6 +5,7 @@
 %     channels are available
 %
 %     the class makes use of the <arduinocomm> class and protocol
+%
 % modifications
 %   01-feb-2024   JM    initial version
 
