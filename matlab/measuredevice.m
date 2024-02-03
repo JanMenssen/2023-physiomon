@@ -11,7 +11,7 @@
 
 classdef measuredevice
 
-  properties(Access = private)
+  properties(GetAccess = public)
     m_started = [];
     m_analogIn = [];
   end

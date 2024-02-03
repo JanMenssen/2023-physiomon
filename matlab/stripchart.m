@@ -29,16 +29,16 @@ classdef stripchart < basechart
       % with <axixHandle> a handle to the axis of the chart and <channels> a list of
       % channcels that should be plotted in this chart
 
-      obj = basechart(axisHandle,channels);
+      obj = obj@basechart(axisHandle,channels);
 
-      obj.m_curIndx = ones(lenght(channels),1);
-      obj.m_first = ones(length(channels),1,'bool');
+      obj.m_curIndx = ones(length(channels),1);
+      obj.m_first = ones(length(channels),1,'logical');
 
     end
 
     %% setTimeAxis
 
-    function obj = setTimeAxis(~,nsec)
+    function obj = setTimeAxis(obj,nsec)
       
       % in the method <setTimeAxis> the time scale is set to the graph and 
       % some variablea are initialised
@@ -48,7 +48,7 @@ classdef stripchart < basechart
       % with <nsec> the lenght of the time axis
 
 
-      obj = setTimeAxis@basechart(nsec);
+      obj = obj.setTimeAxis@basechart(nsec);
       
       obj.m_first = true;
       obj.m_curIndx = 0;

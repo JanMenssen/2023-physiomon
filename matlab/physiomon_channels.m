@@ -23,7 +23,7 @@ classdef physiomon_channels
   
     %% constructor
 
-    function obj = phsyiomon_channels(nsec)
+    function obj = physiomon_channels(nsec)
       
       % constructor of the class, some properties are initialised
 
@@ -43,14 +43,14 @@ classdef physiomon_channels
       % with <settings> and instance of the settings class and <device> an instance of the
       % device class
 
-      numChan = mySettings.m_numChan;
+      numChan = length(mySettings.m_channels);
       obj.m_buffers = repmat(struct('sampleRate',[],"display",[],'store',[]),numChan,1);
 
       % perform for all channels
       
       for iChan = 1:numChan
       
-        source = mySettins(iChan).type;
+        source = mySettings.m_channels(iChan).source;
         numAnalog = length(myDevice.m_analogIn);
         for iAnalog = 1:numAnalog
 
@@ -58,12 +58,12 @@ classdef physiomon_channels
           
           if ((source+1) == iAnalog)
 
-            sampleRate = myDevice.m_analogin(iAnalog).sampleRate;
-            buflen = obj.m_lengthInSeconds / sampleRate;
+            sampleRate = myDevice.m_analogIn(iAnalog).sampleRate;
+            buflen = obj.m_lengthInSeconds * sampleRate;
           
             obj.m_buffers(iChan).sampleRate = sampleRate;
-            obj.m_buffers(iChan).display = cyclic_buffer(buflen,'double');
-            obj.m_buffers(iChan).store = cyclic_buffer(buflen,'double');
+            obj.m_buffers(iChan).display = cyclicbuffer(buflen,'double');
+            obj.m_buffers(iChan).store = cyclicbuffer(buflen,'double');
 
           end
 

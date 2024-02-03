@@ -9,7 +9,7 @@
 classdef displays
 
   properties (Access = private)
-    m_chart = [];
+    m_chart = {};
   end
 
   methods
@@ -35,7 +35,7 @@ classdef displays
 
     %% configure
    
-    function obj = configure(obj,mySettings,cansvasHandle)
+    function obj = configure(obj,mySettings,canvasHandle)
     
       % in configure, the displays are configured using the information from an instance
       % of the <physiomon_settings> class. The number of displays are placed on the canvas
@@ -48,24 +48,16 @@ classdef displays
  
       % first remove the the exisiting charts
 
-      obj.m_chart = [];
-      axes = findobj(cansvasHandle,'type','axes');
-      delete(axes);
+      obj.m_chart = {};
+      used_axes = findobj(canvasHandle,'type','axes');
+      delete(used_axes);
 
       % now create each display on the canvas, but before we must known the size of the
       % figure
 
-      canvasWidth = h.Position(3);
-      canvasHeight = h.Position(4);
-
       for iDisp = 1:length(mySettings.m_displays)
 
         curDisp = mySettings.m_displays(iDisp);
-
-        top = canvasWidth * curDisp.top;
-        left = canvasHeight * curDisp.left;
-        width = canvasWidth * curDisp.width;
-        height = canvasHeight * curDisp.height;
 
         % get the channels which should be on the current display, currently
         % max 3 channels are allowed
@@ -78,24 +70,24 @@ classdef displays
             i = i + 1;
           end     
         end
-        channels((i-1):3) = [];
+        channels((i):3) = [];
 
-        % and create the current display
+        % and create the current display (position is different compared to Qt)
 
-        handle = subplot('position',[top left width height]);
+        handle = axes(OuterPosition = [curDisp.left (1-curDisp.top-curDisp.height) curDisp.width curDisp.height]);
         switch curDisp.mode
           case 1
-            obj.m_chart(iDisp) = stripchart(handle,channels);
+            obj.m_chart{iDisp} = stripchart(handle,channels);
           case 2
-            obj.m_chart(iDisp) = sweepchart(handle,channels);
+            obj.m_chart{iDisp} = sweepchart(handle,channels);
           case 3
-            obj.m_chart(iDisp) = scopeChart(handle,channels);
+            obj.m_chart{iDisp} = scopechart(handle,channels);
         end
 
         % and set the Y-axis and time axis for the current chart
 
-        chart.setYaxis(curDisp.ymin,curDisp.ymax);
-        chart.setTimeAxis(curDisp.timeScale);
+        obj.m_chart{iDisp}.setYaxis(curDisp.ymin,curDisp.ymax);
+        obj.m_chart{iDisp}.setTimeAxis(curDisp.timescale);
       
       end
     end
@@ -128,7 +120,7 @@ classdef displays
           
           % update the display
 
-          obj.m_chart(iDisp).update(iChan,data);
+          obj.m_chart{iDisp}.update(iChan,data);
        
         end
         obj.m_chart.finishUpdate();

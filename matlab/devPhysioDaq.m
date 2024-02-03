@@ -12,7 +12,7 @@
 classdef devPhysioDaq < measuredevice
 
   properties
-    m_adress = [];
+    m_address = [];
     m_arduino = [];
   end
 
@@ -79,10 +79,10 @@ classdef devPhysioDaq < measuredevice
         if ismac(), filename = ['/Users/Jan/.config/Jansoft/' deviceName '.ini']; end
         if ispc(), filename = ['C:\users\z558043\appdata\roaming\Jansoft\' filename '.ini']; end
 
-        obj = obj.iniRead@measuredevice();
+        obj = obj.iniRead@measuredevice(deviceName);
 
         tmpStruct = ini2struct(filename);
-        if isfield(tmpStruct,'address'), obj.m_address = tmpStruct.address; end
+        if isfield(tmpStruct.algemeen,'address'), obj.m_address = tmpStruct.algemeen.address; end
 
     end
 
