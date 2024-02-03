@@ -54,17 +54,17 @@ classdef basechart
       %
       % with <ymin> the lower boundary and <ymax> the upper boundary of the y-axis
 
-      obj.m_handle.yLim([ymin ymax]);
+      obj.m_handle.YLim = [ymin ymax];
 
     end
 
     %% setTimeAxis
 
-    function setTimeAxis(obj,nsec)
+    function obj = setTimeAxis(obj,nsec)
 
       % set the time scale
 
-      obj.m_handle.xLim([0 nsec]);
+      obj.m_handle.XLim = [0 nsec];
       
       % calculate the number of points in the graph
 
