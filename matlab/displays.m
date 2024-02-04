@@ -84,12 +84,12 @@ classdef displays
         % and create the current display (position is different compared to Qt). around
         % the borders, 10 pixels are used for a nicer layout
 
-        left = ceil(curDisp.left * canvasWidth) + 10;
-        top = ceil(curDisp.top * canvasHeight) + 10;
-        width = floor(curDisp.width * (canvasWidth - canvasLeft)) - 10;
-        height = floor(curDisp.height * canvasHeight) - 10;
+        left = ceil(curDisp.left * canvasWidth) + 50;
+        top = ceil(curDisp.top * canvasHeight) + 35;
+        width = floor(curDisp.width * (canvasWidth - canvasLeft)) - 50;
+        height = floor(curDisp.height * canvasHeight) - 35;
 
-        handle = uiaxes(parent = canvasHandle, OuterPosition = [left top width height],Color=background);
+        handle = uiaxes(parent = canvasHandle, InnerPosition = [left top width height],Color=background);
         switch curDisp.mode
           case 1
             obj.m_chart{iDisp} = stripchart(handle,channels);
