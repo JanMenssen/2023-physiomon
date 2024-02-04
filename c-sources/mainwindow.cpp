@@ -57,7 +57,7 @@ mainWindow::mainWindow(int width, int height) {
   m_displays = new displays(centralWidget);
   m_channels = new channels(MAX_CHANNELS);
 
-  configure();
+  onConfigure();
 
   // create the timer
 
@@ -211,12 +211,12 @@ void mainWindow::createEventKeys() {
   connect(keyF10,SIGNAL(activated()),this,SLOT(onEvent()));
 }
 
-// configure
+// onConfigure
 //
 //    configures the program, depending on the settings from the *.INI file or from the popup
 //    menu
 
-void mainWindow::configure() {
+void mainWindow::onConfigure() {
 
   m_displays->configure(m_settings);
   m_device->configure(m_settings);

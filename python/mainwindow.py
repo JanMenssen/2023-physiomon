@@ -72,7 +72,7 @@ class mainWindow(QMainWindow) :
     self.m_displays = displays(centralWidget)
     self.m_channels = channels(MAX_CHANNELS)
 
-    self.configure()
+    self.onConfigure()
     
     # set the timer
 
@@ -86,12 +86,12 @@ class mainWindow(QMainWindow) :
     self.setStyleSheet("background-color: black;")
     self.statusBar().setText("ready ...",5.0)
 
-  # configure
+  # onConfigure
   #
   #   configures the program, depending the settings read from the *.INI files or from the
   #   popup menu's
     
-  def configure(self) :
+  def onConfigure(self) :
 
     self.m_displays.configure(self.m_settings)
     self.m_device.configure(self.m_settings)
