@@ -55,26 +55,41 @@ classdef displays
       % now create each display on the canvas, but before we must known the size of the
       % figure
 
-      for iDisp = 1:length(mySettings.m_displays)
+      myDisplays = mySettings.getDisplays();
+      myChannels = mySettings.getChannels();
 
-        curDisp = mySettings.m_displays(iDisp);
+      background = canvasHandle.BackgroundColor;
+
+      canvasLeft = canvasHandle.Position(1);
+      canvasWidth = canvasHandle.Position(3);
+      canvasHeight = canvasHandle.Position(4) - 75;       % size of the banner
+
+      for iDisp = 1:length(myDisplays)
+
+        curDisp = myDisplays(iDisp);
 
         % get the channels which should be on the current display, currently
         % max 3 channels are allowed
 
         channels = zeros(3,1);
         i = 1;
-        for iChan = 1:length(mySettings.m_channels)
-          if (mySettings.m_channels(iChan).display == iDisp)
+        for iChan = 1:length(myChannels)
+          if (myChannels(iChan).display == iDisp)
             channels(i) = iChan;
             i = i + 1;
           end     
         end
         channels((i):3) = [];
 
-        % and create the current display (position is different compared to Qt)
+        % and create the current display (position is different compared to Qt). around
+        % the borders, 10 pixels are used for a nicer layout
 
-        handle = axes(OuterPosition = [curDisp.left (1-curDisp.top-curDisp.height) curDisp.width curDisp.height]);
+        left = ceil(curDisp.left * canvasWidth) + 10;
+        top = ceil(curDisp.top * canvasHeight) + 10;
+        width = floor(curDisp.width * (canvasWidth - canvasLeft)) - 10;
+        height = floor(curDisp.height * canvasHeight) - 10;
+
+        handle = uiaxes(parent = canvasHandle, OuterPosition = [left top width height],Color=background);
         switch curDisp.mode
           case 1
             obj.m_chart{iDisp} = stripchart(handle,channels);

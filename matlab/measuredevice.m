@@ -11,7 +11,7 @@
 
 classdef measuredevice
 
-  properties(GetAccess = public)
+  properties(Access = private)
     m_started = [];
     m_analogIn = [];
   end
@@ -24,8 +24,24 @@ classdef measuredevice
       
       % the constructor initialises the class. This is done by settings the properties to
       % their initial values
+      %
+      %     syntax : obj = measuredevice()
 
       obj.m_started = false;
+    end
+
+    %% getAnalogChannels
+
+    function analogIn = getAnalogChannels(obj)
+
+      % returns a copy of the private property <m_analogIn>
+      %
+      %     syntax : analogIn = getAnalogChannels(obj)
+      %
+      % with <analogIn> a copy of the private property
+
+      analogIn = obj.m_analogIn;
+
     end
 
     %% initialise
@@ -113,10 +129,10 @@ classdef measuredevice
 
       % source is 0 based
 
-      numChan = length(mySettings.m_channels);
-      for iChan = 1:numChan      
-        source = mySettings.m_channels(iChan).source;
-        if (mySettings.m_channels(iChan).type ==1 ), obj.m_analogIn(source+1).channels = [obj.m_analogIn(source+1).channels iChan]; end
+      myChannels = mySettings.getChannels();
+      for iChan = 1:length(myChannels)      
+        source = myChannels(iChan).source;
+        if (myChannels(iChan).type ==1 ), obj.m_analogIn(source+1).channels = [obj.m_analogIn(source+1).channels iChan]; end
       end
 
     end

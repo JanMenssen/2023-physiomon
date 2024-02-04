@@ -13,7 +13,7 @@
 
 classdef physiomon_settings
 
-  properties (GetAccess = public)
+  properties (Access = private)
     
     m_filename = [];
     m_channels = [];
@@ -33,6 +33,48 @@ classdef physiomon_settings
 
       if ismac(), obj.m_filename = '/Users/jan/.config/JanSoft/physiomon.ini'; end
     end
+
+    %% getChannels
+
+    function channels = getChannels(obj)
+    
+      % this method returns the private property <m_channels>
+      %
+      %     syntax : channels = getChannels(obj)
+      %
+      % with <channels> a copy of the private member m_channels
+
+      channels = obj.m_channels;
+
+    end
+
+    %% getEvents
+
+    function events = getEvents(obj)
+    
+      % this method returns the private property <m_events>
+      %
+      %     syntax : events = getEvents(obj)
+      %
+      % with <events> a copy of the private member m_events
+      
+      events = obj.m_events;
+
+    end  
+
+    %% getDisplays
+
+    function displays = getDisplays(obj)
+    
+      % this method returns the private property <m_displays>
+      %
+      %     syntax : displays = getDisplays(obj)
+      %
+      % with <displays> a copy of the private member m_displays
+      
+      displays = obj.m_displays;
+
+    end  
 
     %% iniRead
 

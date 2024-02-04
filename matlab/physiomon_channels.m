@@ -43,22 +43,25 @@ classdef physiomon_channels
       % with <settings> and instance of the settings class and <device> an instance of the
       % device class
 
-      numChan = length(mySettings.m_channels);
+      myChannels = mySettings.getChannels();
+      numChan = length(myChannels);
       obj.m_buffers = repmat(struct('sampleRate',[],"display",[],'store',[]),numChan,1);
 
       % perform for all channels
       
       for iChan = 1:numChan
       
-        source = mySettings.m_channels(iChan).source;
-        numAnalog = length(myDevice.m_analogIn);
+        source = myChannels(iChan).source;
+        analogIn = myDevice.getAnalogChannels();
+
+        numAnalog = length(analogIn);
         for iAnalog = 1:numAnalog
 
           % create the buffers if the source is found 
           
           if ((source+1) == iAnalog)
 
-            sampleRate = myDevice.m_analogIn(iAnalog).sampleRate;
+            sampleRate = analogIn(iAnalog).sampleRate;
             buflen = obj.m_lengthInSeconds * sampleRate;
           
             obj.m_buffers(iChan).sampleRate = sampleRate;
