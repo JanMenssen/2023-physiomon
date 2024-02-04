@@ -44,6 +44,20 @@ classdef measuredevice
 
     end
 
+    %% setAnalogChannels
+
+    function obj = setAnalogChannels(obj,analogIn)
+
+      % given an array of the <m_analogIn> struct, this methods set the internal <m_analogIn> 
+      % property
+      %
+      %     syntax : obj = setAnalogChannels(obj,analogIn)
+      %
+      % with <analogIn> an array of the analog structure used
+
+      obj.m_analogIn = analogIn;
+
+    end  
     %% initialise
 
     function obj = initialise(obj)

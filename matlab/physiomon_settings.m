@@ -76,6 +76,51 @@ classdef physiomon_settings
 
     end  
 
+    %% setChannels
+
+    function obj = setChannels(obj,channels)
+    
+      % the method <setChannels> copies information from <channels> to the internal
+      % private propertie <m_channels> This method is used in the dialog boxes
+      %
+      %     syntax : obj = setChannels(obj,channels)
+      %
+      % with <channels> an vector of a channelStruct
+
+      obj.m_channels = channels;
+
+    end
+
+    %% setDisplays
+
+    function obj = setDisplays(obj,displays)
+
+      % the method <setDisplays> copies information from <displays> to the internal
+      % private propertie <m_displays> This method is used in the dialog boxes
+      %
+      %     syntax : obj = setDisplays(obj,displays)
+      %
+      % with <displays> an vector of a displayStruct
+
+      obj.m_displays = displays;
+
+    end
+
+    %% setEvents
+
+    function obj = setEvents(obj,events)
+
+      % the method <setEvents> copies an list of events (<events>) to the internal
+      % private propertie <m_events> This method is used in the dialog boxes
+      %
+      %     syntax : obj = setEvents(obj,events)
+      %
+      % with <events> a list of events
+      
+      obj.m_events = events;
+    
+    end
+
     %% iniRead
 
     function [obj,devicename] = iniRead(obj)
