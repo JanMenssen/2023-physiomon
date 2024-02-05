@@ -212,13 +212,12 @@ classdef physiomon_settings
 
         switch (lower(tmpStruct.(section).updatemode))
           
-          case 'scope'
+          case 'strip'
             obj.m_displays(iDisplay).mode = 1;
           case 'sweep'
             obj.m_displays(iDisplay).mode = 2;
-          case 'strip'
+          case 'scope'
             obj.m_displays(iDisplay).mode = 3;
-
         end
 
       end

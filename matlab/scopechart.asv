@@ -68,11 +68,16 @@ classdef scopechart < basechart
       %
       % with <ichan> the channel that should be updated and <data> the new data that is
       % added to the graph
-       
-      if (obj.m_curIndx(nchan) >= obj.m_pntsInGraph(nchan))
-        obj.m_curIndx(nchan) = 1;
-        if obj.m_first(nchan), obj.m_first(nchan) = false; end
-      end 
+      
+
+      curIndx = obj.m_curIndx(nchan);
+      maxIndx = obj.m_pntsInGraph(nchan);
+      deltaT = obj.m_deltaT(nchan);
+
+      if (curIndx > maxIndx)
+        curIndx = 1;
+        if obj.m_first(chan), obj.m_first(chan) = false; end
+      end
 
       % downsample
 
@@ -84,18 +89,17 @@ classdef scopechart < basechart
         % first screen, append points
 
         obj.m_buffer{nchan} = [obj.m_buffer{nchan} data];
-        obj.m_curIndx(nchan) = length(obj.m_buffer{nchan});
 
       else
 
         % replace points
 
-        obj.m_buffer{nchan}(obj.m_curIndx(nchan):(obj.m_curIndx(nchan)+nPoints-1)) = data;
-        obj.m_curIndx(nchan) = obj.m_curIndx(nchan) + nPoints;
+        obj.m_buffer{nchan}(curIndx:curIndx+nPoints) = data;
 
       end
 
-      xdata = obj.m_deltaT(nchan) * (1:length(obj.m_buffer{nchan}));
+      obj.m_curIndx(nchan) = length(obj.m_buffer{nchan})
+      xdata = deltaT * (1:obj.m_curIndx(n);
       plot(obj.m_handle,xdata,obj.m_buffer{nchan});
       
 

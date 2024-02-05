@@ -55,7 +55,7 @@ classdef sweepchart < basechart
 
     %% update
 
-    function obj = update(obj,ichan,data)
+    function obj = update(obj,nchan,data)
 
       % <update> updates the graph for channel <ichan> with the data from <data>. Point are 
       % added to the graph until the then of the screen is reached on the right. Then the
@@ -66,6 +66,24 @@ classdef sweepchart < basechart
       % with <ichan> the channel that should be updated and <data> the new data that is
       % added to the graph
       
+      % sweep back to the beginning of the screen
+
+      nPoints = length(obj.m_buffer{nchan});
+      if (nPoints >= obj.m_pntsInGraph(nchan)), obj.m_buffer{nchan} = []; end
+
+      % downsample
+
+      [obj.m_downSampler{nchan},data] = obj.m_downSampler{nchan}.getData(data);     
+      obj.m_buffer{nchan} = [obj.m_buffer{nchan} data];
+ 
+
+      % and plot
+
+      xdata = obj.m_deltaT(nchan) * (1:length(obj.m_buffer{nchan}));
+      plot(obj.m_handle,xdata,obj.m_buffer{nchan});
+  
+      % done
+     
     end
 
   end

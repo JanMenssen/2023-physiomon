@@ -86,7 +86,7 @@ classdef displays
 
         left = ceil(curDisp.left * canvasWidth) + 50;
         top = ceil(curDisp.top * canvasHeight) + 35;
-        width = floor(curDisp.width * (canvasWidth - canvasLeft)) - 50;
+        width = floor(curDisp.width * (canvasWidth - canvasLeft)) - 75;
         height = floor(curDisp.height * canvasHeight) - 35;
 
         handle = uiaxes(parent = canvasHandle, InnerPosition = [left top width height],Color=background);
@@ -101,22 +101,22 @@ classdef displays
 
         % and set the Y-axis and time axis for the current chart
 
-        obj.m_chart{iDisp}.setYaxis(curDisp.ymin,curDisp.ymax);
-        obj.m_chart{iDisp}.setTimeAxis(curDisp.timescale);
+        obj.m_chart{iDisp} = obj.m_chart{iDisp}.setYaxis(curDisp.ymin,curDisp.ymax);
+        obj.m_chart{iDisp} = obj.m_chart{iDisp}.setTimeAxis(curDisp.timescale);
       
       end
     end
 
     %% plot
 
-    function myChannels = plot(obj,myChannels)
+    function obj = plot(obj,myChannels)
     
       % using the new data from the buffers in the instance of the <physiomon_channels> class 
       % (written by the read method of the instance of <measuredevice>, this method plots
       % this new data on the charts, using the method thas is selected (strip, scope,
       % sweep or numeric)
       %
-      %     syntax : myChannels = plot(obj,myChannels)
+      %     syntax : obj = plot(obj,myChannels)
       %
       % with <myChannels> and instance of the <physiomon_channels> 
       
@@ -126,22 +126,25 @@ classdef displays
         % a display could have more channels, so we need the data for all channels in this
         % display
 
-        for iChan = 1:length(obj.m_chart.m_channels)
+        for iChan = 1:length(obj.m_chart{iDisp}.m_channels)
         
           % get the channel number and get the data
 
-          curChannel = obj.m_chart.m_channels(iChan);
-          data = myChannels.readDisplay(curChannel);
-          
+          curChannel = obj.m_chart{iDisp}.m_channels(iChan);
+          %-jm data = myChannels.readDisplay(curChannel);
+          data = 5 * rand(1,500);
+          %-jm data = 0.01 * (1:500);
+
           % update the display
 
-          obj.m_chart{iDisp}.update(iChan,data);
+          obj.m_chart{iDisp} = obj.m_chart{iDisp}.update(iChan,data);
        
         end
-        obj.m_chart.finishUpdate();
+        obj.m_chart{iDisp} = obj.m_chart{iDisp}.finishUpdate();
       end
 
-      drawnow limitrate
+      %-jm drawnow limitrate
+      drawnow();
     end
 
   end

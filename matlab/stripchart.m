@@ -11,7 +11,6 @@
 classdef stripchart < basechart
 
   properties
-    m_curIndx = [];
     m_first = [];
   end
 
@@ -31,7 +30,6 @@ classdef stripchart < basechart
 
       obj = obj@basechart(axisHandle,channels);
 
-      obj.m_curIndx = ones(length(channels),1);
       obj.m_first = ones(length(channels),1,'logical');
 
     end
@@ -51,15 +49,12 @@ classdef stripchart < basechart
       obj = obj.setTimeAxis@basechart(nsec);
       
       obj.m_first = true;
-      obj.m_curIndx = 0;
 
     end
 
-
-
     %% update
 
-    function obj = update(obj,ichan,data)
+    function obj = update(obj,nchan,data)
 
       % <update> updates the graph for channel <ichan> with the data from <data>. Old
       % points are removed on left the graph is shifted and the new data points are added
@@ -70,6 +65,38 @@ classdef stripchart < basechart
       % with <ichan> the channel that should be updated and <data> the new data that is
       % added to the graph
       
+      maxIndx = obj.m_pntsInGraph(nchan);
+
+      % at the end of the display, reset curIndx and set first to false (not first
+      % display)
+
+      if (obj.m_first(nchan)) && (length(obj.m_buffer{nchan}) >= maxIndx)
+        obj.m_pntsInGraph(nchan) = length(obj.m_buffer{nchan});
+        obj.m_first(nchan) = false;
+      end
+
+      % downsample
+
+      [obj.m_downSampler{nchan},data] = obj.m_downSampler{nchan}.getData(data);
+      
+      if (obj.m_first(nchan))
+      
+        % first screen is adding points 
+
+        obj.m_buffer{nchan} = [obj.m_buffer{nchan} data];
+
+      else
+
+        % shift
+
+        nPoints = length(data);
+        obj.m_buffer{nchan} = [obj.m_buffer{nchan}((nPoints+1):end) data];
+      
+      end
+
+      xdata = obj.m_deltaT(nchan) * (1:length(obj.m_buffer{nchan}));
+      plot(obj.m_handle,xdata,obj.m_buffer{nchan});
+
     end
 
   end
