@@ -98,12 +98,12 @@ classdef devPhysioDaq < measuredevice
       % with <state> is true (start) or false (stop)
 
         obj.m_arduino.startstop(started);
-        obj = setStartStop@measuredevice(started);    
+        obj = obj.setStartStop@measuredevice(started);    
     end
 
     %% isStarted
 
-    function onoff = isStarted(~)
+    function onoff = isStarted(obj)
 
       % returns the started state of the firmware. If a true is returned, the firmware is
       % started, else a false is returned
@@ -112,7 +112,7 @@ classdef devPhysioDaq < measuredevice
       %
       % with onoff is true (started) or false (not started)
 
-      onoff = isStarted@measuredevice();
+      onoff = obj.isStarted@measuredevice();
 
     end
 
