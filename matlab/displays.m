@@ -132,8 +132,8 @@ classdef displays
 
           curChannel = obj.m_chart{iDisp}.m_channels(iChan);
           %-jm data = myChannels.readDisplay(curChannel);
-          data = 5 * rand(1,500);
-          %-jm data = 0.01 * (1:500);
+       
+          data = 0.04 * (1:100);
 
           % update the display
 
