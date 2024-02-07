@@ -87,7 +87,7 @@ void scopeChart::update(int nchan, int nsamples, float *data) {
     curIndx = 0;
     if (m_first[nchan]) {
       m_first[nchan] = false;
-      maxIndx = m_pntsInGraph[nchan] = m_series->count();
+      maxIndx = m_pntsInGraph[nchan] = m_series[nchan]->count();
     }  
   } 
 
@@ -121,7 +121,7 @@ void scopeChart::update(int nchan, int nsamples, float *data) {
 
   // and replace the series with the new data
 
-  m_series[nchan].replace(m_buffer[nchan]);
+  m_series[nchan]->replace(m_buffer[nchan]);
   m_curIndx[nchan] = curIndx;
  
 }

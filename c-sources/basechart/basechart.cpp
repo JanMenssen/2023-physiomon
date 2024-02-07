@@ -147,25 +147,26 @@ baseChart::baseChart(int nchan) {
 
   // create for every channel a QlineSeries object and add the axis to it
   
+ 
   m_chart->removeAllSeries();
 
-  //-jm for (int ichan = 0; ichan < m_numchan; ichan++) {
+  for (int ichan = 0; ichan < m_numchan; ichan++) {
 
-    m_series = new QLineSeries();
-    m_chart->addSeries(m_series);
-    m_series->attachAxis(m_axisX);
-    m_series->attachAxis(m_axisY);
-  //-jm }
+    m_series << new QLineSeries();
+
+    m_chart->addSeries(m_series[ichan]);
+    m_series[ichan]->attachAxis(m_axisX);
+    m_series[ichan]->attachAxis(m_axisY);
+  }
 }
 
 // baseChart destructor
 
 baseChart::~baseChart() {
 
-  //-jm if (m_axisY != NULL) delete m_axisY;
-  //-jm if (m_axisX != NULL) delete m_axisX;
-  //=jm if (m_chart != NULL) delete m_chart;
-
+  if (m_axisY != NULL) delete m_axisY;
+  if (m_axisX != NULL) delete m_axisX;
+  if (m_chart != NULL) delete m_chart;
 }
 
 // baseChart setYaxis
@@ -228,8 +229,5 @@ void baseChart::setTimeAxis(float nsec) {
 
   // clear the data series
 
-  m_series->clear();
-
-//-jm  for (int i=0;i<MAX_CHANNELS_IN_DISPLAY;i++) m_series[i].clear();
-
+  for (int i=0;i<m_numchan;i++) m_series[i]->clear();
 }

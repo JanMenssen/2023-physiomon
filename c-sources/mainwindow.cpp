@@ -8,6 +8,7 @@
 #include "channels.h"
 #include "displays.h"
 #include "devphysiodaq.h"
+#include "devphysiodaq_dialog.h"
 
 #include <QMenuBar>
 #include <QMenu>
@@ -293,6 +294,10 @@ void mainWindow::onDeviceSettingsChanged() {
 
   statusBarNew *status = (statusBarNew *)statusBar();
   status->setText("on device settings pressed",1.0);
+
+  devphysiodaq_dialog w;
+  w.show();
+
 }
 
 // onDisplaySettingsChanged

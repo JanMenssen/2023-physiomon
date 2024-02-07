@@ -41,6 +41,7 @@ set(INSTALL_DIR "/Users/jan/")
     ${ROOT_DIR}/arduinocomm/arduinocomm.cpp 
     ${ROOT_DIR}/measuredevice/measuredevice.cpp
     ${ROOT_DIR}/devphysiodaq/devphysiodaq.cpp
+    ${ROOT_DIR}/devphysiodaq/devphysiodaq_ui/devphysiodaq_dialog.cpp
   )
 
 # include folders
@@ -58,6 +59,7 @@ set(INSTALL_DIR "/Users/jan/")
     ${ROOT_DIR}/scopechart
     ${ROOT_DIR}/measuredevice
     ${ROOT_DIR}/devphysiodaq
+    ${ROOT_DIR}/devphysiodaq/devphysiodaq_ui
     ${Qt6Widgets_INCLUDE_DIRS}
     ${Qt6SerialPort_INCLUDE_DIRS}
   )

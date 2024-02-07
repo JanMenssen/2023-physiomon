@@ -78,6 +78,7 @@ classdef stripchart < basechart
       % downsample
 
       [obj.m_downSampler{nchan},data] = obj.m_downSampler{nchan}.getData(data);
+
       if (obj.m_first(nchan))
       
         % first screen is adding points 

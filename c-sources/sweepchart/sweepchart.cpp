@@ -51,7 +51,7 @@ void sweepChart::update(int nchan, int nsamples, float *data) {
 
   if (curIndx >= maxIndx) {
     curIndx = 0;
-    m_series->clear();
+    m_series[nchan]->clear();
   }
   
   // downsample the data
@@ -74,7 +74,6 @@ void sweepChart::update(int nchan, int nsamples, float *data) {
   // and append the new data to the series, this is not faster as append point for point
   // so m_buffer is in fact not needed. However, in stripchart and scopechart 
 
-  //-jm m_series[nchan].append(buffer[nchan]);
-  m_series->append(buffer[nchan]);
+  m_series[nchan]->append(buffer[nchan]);
   m_curIndx[nchan] = curIndx;
 }
