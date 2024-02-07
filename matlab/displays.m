@@ -109,14 +109,14 @@ classdef displays
 
     %% plot
 
-    function obj = plot(obj,myChannels)
+    function [obj,myChannels] = plot(obj,myChannels)
     
       % using the new data from the buffers in the instance of the <physiomon_channels> class 
       % (written by the read method of the instance of <measuredevice>, this method plots
       % this new data on the charts, using the method thas is selected (strip, scope,
       % sweep or numeric)
       %
-      %     syntax : obj = plot(obj,myChannels)
+      %     syntax : [obj,myChannels] = plot(obj,myChannels)
       %
       % with <myChannels> and instance of the <physiomon_channels> 
       
@@ -128,18 +128,13 @@ classdef displays
 
         for iChan = 1:length(obj.m_chart{iDisp}.m_channels)
         
-          % get the channel number and get the data
+          % get the channel number and get the data and update display
 
           curChannel = obj.m_chart{iDisp}.m_channels(iChan);
-          %-jm data = myChannels.readDisplay(curChannel);
+          [myChannels,data] = myChannels.readDisplay(curChannel);
        
-          %-jm data = 0.1 * (1:50);
-          data = 5 * rand(1,50);
-
-          % update the display
-
-          obj.m_chart{iDisp} = obj.m_chart{iDisp}.update(iChan,data);
-       
+          if ~isempty(data), obj.m_chart{iDisp} = obj.m_chart{iDisp}.update(iChan,data); end
+          
         end
         obj.m_chart{iDisp} = obj.m_chart{iDisp}.finishUpdate();
       end

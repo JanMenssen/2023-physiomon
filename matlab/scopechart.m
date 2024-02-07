@@ -95,7 +95,9 @@ classdef scopechart < basechart
 
       end
 
-      xdata = obj.m_deltaT(nchan) * (1:length(obj.m_buffer{nchan}));
+      lenData = length(obj.m_buffer{nchan});
+
+      xdata = obj.m_deltaT(nchan) * (1:lenData);
       plot(obj.m_handle,xdata,obj.m_buffer{nchan});
       
 

@@ -12,8 +12,11 @@
 classdef devPhysioDaq < measuredevice
 
   properties
+    
     m_address = [];
     m_arduino = [];
+    m_analogInfo = [];
+
   end
 
   methods
@@ -21,6 +24,7 @@ classdef devPhysioDaq < measuredevice
     %% constructor
 
     function obj = devPhysioDaq()
+
     end
 
     %% initialise
@@ -80,7 +84,7 @@ classdef devPhysioDaq < measuredevice
         if ispc(), filename = ['C:\users\z558043\appdata\roaming\Jansoft\' filename '.ini']; end
 
         obj = obj.iniRead@measuredevice(deviceName);
-
+       
         tmpStruct = ini2struct(filename);
         if isfield(tmpStruct.algemeen,'address'), obj.m_address = tmpStruct.algemeen.address; end
 
@@ -97,8 +101,13 @@ classdef devPhysioDaq < measuredevice
       %
       % with <state> is true (start) or false (stop)
 
-        obj.m_arduino.startstop(started);
-        obj = obj.setStartStop@measuredevice(started);    
+      obj.m_arduino.startstop(started);
+      obj = obj.setStartStop@measuredevice(started);    
+
+       % copy the analog information to be fast
+       
+      if (started),  obj.m_analogInfo = obj.getAnalogChannels(); end
+    
     end
 
     %% isStarted
@@ -118,25 +127,28 @@ classdef devPhysioDaq < measuredevice
 
     %% read
 
-    function myChannels = read(obj,myChannels)
+    function [obj,myChannels] = read(obj,myChannels)
 
       % reads the data from the device and store this data in the buffers of the connected
       % channels
       %
-      %     syntax : myChannels = read(obj,myChannels)
+      %     syntax : [obj,myChannels] = read(obj,myChannels)
       %
       % with <myChannels> an instance of the channels class
-
+      
       if obj.isStarted()
-        msgOK = true;
 
-        while (msgOK == true)
-          [msgOK,cmd,data] = obj.m_arduino.rcvMsg();
-          if (cmd == 1)
-            for i =1:length(data)
-              myChannels = obj.writeValueToAllChannels(obj.m_analogIn(i),myChannels,data(i));
-            end
+        cmd = '-';
+        while ~isempty(cmd)
+
+          [obj.m_arduino,cmd,data] = obj.m_arduino.rcvMsg();
+          
+          % analog signale
+
+          if (cmd == 'A')
+            for i =1:length(data), myChannels = obj.writeValuesToAllChannels(obj.m_analogInfo(i),myChannels,data(i)); end
           end
+
         end
       end
     end
@@ -159,12 +171,12 @@ classdef devPhysioDaq < measuredevice
       %   - myChannels        : instance of myChannels class, output also because it is modified
       %   - value             : the acquired data
 
-        realValue = analogStruct.gain * value + analogStruct.offset;
-
+        realValue = analogStruct.gain * double(value) + analogStruct.offset;
+        
         numChan = length(analogStruct.channels);
         for i=1:numChan
           ichan = analogStruct.channels(i);
-          myChannels.writeData(ichan,realValue);
+          myChannels = myChannels.writeData(ichan,realValue);
         end
     end
 

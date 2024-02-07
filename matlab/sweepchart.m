@@ -69,17 +69,19 @@ classdef sweepchart < basechart
       % sweep back to the beginning of the screen
 
       nPoints = length(obj.m_buffer{nchan});
-      if (nPoints >= obj.m_pntsInGraph(nchan)), obj.m_buffer{nchan} = []; end
+      if (nPoints >= obj.m_pntsInGraph(nchan))
+        obj.m_buffer{nchan} = [];
+      end
 
-      % downsample
+      % downsample and add to buffer
 
-      [obj.m_downSampler{nchan},data] = obj.m_downSampler{nchan}.getData(data);     
+      [obj.m_downSampler{nchan},data] = obj.m_downSampler{nchan}.getData(data);  
       obj.m_buffer{nchan} = [obj.m_buffer{nchan} data];
- 
 
       % and plot
 
-      xdata = obj.m_deltaT(nchan) * (1:length(obj.m_buffer{nchan}));
+      lenData = length(obj.m_buffer{nchan});
+      xdata = obj.m_deltaT(nchan) * (1:lenData);
       plot(obj.m_handle,xdata,obj.m_buffer{nchan});
   
       % done

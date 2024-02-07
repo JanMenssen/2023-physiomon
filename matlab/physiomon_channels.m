@@ -88,7 +88,8 @@ classdef physiomon_channels
       %
       % with <channel> the channel number and <data> a vector with returned data
 
-      data = obj.m_buffers(channel).store.read();
+      [writeIndx,readIndx] = obj.m_buffers(channel).display.getIndices();
+      [obj.m_buffers(channel).display,data] = obj.m_buffers(channel).display.read();
       
     end
 
@@ -119,8 +120,9 @@ classdef physiomon_channels
       %
       % with <channel> the appropriate channel and <data> the data to be written (vector)
 
-      obj.m_buffers(channel).display.write(data);
-      obj.m_buffers(channel).store.write(data);
+      [writeIndx,readIndx] = obj.m_buffers(channel).display.getIndices();
+      obj.m_buffers(channel).display = obj.m_buffers(channel).display.write(data);
+      obj.m_buffers(channel).store = obj.m_buffers(channel).store.write(data);
 
     end
   end
