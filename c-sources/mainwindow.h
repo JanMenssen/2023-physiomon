@@ -26,7 +26,7 @@ class mainWindow : public QMainWindow {
 
     mainWindow(int width, int heigth);
     ~mainWindow();
-    void configure();
+    void onConfigure();
 
   private slots :
     
