@@ -72,7 +72,7 @@ class measureDevice() :
       
       settings.beginGroup(keyName)
       fields["name"] = settings.value("name",1)
-      fields["sampleRate"] = 1 / float(settings.value("frequency",defaultValue = 1.0   ))
+      fields["sampleRate"] = float(settings.value("frequency",defaultValue = 1.0))
       fields["gain"] = float(settings.value("gain",defaultValue = 1.0))
       fields["offset"] = float(settings.value("offset",defaultValue = 0.0))
       settings.endGroup()

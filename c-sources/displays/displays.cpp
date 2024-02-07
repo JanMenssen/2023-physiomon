@@ -158,7 +158,8 @@ void displays::plot(channels *channels) {
       
       channels->readDisplay(curchan,&nSamples,data);
       dispSettings.chart->update(ichan,nSamples,data);
-    }   
+    }  
+    
     dispSettings.chart->finishUpdate();
   }  
 

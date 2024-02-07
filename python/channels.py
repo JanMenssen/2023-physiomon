@@ -88,8 +88,8 @@ class channels() :
             
             indx = channels.index(i)
             tmpBuffer["sampleRate"] = analogChan["sampleRate"]
-            tmpBuffer["display"] = buffer(int(self.m_lengthBuffer / tmpBuffer["sampleRate"]))
-            tmpBuffer["store"] = buffer(int(self.m_lengthBuffer / tmpBuffer["sampleRate"]))
+            tmpBuffer["display"] = buffer(int(self.m_lengthBuffer * tmpBuffer["sampleRate"]))
+            tmpBuffer["store"] = buffer(int(self.m_lengthBuffer  * tmpBuffer["sampleRate"]))
 
             self.m_buffers.append(tmpBuffer.copy())
 

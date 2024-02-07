@@ -40,7 +40,7 @@ cyclicBuffer::~cyclicBuffer() {
 void cyclicBuffer::read(int *n,float *data) {
 
   int ntal = 0;
-  
+
   while (m_indxRead != m_indxWrite) {
     data[ntal++] = m_data[m_indxRead++];
     if (m_indxRead >= m_len) m_indxRead = 0;
@@ -125,7 +125,7 @@ void channels::getSampleRate() {
 
 void channels::readDisplay(int ichan, int *nSamples, float *data) {
 
-  m_buffers[ichan].display->read(nSamples, data);
+  m_buffers[ichan].display->read(nSamples, data);  
 }
 
 // readStore
@@ -144,6 +144,6 @@ void channels::readStore(int ichan, int *nSamples, float *data) {
 void channels::writeData(int ichan, float data) {
 
   m_buffers[ichan].display->write(1,&data);
-  m_buffers[ichan].store->write(1,&data);
+  //-jm m_buffers[ichan].store->write(1,&data);
 
 }

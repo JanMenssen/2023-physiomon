@@ -33,7 +33,7 @@ void sweepChart::setTimeAxis(float nsec) {
 
   baseChart::setTimeAxis(nsec);
   for (int i=0;i<MAX_CHANNELS_IN_DISPLAY;i++) m_curIndx[i] = 0;
-  
+ 
 }
 
 // update
@@ -51,13 +51,13 @@ void sweepChart::update(int nchan, int nsamples, float *data) {
 
   if (curIndx >= maxIndx) {
     curIndx = 0;
-    m_series[nchan].clear();
+    m_series->clear();
   }
   
   // downsample the data
-
+ 
   m_downSampler[nchan].getData(&nsamples,data);
-
+ 
   // and place the data in the (cleared) buffer
 
   QPointF tmp;
@@ -74,6 +74,7 @@ void sweepChart::update(int nchan, int nsamples, float *data) {
   // and append the new data to the series, this is not faster as append point for point
   // so m_buffer is in fact not needed. However, in stripchart and scopechart 
 
-  m_series[nchan].append(buffer[nchan]);
+  //-jm m_series[nchan].append(buffer[nchan]);
+  m_series->append(buffer[nchan]);
   m_curIndx[nchan] = curIndx;
 }

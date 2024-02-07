@@ -124,6 +124,10 @@ void downSampler::getData(int *n, float *data) {
 
 baseChart::baseChart(int nchan) {
 
+  m_numchan = nchan;
+
+  // create the graphics 
+
   m_chart = new QChart;
   
   m_axisX = new QValueAxis();
@@ -145,13 +149,13 @@ baseChart::baseChart(int nchan) {
   
   m_chart->removeAllSeries();
 
-  m_numchan = nchan;
-  for (int ichan = 0; ichan < m_numchan; ichan++) {
+  //-jm for (int ichan = 0; ichan < m_numchan; ichan++) {
 
-    m_chart->addSeries(&m_series[ichan]);
-    m_series[ichan].attachAxis(m_axisX);
-    m_series[ichan].attachAxis(m_axisY);
-  }
+    m_series = new QLineSeries();
+    m_chart->addSeries(m_series);
+    m_series->attachAxis(m_axisX);
+    m_series->attachAxis(m_axisY);
+  //-jm }
 }
 
 // baseChart destructor
@@ -219,10 +223,13 @@ void baseChart::setTimeAxis(float nsec) {
     m_pntsInGraph[i] = round(nsec * m_sampleRate[i] / rate);
     m_deltaT[i] = double(rate) / m_sampleRate[i];
 
-    m_downSampler[i].setRate(rate);
+    m_downSampler[i].setRate(rate);   
   }
 
   // clear the data series
 
-  for (int i=0;i<MAX_CHANNELS_IN_DISPLAY;i++) m_series[i].clear();
+  m_series->clear();
+
+//-jm  for (int i=0;i<MAX_CHANNELS_IN_DISPLAY;i++) m_series[i].clear();
+
 }

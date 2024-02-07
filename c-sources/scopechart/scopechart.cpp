@@ -12,7 +12,7 @@
 // constructor
 
 scopeChart::scopeChart(int nchan) : baseChart(nchan) {
-  
+ 
   for (int i=0;i<nchan;i++) m_buffer[i].reserve(MAX_POINTS_IN_GRAPH);
 
   // create a red line reference for the current position
@@ -29,7 +29,6 @@ scopeChart::scopeChart(int nchan) : baseChart(nchan) {
   pen.setWidth(1);
   pen.setColor("red");
   m_scopeLine->setPen(pen);
-
 }
 
 // destructor
@@ -49,13 +48,13 @@ void scopeChart::setTimeAxis(float nsec) {
   // we start again, reset everything
   
   for (int i=0;i<MAX_CHANNELS_IN_DISPLAY;i++) {
-   
+ 
     m_first[i] = true; 
     m_buffer[i].clear();
     m_curIndx[i] = 0;
-
   }
 }
+
 // setYaxis
 //
 //    the scope chart has a specific setYaxis function because the values should be 
@@ -66,9 +65,9 @@ void scopeChart::setYaxis(float ymin,float ymax) {
   baseChart::setYaxis(ymin,ymax);
 
   m_yLimits[0] = ymin;
-  m_yLimits[1] = ymax;
+  m_yLimits[1] = ymax; 
 }
-//
+
 // update
 
 void scopeChart::update(int nchan, int nsamples, float *data) {
@@ -124,6 +123,7 @@ void scopeChart::update(int nchan, int nsamples, float *data) {
 
   m_series[nchan].replace(m_buffer[nchan]);
   m_curIndx[nchan] = curIndx;
+ 
 }
 
 // finishUpdate

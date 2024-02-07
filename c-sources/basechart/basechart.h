@@ -73,7 +73,7 @@ class baseChart {
     double m_deltaT[MAX_CHANNELS_IN_DISPLAY] = {0.0, 0.0, 0.0};
     
     QChart *m_chart = NULL; 
-    QLineSeries m_series[MAX_CHANNELS_IN_DISPLAY];   
+    QLineSeries *m_series = NULL; 
     QVector<QPointF> m_buffer[MAX_CHANNELS_IN_DISPLAY];
     downSampler m_downSampler[MAX_CHANNELS_IN_DISPLAY];
   

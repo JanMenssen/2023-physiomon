@@ -33,12 +33,11 @@ void stripChart::setTimeAxis(float nsec) {
   baseChart::setTimeAxis(nsec);
 
   for (int i=0;i<MAX_CHANNELS_IN_DISPLAY;i++) {
-   
     m_first[i] = true; 
     m_buffer[i].clear();
     m_curIndx[i] = 0;
-
   }
+
 }
 
 // update
@@ -57,7 +56,7 @@ void stripChart::update(int nchan, int nsamples, float *data) {
   // at display overlap, index in buffer should be 0 and not first display
 
   if ((curIndx >= maxIndx) && (m_first[nchan])) {
-    maxIndx = m_pntsInGraph[nchan] = m_series[nchan].count();
+    maxIndx = m_pntsInGraph[nchan] = m_series->count();
     m_first[nchan] = false;
   }
 
@@ -104,6 +103,7 @@ void stripChart::update(int nchan, int nsamples, float *data) {
 
   // and replace the series with the new data
 
-  m_series[nchan].replace(m_buffer[nchan]);
+  m_series->replace(m_buffer[nchan]);
+  //-jm m_series[nchan].replace(m_buffer[nchan]);
   m_curIndx[nchan] = curIndx;
 }
