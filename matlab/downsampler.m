@@ -57,14 +57,15 @@ classdef downsampler
       %     syntax [obj,outData] = getData(obj,inData)
       %
       % with <inData> the input data and <outData> the downsampled data
-      
+
+
       if (obj.m_decimateFactor > 1)
 
         obj.m_buffer = [obj.m_buffer inData];
         outData = inData(1:obj.m_decimateFactor:end);
         
         samplesToRemove = obj.m_decimateFactor * length(outData);
-        if samplesToRemove > length(obj.m_buffer), samplesToRemove = length(obj.m_buffer); end;
+        if samplesToRemove > length(obj.m_buffer), samplesToRemove = length(obj.m_buffer); end
         obj.m_buffer(1:samplesToRemove) = [];
       
       else
