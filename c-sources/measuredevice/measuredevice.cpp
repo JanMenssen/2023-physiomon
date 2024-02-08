@@ -97,6 +97,18 @@ void measureDevice::iniRead(QString device) {
   return;
 }
 
+// getAnalogInfo
+//
+//    returns the analogInfo from the class
+
+void measureDevice::getAnalogInfo(int *n, analogInStruct *analogInfo) {
+
+  qDebug() << "getAnalogInfo" << m_analogIn[2].name;
+
+  *n = m_nrAnalogIn;
+  analogInfo = m_analogIn;
+}
+
 // configure
 //
 //    given the settings, configures the device handler

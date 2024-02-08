@@ -9,6 +9,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(ROOT_DIR  "/Users/jan/Library/CloudStorage/OneDrive-Personal/my projects/2024 physiomon/c-sources")
+
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
@@ -17,6 +19,12 @@ set(PROJECT_SOURCES
         devphysiodaq_dialog.cpp
         devphysiodaq_dialog.h
         devphysiodaq_dialog.ui
+)
+
+include_directories (
+    ${ROOT_DIR}
+    ${ROOT_DIR}/settings
+    ${ROOT_DIR}/measuredevice
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

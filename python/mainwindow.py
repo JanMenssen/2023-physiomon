@@ -13,10 +13,10 @@ from PySide6.QtCore import QTimer, Qt, QObject
 
 from statusbar import statusBarNew
 from settings import settings
-#-jm from displays_mdi import displays
 from displays import displays
 from channels import channels
 from devphysiodaq import devPhysioDaq
+from devphysiodaq_dialog import devPhsyioDaq_dialog
 
 MAX_CHANNELS = 5
 
@@ -287,6 +287,13 @@ class mainWindow(QMainWindow) :
 
   def onDeviceSettingsChanged(self) :
     
+    dlgBox = devPhsyioDaq_dialog()
+    if dlgBox.exec() :
+      print("true")
+    else :
+      print("false")
+      
+   
     self.statusBar().setText("device settings changed",5)
     return
   

@@ -292,11 +292,16 @@ void mainWindow::onTimeOut() {
 
 void mainWindow::onDeviceSettingsChanged() {
 
-  statusBarNew *status = (statusBarNew *)statusBar();
-  status->setText("on device settings pressed",1.0);
+  // NOTE, this should be done better, no public members
 
-  devphysiodaq_dialog w;
-  w.show();
+  int n = m_device->m_nrAnalogIn;
+  analogInStruct *analogInfo = m_device->m_analogIn;
+
+  // get the analogInfo data and copy this to the dialog widget before executing it
+  // m_device->getAnalogInfo(&n,analogInfo);
+
+  devphysiodaq_dialog dlgBox(this,n,analogInfo);
+  dlgBox.exec();
 
 }
 

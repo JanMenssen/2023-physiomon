@@ -36,12 +36,13 @@ class measureDevice {
     void setStartStop(bool start);
     void iniRead(QString device);
     void configure(settings *settings);
+    void getAnalogInfo(int *ntal, analogInStruct *analogInfo);
 
     int m_nrAnalogIn = 0;
     int m_nrWaveIn = 0;
     int m_nrNumericIn = 0;
     
-    analogInStruct *m_analogIn = NULL;
+    analogInStruct *m_analogIn = nullptr;
 
   private :
 
