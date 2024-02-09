@@ -3,7 +3,9 @@
 #
 #     this class handles the device settings for the physiodaq device. A dialog box is 
 #     popped up to let the user change gain and offset from the cnannels
-
+#
+# modfications
+#     09-feb-2024   JM    initial version
 
 from PySide6.QtWidgets import QDialog
 from PySide6.QtGui import QDoubleValidator
@@ -20,6 +22,8 @@ class devPhsyioDaq_dialog(QDialog) :
     super().__init__()
     self.ui = Ui_devphysiodaq_dialog()
     self.ui.setupUi(self)
+    self.setFixedSize(self.width(),self.height())
+    self.setWindowTitle("change channel settings")
 
     self.m_analogInfo = analogInfo
 
@@ -94,6 +98,6 @@ class devPhsyioDaq_dialog(QDialog) :
   #
   #   returns the (modified) analog structure
     
-    def getAnalogInfo(self) :
+  def getAnalogInfo(self) :
 
-      return self.m_analogInfo
+    return self.m_analogInfo

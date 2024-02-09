@@ -54,7 +54,7 @@ settings_dialog::settings_dialog(QWidget *parent, int *numchan, channelStruct *c
 
   ui->channelName->setText(m_channels[0].name);
   ui->channelDisplaySelected->setRange(1, m_numdisp);
-  ui->channelDisplaySelected->setValue(1);
+  ui->channelDisplaySelected->setValue(m_channels[0].display);
 
   setChannelRadioButtons(m_channels[0].type);
   for (int i=0;i<numanalog;i++) ui->channelSignalSelect->addItem(analogInfo[i].name);

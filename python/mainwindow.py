@@ -17,6 +17,7 @@ from displays import displays
 from channels import channels
 from devphysiodaq import devPhysioDaq
 from devphysiodaq_dialog import devPhsyioDaq_dialog
+from settings_dialog import settings_dialog
 
 MAX_CHANNELS = 5
 
@@ -83,7 +84,6 @@ class mainWindow(QMainWindow) :
     # and set ready
 
     self.setWindowTitle("PhysioMon v3.01")
-    self.setStyleSheet("background-color: black;")
     self.statusBar().setText("ready ...",5.0)
 
   # onConfigure
@@ -123,11 +123,11 @@ class mainWindow(QMainWindow) :
     saveAction.triggered.connect(self.onSave)
     fileMenu.addAction(saveAction)
 
-    dispSettingsChangeAction = QAction("Display",self)
-    dispSettingsChangeAction.triggered.connect(self.onDispSettingsChanged)
-    editMenu.addAction(dispSettingsChangeAction)
+    settingsChangeAction = QAction("General Settings ",self)
+    settingsChangeAction.triggered.connect(self.onGeneralSettingsChanged)
+    editMenu.addAction(settingsChangeAction)
 
-    deviceSettingsChangeAction = QAction("Device",self)
+    deviceSettingsChangeAction = QAction("Device Settings ",self)
     deviceSettingsChangeAction.triggered.connect(self.onDeviceSettingsChanged)
     editMenu.addAction(deviceSettingsChangeAction)
 
@@ -162,10 +162,10 @@ class mainWindow(QMainWindow) :
 
     # change display settings
 
-    changeDisplayButton = QAction("display",self)
-    changeDisplayButton.setToolTip("change display settings")
-    changeDisplayButton.triggered.connect(self.onDispSettingsChanged)
-    toolbar.addAction(changeDisplayButton)
+    changeGeneralSettingsButton = QAction("general",self)
+    changeGeneralSettingsButton.setToolTip("change display settings")
+    changeGeneralSettingsButton.triggered.connect(self.onGeneralSettingsChanged)
+    toolbar.addAction(changeGeneralSettingsButton)
 
     # change device settings
 
@@ -287,19 +287,35 @@ class mainWindow(QMainWindow) :
 
   def onDeviceSettingsChanged(self) :
     
+    self.statusBar().setText("device settings modified ...",3)
+    
     dlgBox = devPhsyioDaq_dialog(self.m_device.m_analogIn)
     if dlgBox.exec() :
-      self.m_device.m_analogIn = dlgBox.getAnalogInfo();
-     
-  # onDispSettingsChanged
+      self.m_device.m_analogIn = dlgBox.getAnalogInfo()
+      self.statusBar().setText("display settings are modified ...",3)
+    else : 
+      self.statusBar().setText("display settings not modified ...",3)
+      
+  # onGeneralSettingsChanged
   #
   #     a popup is displayed which makes it possible to edit the device settings
 
-  def onDispSettingsChanged(self) :
+  def onGeneralSettingsChanged(self) :
     
-    self.statusBar().setText("display settings changed",5)
-    return
-  
+    self.statusBar().setText("general settings are modified changed",2)
+    
+    channels = self.m_settings.m_channels
+    displays = self.m_settings.m_displays
+    events = self.m_settings.m_events
+    analog = self.m_device.m_analogIn
+
+    dlgBox = settings_dialog(channels,displays,events,analog)
+    if dlgBox.exec() :
+      self.m_device.m_channels,self.m_settings.m_displays,self.m_settings.m_events = dlgBox.getModifiedValues()
+      self.statusBar().setText("general settings are modified ...",3)
+    else : 
+      self.statusBar().setText("general settings not modified ...",3)
+   
   # onEvent
   #
   #     function is called when an event key is pressed
