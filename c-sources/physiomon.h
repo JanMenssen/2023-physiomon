@@ -9,6 +9,12 @@
 #ifndef FYSIOMON_H
 #define FYSIOMON_H
 
+// currently only 10 channels and displays are allowed
+
+#define MAX_CHANNELS 10
+#define MAX_DISPLAYS 10
+#define MAX_EVENTS   10
+
 // some enums
 
 enum typeSignal {TYPE_ANALOG_IN = 1, TYPE_NUMERIC_IN = 2 };

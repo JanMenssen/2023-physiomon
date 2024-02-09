@@ -298,6 +298,9 @@ void mainWindow::onDeviceSettingsChanged() {
   int n = m_device->m_nrAnalogIn;
   analogInStruct *analogInfo = m_device->m_analogIn;
 
+  statusBarNew *status = (statusBarNew *)statusBar();
+  status->setText("device settings are modified ...",3.0);
+
   // get the analogInfo data and copy this to the dialog widget before executing it
   // m_device->getAnalogInfo(&n,analogInfo);
 
@@ -315,9 +318,17 @@ void mainWindow::onSettingsChanged() {
   
 int numdisp = m_settings->m_numdisp;
 int numchan = m_settings->m_numchan;
+int numanalog = m_device->m_nrAnalogIn;
+
 channelStruct *channelInfo = m_settings->m_channels;
 displayStruct *displayInfo = m_settings->m_displays;
-settings_dialog dlgBox(this,numchan,channelInfo,numdisp,displayInfo);
+QString *eventInfo = m_settings->m_events;
+analogInStruct *analogInfo = m_device->m_analogIn;
+
+statusBarNew *status = (statusBarNew *)statusBar();
+status->setText("general settings are modified ...",3.0);
+
+settings_dialog dlgBox(this,&numchan,channelInfo,&numdisp,displayInfo,eventInfo,numanalog,analogInfo);
 dlgBox.exec();
 
 }

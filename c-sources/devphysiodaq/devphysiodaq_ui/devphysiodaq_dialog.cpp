@@ -4,6 +4,10 @@
 devphysiodaq_dialog::devphysiodaq_dialog(QWidget *parent, int n, analogInStruct *analogInfo) : QDialog(parent) , ui(new Ui::devphysiodaq_dialog) {
   
   ui->setupUi(this);
+
+  // fixed size, not resizable
+  
+  this->setFixedSize(this->width(),this->height());
   setWindowTitle("change channel settings");
 
   m_numchan = n;
@@ -13,7 +17,7 @@ devphysiodaq_dialog::devphysiodaq_dialog(QWidget *parent, int n, analogInStruct 
   // a copy is needed. This copy is returned when OK is pressed, on Cancel it is destroyed
 
   m_analogInfo = new analogInStruct[m_numchan];
-  memcpy(m_analogInfo,m_analogPtr,m_numchan * sizeof(analogInStruct));
+  if (m_analogPtr != nullptr) memcpy(m_analogInfo,m_analogPtr,m_numchan * sizeof(analogInStruct));
 
   // only numerics are allowed in the gain and offset edit boxes
 
@@ -39,11 +43,13 @@ void devphysiodaq_dialog::on_okButton_clicked() {
 
   // get the last items from the dialog, (no return can be given)
 
+
   int curItem = ui->channelComboBox->currentIndex();
   m_analogInfo[curItem].offset = ui->offsetEdit->text().toDouble();
   m_analogInfo[curItem].gain = ui->gainEdit->text().toDouble();
-  
+
   memcpy(m_analogPtr,m_analogInfo,m_numchan * sizeof(analogInStruct));
+
   accept();
 }
 

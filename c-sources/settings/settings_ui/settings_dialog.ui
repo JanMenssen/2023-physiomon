@@ -137,6 +137,9 @@
       </property>
      </widget>
      <widget class="QRadioButton" name="channelWaveform_rb">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>60</x>
@@ -153,6 +156,9 @@
       </property>
      </widget>
      <widget class="QRadioButton" name="channelNumeric_rb">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>60</x>
@@ -278,7 +284,11 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLineEdit" name="channelColor"/>
+       <widget class="QLineEdit" name="channelColor">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -313,7 +323,11 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLineEdit" name="channelUnit"/>
+       <widget class="QLineEdit" name="channelUnit">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -573,7 +587,7 @@
      <widget class="QLineEdit" name="displayYmin">
       <property name="geometry">
        <rect>
-        <x>40</x>
+        <x>50</x>
         <y>30</y>
         <width>41</width>
         <height>21</height>
@@ -589,7 +603,7 @@
      <widget class="QLineEdit" name="displayYmax">
       <property name="geometry">
        <rect>
-        <x>90</x>
+        <x>100</x>
         <y>30</y>
         <width>41</width>
         <height>21</height>
@@ -605,7 +619,7 @@
      <widget class="QLineEdit" name="displayXaxis">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>210</x>
         <y>30</y>
         <width>41</width>
         <height>21</height>
@@ -621,9 +635,9 @@
      <widget class="QLabel" name="label_16">
       <property name="geometry">
        <rect>
-        <x>140</x>
+        <x>160</x>
         <y>30</y>
-        <width>58</width>
+        <width>51</width>
         <height>16</height>
        </rect>
       </property>
@@ -634,9 +648,9 @@
      <widget class="QLabel" name="label_17">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>10</x>
         <y>30</y>
-        <width>58</width>
+        <width>41</width>
         <height>16</height>
        </rect>
       </property>
@@ -709,6 +723,9 @@
       </property>
      </widget>
      <widget class="QRadioButton" name="displayNumeric_rb">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>40</x>
@@ -782,15 +799,28 @@
       <item>
        <widget class="QLabel" name="label_55">
         <property name="text">
-         <string>event 2</string>
+         <string>2</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_8">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>13</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item>
        <widget class="QLineEdit" name="event02">
         <property name="minimumSize">
          <size>
-          <width>171</width>
+          <width>201</width>
           <height>0</height>
          </size>
         </property>
@@ -815,15 +845,28 @@
       <item>
        <widget class="QLabel" name="label_56">
         <property name="text">
-         <string>event 7</string>
+         <string> 7</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_10">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>13</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item>
        <widget class="QLineEdit" name="event07">
         <property name="minimumSize">
          <size>
-          <width>171</width>
+          <width>201</width>
           <height>0</height>
          </size>
         </property>
@@ -847,15 +890,28 @@
       <item>
        <widget class="QLabel" name="label_59">
         <property name="text">
-         <string>event 3</string>
+         <string>3</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_12">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>13</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item>
        <widget class="QLineEdit" name="event03">
         <property name="minimumSize">
          <size>
-          <width>171</width>
+          <width>201</width>
           <height>0</height>
          </size>
         </property>
@@ -880,15 +936,28 @@
       <item>
        <widget class="QLabel" name="label_60">
         <property name="text">
-         <string>event 8</string>
+         <string> 8</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_11">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>13</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item>
        <widget class="QLineEdit" name="event08">
         <property name="minimumSize">
          <size>
-          <width>171</width>
+          <width>201</width>
           <height>0</height>
          </size>
         </property>
@@ -912,15 +981,28 @@
       <item>
        <widget class="QLabel" name="label_61">
         <property name="text">
-         <string>event 4</string>
+         <string>4</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_14">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>13</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item>
        <widget class="QLineEdit" name="event04">
         <property name="minimumSize">
          <size>
-          <width>171</width>
+          <width>201</width>
           <height>0</height>
          </size>
         </property>
@@ -945,15 +1027,28 @@
       <item>
        <widget class="QLabel" name="label_62">
         <property name="text">
-         <string>event 9</string>
+         <string> 9</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_13">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>13</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item>
        <widget class="QLineEdit" name="event09">
         <property name="minimumSize">
          <size>
-          <width>171</width>
+          <width>201</width>
           <height>0</height>
          </size>
         </property>
@@ -977,15 +1072,28 @@
       <item>
        <widget class="QLabel" name="label_63">
         <property name="text">
-         <string>event 5</string>
+         <string>5</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="event05">
+       <spacer name="horizontalSpacer_16">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>13</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="event10">
         <property name="minimumSize">
          <size>
-          <width>171</width>
+          <width>201</width>
           <height>0</height>
          </size>
         </property>
@@ -1010,15 +1118,28 @@
       <item>
        <widget class="QLabel" name="label_64">
         <property name="text">
-         <string>event 10</string>
+         <string>10</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="event10">
+       <spacer name="horizontalSpacer_15">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>13</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="event05">
         <property name="minimumSize">
          <size>
-          <width>171</width>
+          <width>201</width>
           <height>0</height>
          </size>
         </property>
@@ -1042,15 +1163,28 @@
       <item>
        <widget class="QLabel" name="label_18">
         <property name="text">
-         <string>event 1</string>
+         <string>1</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>13</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item>
        <widget class="QLineEdit" name="event01">
         <property name="minimumSize">
          <size>
-          <width>171</width>
+          <width>201</width>
           <height>0</height>
          </size>
         </property>
@@ -1075,15 +1209,28 @@
       <item>
        <widget class="QLabel" name="label_39">
         <property name="text">
-         <string>event 6</string>
+         <string> 6</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_9">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>13</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item>
        <widget class="QLineEdit" name="event06">
         <property name="minimumSize">
          <size>
-          <width>171</width>
+          <width>201</width>
           <height>0</height>
          </size>
         </property>

@@ -9,6 +9,7 @@
 #ifndef _MAINWINDOW_H
 #define _MAINWINDOW_H
 
+#include "physiomon.h"
 #include "displays.h"
 #include "channels.h"
 #include "devphysiodaq.h"
@@ -58,10 +59,10 @@ class mainWindow : public QMainWindow {
   QShortcut *keyF9 = NULL;
   QShortcut *keyF10 = NULL;
 
-  settings *m_settings = NULL;
-  devPhysioDaq *m_device = NULL;
-  channels *m_channels = NULL;
-  displays *m_displays = NULL;
+  settings *m_settings = nullptr;
+  devPhysioDaq *m_device = nullptr;
+  channels *m_channels = nullptr;
+  displays *m_displays = nullptr;
 
 };
 

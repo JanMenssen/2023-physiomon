@@ -51,9 +51,9 @@ class settings {
     int m_numdisp = 0;
     int m_numchan = 0;
     QString m_device;
-    channelStruct *m_channels = NULL;
-    displayStruct *m_displays = NULL;
-    QString *m_events = NULL;
+    channelStruct m_channels[MAX_CHANNELS];
+    displayStruct m_displays[MAX_DISPLAYS];
+    QString m_events[MAX_EVENTS];
 
   private :
 
