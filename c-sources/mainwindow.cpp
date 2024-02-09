@@ -9,6 +9,7 @@
 #include "displays.h"
 #include "devphysiodaq.h"
 #include "devphysiodaq_dialog.h"
+#include "settings_dialog.h"
 
 #include <QMenuBar>
 #include <QMenu>
@@ -115,12 +116,12 @@ void mainWindow::createMenu() {
   connect(startAction,SIGNAL(triggered()),this, SLOT(onSave()));
   fileMenu->addAction(saveAction);
  
-  QAction *dispSettingsChangeAction = new QAction(tr("Display"));
+  QAction *settingsChangeAction = new QAction(tr("General Settings"));
   //-jm dispSettingsChangeAction->setStatusTip("edit display settings");
-  connect(dispSettingsChangeAction,SIGNAL(triggered()),this,SLOT(onDisplaySettingsChanged()));
-  editMenu->addAction(dispSettingsChangeAction);
+  connect(settingsChangeAction,SIGNAL(triggered()),this,SLOT(onSettingsChanged()));
+  editMenu->addAction(settingsChangeAction);
 
-  QAction *deviceSettingsChangeAction = new QAction(tr("Device"));
+  QAction *deviceSettingsChangeAction = new QAction(tr("Device Settings"));
   //-jm deviceSettingsChangeAction->setStatusTip("edit device settings");
   connect(deviceSettingsChangeAction,SIGNAL(triggered()),this,SLOT(onDeviceSettingsChanged()));
   editMenu->addAction(deviceSettingsChangeAction);
@@ -155,21 +156,21 @@ void mainWindow::createToolBar() {
 
   // display settings
 
-  QAction *changeDisplayAction = new QAction("display");
-  changeDisplayAction->setToolTip("change display settings");
+  QAction *changeDisplayAction = new QAction("general");
+  changeDisplayAction->setToolTip("change general settings");
   toolbar->addAction(changeDisplayAction);
-  connect(changeDisplayAction,SIGNAL(triggered()),this,SLOT(onDisplaySettingsChanged()));
+  connect(changeDisplayAction,SIGNAL(triggered()),this,SLOT(onSettingsChanged()));
   
   // device settings
 
   QAction *changeDeviceAction = new QAction("device");
-  changeDeviceAction->setToolTip("change display settings");
+  changeDeviceAction->setToolTip("change device settings");
   toolbar->addAction(changeDeviceAction);
   connect(changeDeviceAction,SIGNAL(triggered()),this,SLOT(onDeviceSettingsChanged()));
   
   // device info
 
-  QAction *devInfoAction = new QAction("device");
+  QAction *devInfoAction = new QAction("info");
   devInfoAction->setToolTip("get info about the device");
   toolbar->addAction(devInfoAction);
   connect(devInfoAction,SIGNAL(triggered()),this,SLOT(onDeviceInfo()));
@@ -305,15 +306,20 @@ void mainWindow::onDeviceSettingsChanged() {
 
 }
 
-// onDisplaySettingsChanged
+// onSettingsChanged
 //
 //    popuwp window is shown on which the display could be changed. Only possible if the
 //    program is not started
 
-void mainWindow::onDisplaySettingsChanged() {
+void mainWindow::onSettingsChanged() {
   
-  statusBarNew *status = (statusBarNew *)statusBar();
-  status->setText("on display settings pressed",5.0);
+int numdisp = m_settings->m_numdisp;
+int numchan = m_settings->m_numchan;
+channelStruct *channelInfo = m_settings->m_channels;
+displayStruct *displayInfo = m_settings->m_displays;
+settings_dialog dlgBox(this,numchan,channelInfo,numdisp,displayInfo);
+dlgBox.exec();
+
 }
 
 // onEvent 

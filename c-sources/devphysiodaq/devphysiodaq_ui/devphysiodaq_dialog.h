@@ -32,6 +32,6 @@ private:
 
     int m_numchan = 0;
     analogInStruct *m_analogInfo = nullptr;
-    analogInStruct *m_previousInfo = nullptr;
+    analogInStruct *m_analogPtr = nullptr;
 };
 #endif 

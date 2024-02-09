@@ -34,6 +34,7 @@ set(INSTALL_DIR "/Users/jan/")
     ${ROOT_DIR}/channels/channels.cpp
     ${ROOT_DIR}/displays/displays.cpp
     ${ROOT_DIR}/settings/settings.cpp
+    ${ROOT_DIR}/settings/settings_ui/settings_dialog.cpp
     ${ROOT_DIR}/basechart/basechart.cpp 
     ${ROOT_DIR}/stripchart/stripchart.cpp
     ${ROOT_DIR}/sweepchart/sweepchart.cpp
@@ -51,6 +52,7 @@ set(INSTALL_DIR "/Users/jan/")
     ${ROOT_DIR}/statusbar
     ${ROOT_DIR}/channels
     ${ROOT_DIR}/settings
+    ${ROOT_DIR}/settings/settings_ui
     ${ROOT_DIR}/displays
     ${ROOT_DIR}/arduinocomm
     ${ROOT_DIR}/basechart

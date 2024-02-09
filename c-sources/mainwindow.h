@@ -34,7 +34,7 @@ class mainWindow : public QMainWindow {
     void onSave();
     void onDeviceInfo();
     void onTimeOut();
-    void onDisplaySettingsChanged();
+    void onSettingsChanged();
     void onDeviceSettingsChanged();
     void onEvent();
     void onPhysiomonHelp();

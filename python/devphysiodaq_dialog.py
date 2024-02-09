@@ -5,9 +5,8 @@
 #     popped up to let the user change gain and offset from the cnannels
 
 
-from PySide6.QtWidgets import QDialog,QDialogButtonBox,QVBoxLayout,QLabel
-from PySide6.QtCore import QFile
-from PySide6.QtUiTools import QUiLoader
+from PySide6.QtWidgets import QDialog
+from PySide6.QtGui import QDoubleValidator
 from devphysiodaq_ui import Ui_devphysiodaq_dialog
 
 class devPhsyioDaq_dialog(QDialog) :
@@ -16,17 +15,28 @@ class devPhsyioDaq_dialog(QDialog) :
   #
   #   the UI is loaded
 
-  def __init__(self):
+  def __init__(self,analogInfo):
 
     super().__init__()
     self.ui = Ui_devphysiodaq_dialog()
     self.ui.setupUi(self)
 
+    self.m_analogInfo = analogInfo
+
     # set the validation for the edit and gain box, only numerics are allowed
+
+    self.ui.gainEdit.setValidator(QDoubleValidator(-5,5,2))
+    self.ui.offsetEdit.setValidator(QDoubleValidator(-100,100,2))
 
     # fill the channel select box with the names of the channels and set the gain and
     # offset in the edit boxes
     
+    for analogChannel in self.m_analogInfo :
+      self.ui.channelComboBox.addItem(analogChannel["name"])
+
+    self.ui.gainEdit.setText("%6.4f" % self.m_analogInfo[0]["gain"])
+    self.ui.offsetEdit.setText("%5.3f" % self.m_analogInfo[0]["offset"])
+
     # connect to slots
 
     self.ui.okButton.clicked.connect(self.onOK)
@@ -40,7 +50,7 @@ class devPhsyioDaq_dialog(QDialog) :
   #   return with accept
          
   def onOK(self) :
-    print("accepted")
+
     self.accept()
 
   # cancel button
@@ -48,7 +58,7 @@ class devPhsyioDaq_dialog(QDialog) :
   #   reject
     
   def onCancel(self) :
-    print("on cancel")
+
     self.reject()
 
   # gain edit
@@ -56,14 +66,18 @@ class devPhsyioDaq_dialog(QDialog) :
   #   get the current selected channel and modify the gain of it
     
   def onGain(self) :
-    print("on gain")
+
+    curItem = self.ui.channelComboBox.currentIndex()
+    self.m_analogInfo[curItem]["gain"] = float(self.ui.gainEdit.text())
 
   # offset edit
   #
   #   get the current selected channel and modify the offset of it
     
   def onOffset(self) :
-    print("on offset")
+
+    curItem = self.ui.channelComboBox.currentIndex()
+    self.m_analogInfo[curItem]["offset"] = float(self.ui.offsetEdit.text())
 
   # combobox select channel
   #
@@ -71,4 +85,15 @@ class devPhsyioDaq_dialog(QDialog) :
   #   edit boxes
     
   def onSelectChannel(self) :
-    print ("channel selected")
+    
+    curItem = self.ui.channelComboBox.currentIndex()
+    self.ui.gainEdit.setText("%6.4f" % self.m_analogInfo[curItem]["gain"])
+    self.ui.offsetEdit.setText("%5.2f" % self.m_analogInfo[curItem]["offset"])  
+
+  # getAnalogInfo
+  #
+  #   returns the (modified) analog structure
+    
+    def getAnalogInfo(self) :
+
+      return self.m_analogInfo

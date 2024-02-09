@@ -287,16 +287,10 @@ class mainWindow(QMainWindow) :
 
   def onDeviceSettingsChanged(self) :
     
-    dlgBox = devPhsyioDaq_dialog()
+    dlgBox = devPhsyioDaq_dialog(self.m_device.m_analogIn)
     if dlgBox.exec() :
-      print("true")
-    else :
-      print("false")
-      
-   
-    self.statusBar().setText("device settings changed",5)
-    return
-  
+      self.m_device.m_analogIn = dlgBox.getAnalogInfo();
+     
   # onDispSettingsChanged
   #
   #     a popup is displayed which makes it possible to edit the device settings

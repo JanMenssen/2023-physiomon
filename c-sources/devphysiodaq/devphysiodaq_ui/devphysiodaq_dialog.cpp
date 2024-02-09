@@ -7,13 +7,13 @@ devphysiodaq_dialog::devphysiodaq_dialog(QWidget *parent, int n, analogInStruct 
   setWindowTitle("change channel settings");
 
   m_numchan = n;
-  m_previousInfo = analogInfo;
+  m_analogPtr = analogInfo;
 
   // because we make changes to the analog info, a pointer doesn't work when cancel is pressed, 
   // a copy is needed. This copy is returned when OK is pressed, on Cancel it is destroyed
 
   m_analogInfo = new analogInStruct[m_numchan];
-  memcpy(m_analogInfo,m_previousInfo,m_numchan * sizeof(analogInStruct));
+  memcpy(m_analogInfo,m_analogPtr,m_numchan * sizeof(analogInStruct));
 
   // only numerics are allowed in the gain and offset edit boxes
 
@@ -43,13 +43,14 @@ void devphysiodaq_dialog::on_okButton_clicked() {
   m_analogInfo[curItem].offset = ui->offsetEdit->text().toDouble();
   m_analogInfo[curItem].gain = ui->gainEdit->text().toDouble();
   
-  memcpy(m_previousInfo,m_analogInfo,m_numchan * sizeof(analogInStruct));
+  memcpy(m_analogPtr,m_analogInfo,m_numchan * sizeof(analogInStruct));
   accept();
 }
 
 // cancel is pressed, close 
 
 void devphysiodaq_dialog::on_cancelButton_clicked() {
+  
   reject();
 }
 
