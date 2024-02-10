@@ -102,7 +102,9 @@ class settings_dialog(QDialog) :
 
     self.ui.okButton.clicked.connect(self.onOK)
     self.ui.cancelButton.clicked.connect(self.onCancel)
-    
+    self.ui.numchan.editingFinished.connect(self.onNumChannelsChanged)
+    self.ui.numdisp.editingFinished.connect(self.onNumDisplaysChanged)
+                                            
     self.ui.channelSelected.valueChanged.connect(self.onChannelSelected)
     self.ui.channelName.editingFinished.connect(self.onChannelNameChanged)
     self.ui.channelSignalSelect.currentIndexChanged.connect(self.onChannelSourceChanged)
@@ -137,6 +139,48 @@ class settings_dialog(QDialog) :
 
   def onCancel(self) :
     self.reject()  
+
+  # onNumChannelsChanged
+  #
+  #   this callback is executed with the number of channels changed. 
+    
+  def onNumChannelsChanged(self) :
+    
+    newNumChan = int(self.ui.numchan.text())
+    
+    if (newNumChan > self.m_numchan) :
+
+      newChannels = [ {"name" : "", "type" : 0, "source" : 0, "display" : 0} for k in range(newNumChan-self.m_numchan)]
+      self.m_channels.extend(newChannels)
+
+    if (newNumChan < self.m_numchan) :
+      
+      self.m_channels = self.m_channels[:newNumChan]
+
+    self.m_numchan = newNumChan
+    self.ui.channelSelected.setRange(1,self.m_numchan)
+
+  # onNuMDisplayChanged
+  #
+  #   the number of displays is changed. Add or remove displays to or from <m_displays> and update
+  #   the spinner box in the display tab and the display spinner box in the channels tab
+    
+  def onNumDisplaysChanged(self) :
+
+    newNumDisp = int(self.ui.numdisp.text())
+
+    if newNumDisp > self.m_numdisp :
+
+      newDisplays = [{"top" : 0, "left" : 0, "width" : 0, "height" : 0, "ymin" : 0, "ymax" : 0, "timescale" : 10, "mode" : ""} for k in range(newNumDisp-self.m_numdisp)]
+      self.m_channels.extend(newDisplays)
+
+    if newNumDisp < self.m_numdisp :
+
+      self.m_displays = self.m_displays[:newNumDisp]
+
+    self.m_numdisp = newNumDisp  
+    self.ui.displaySelected.setRange(1,self.m_numdisp)
+    self.ui.channelDisplaySelected.setRange(1,self.m_numdisp)
 
   # onDisplaySelected
   #
@@ -207,13 +251,13 @@ class settings_dialog(QDialog) :
     
   def onChannelSelected(self) :
 
-    curChannel = self.ui.channelSelected.value()
+    curChannel = self.ui.channelSelected.value() - 1
 
     self.ui.channelDisplaySelected.setValue(self.m_channels[curChannel]["display"])
-    self.ui.channelName.setText(self.m_channels[0]["name"])
+    self.ui.channelName.setText(self.m_channels[curChannel]["name"])
     self.ui.channelSignalSelect.setCurrentIndex(self.m_channels[curChannel]["source"])
     
-    self.setChannelRadioButtons(self.m_channels[curChannel]["mode"].lower())
+    self.setChannelRadioButtons(self.m_channels[curChannel]["type"])
 
   # onChannelNameChanged
   #
@@ -221,7 +265,7 @@ class settings_dialog(QDialog) :
     
   def onChannelNameChanged(self) :
 
-    curChannel = self.ui.channelSelected.value()    
+    curChannel = self.ui.channelSelected.value() - 1   
     self.m_channels[curChannel]["name"] = self.ui.channelName.text()
     
   # onChannelSourceCHanged
@@ -230,8 +274,8 @@ class settings_dialog(QDialog) :
 
   def onChannelSourceChanged(self) :
 
-    curChannel = self.ui.channelSelected.value()
-    self.m_channel[curChannel]["source"] = self.ui.channelSignalSelect.currentIndex()
+    curChannel = self.ui.channelSelected.value() - 1
+    self.m_channels[curChannel]["source"] = self.ui.channelSignalSelect.currentIndex()
 
   # onChannelDisplayChanged
   #
@@ -239,8 +283,8 @@ class settings_dialog(QDialog) :
     
   def onChannelDisplayChanged(self) :
 
-    curChannel = self.ui.channelSelected.value()
-    self.m_channel[curChannel]["display"] = self.ui.channelDisplaySelected.value()
+    curChannel = self.ui.channelSelected.value() - 1
+    self.m_channels[curChannel]["display"] = self.ui.channelDisplaySelected.value()
 
   # onChannelTypeChanged
   #

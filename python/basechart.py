@@ -65,6 +65,8 @@ class baseChart :
       self.m_pntsInGraph.append(0)
       self.m_downSampler.append(downSampler())
 
+    # create a new chart and disable the mouse event on these charts
+      
     self.m_chart = QChart()
 
     self.m_axisX = QValueAxis()

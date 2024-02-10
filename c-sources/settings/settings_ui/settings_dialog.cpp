@@ -217,14 +217,30 @@ void settings_dialog::on_okButton_clicked() {
 
 }
 
+// on_numchan_editingFinished
+//
+//    the number of channels is changed. Because in C we use a static list of MAX_CHANNELS
+//    elements and <m_cnumchan> contains the number of channels, we only have to change
+//    <m_numchan> and adapt the channelSelected spinbox
 
 void settings_dialog::on_numchan_editingFinished() {
 
+  m_numchan = ui->numchan->text().toInt();
+  ui->channelSelected->setRange(1,m_numchan);
 }
 
+// on_numdisp_editingFinished
+//
+//    the number of displays is changed. Because in C, with static arrays used, we only have to
+//    change the number of displays and update the display selecged spinner and the displays
+//    selection box in the channel tab
 
 void settings_dialog::on_numdisp_editingFinished() {
 
+  m_numdisp = ui->numdisp->text().toInt();
+
+  ui->channelDisplaySelected->setRange(1, m_numdisp);
+  ui->displaySelected->setRange(1, m_numdisp);
 }
 
 // on_channelName_editingFinished

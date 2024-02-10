@@ -9,6 +9,7 @@
 
 from PySide6.QtWidgets import QGridLayout,QWidget
 from PySide6.QtCharts import QChartView
+from PySide6.QtCore import Qt
 from stripchart import stripChart
 from sweepchart import sweepChart
 from scopechart import scopeChart
@@ -99,9 +100,14 @@ class displays() :
       ncol = round(curDisplay["width"] / RESOLUTION)
 
       # display is waveform        
-      
+   
       chartView = QChartView(self.m_graphDisplay[iDisp].m_chart)
       self.m_layout.addWidget(chartView,irow,icol,nrow,ncol)
+
+      # bug in using touchpad, changes in display causes a message, this bug is not solved by
+      # this command
+      
+      chartView.setAttribute(Qt.WidgetAttribute.WA_AcceptTouchEvents, False)
 
       # display is numeric, numeric should be added  
 
