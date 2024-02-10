@@ -102,7 +102,28 @@ class settings_dialog(QDialog) :
 
     self.ui.okButton.clicked.connect(self.onOK)
     self.ui.cancelButton.clicked.connect(self.onCancel)
+    
+    self.ui.channelSelected.valueChanged.connect(self.onChannelSelected)
+    self.ui.channelName.editingFinished.connect(self.onChannelNameChanged)
+    self.ui.channelSignalSelect.currentIndexChanged.connect(self.onChannelSourceChanged)
+    self.ui.channelDisplaySelected.valueChanged.connect(self.onChannelDisplayChanged)
+    self.ui.channelAnalog_rb.clicked.connect(self.onChannelTypeChanged)
+    self.ui.channelWaveform_rb.clicked.connect(self.onChannelTypeChanged)
+    self.ui.channelNumeric_rb.clicked.connect(self.onChannelTypeChanged)
 
+    self.ui.displaySelected.valueChanged.connect(self.onDisplaySelected)
+    self.ui.displayTop.editingFinished.connect(self.onDisplayPositionChanged)
+    self.ui.displayLeft.editingFinished.connect(self.onDisplayPositionChanged)
+    self.ui.displayHeight.editingFinished.connect(self.onDisplayPositionChanged)
+    self.ui.displayWidth.editingFinished.connect(self.onDisplayPositionChanged)
+    self.ui.displayYmin.editingFinished.connect(self.onDisplayScaleChanged)
+    self.ui.displayYmax.editingFinished.connect(self.onDisplayScaleChanged)
+    self.ui.displayXaxis.editingFinished.connect(self.onDisplayScaleChanged)
+    self.ui.displaySweepChart_rb.clicked.connect(self.onDisplayModeChanged)
+    self.ui.displayScopeChart_rb.clicked.connect(self.onDisplayModeChanged)
+    self.ui.displayStripChart_rb.clicked.connect(self.onDisplayModeChanged)
+    self.ui.displayNumeric_rb.clicked.connect(self.onDisplayModeChanged)  
+    
   # onOK
   #
   #   handles the OK button, and accept is returned
@@ -116,6 +137,125 @@ class settings_dialog(QDialog) :
 
   def onCancel(self) :
     self.reject()  
+
+  # onDisplaySelected
+  #
+  #   anaother display is selected, update the display field with information for the
+  #   current display
+    
+  def onDisplaySelected(self) :
+
+    curDisplay = self.ui.displaySelected.value() - 1
+    
+    self.ui.displayTop.setText("%3.2f" % self.m_displays[curDisplay]["top"])
+    self.ui.displayLeft.setText("%3.2f" % self.m_displays[curDisplay]["left"])
+    self.ui.displayHeight.setText("%3.2f" % self.m_displays[curDisplay]["height"])
+    self.ui.displayWidth.setText("%3.2f" % self.m_displays[curDisplay]["width"])
+
+    self.ui.displayYmin.setText("%3.1f" % self.m_displays[curDisplay]["ymin"])
+    self.ui.displayYmax.setText("%3.1f" % self.m_displays[curDisplay]["ymax"])
+    self.ui.displayXaxis.setText("%3.1f" % self.m_displays[curDisplay]["timescale"])
+ 
+    self.setDisplayRadioButtons(self.m_displays[curDisplay]["mode"].lower())
+
+  # onDisplayPositionChanged
+  #
+  #   the position of the display (top,left,height or width) is changed, pass the new values to
+  #   the <m_displays> structure
+    
+  def onDisplayPositionChanged(self) :
+
+    curDisplay = self.ui.displaySelected.value() - 1
+
+    self.m_displays[curDisplay]["top"] = float(self.ui.displayTop.text())
+    self.m_displays[curDisplay]["left"] = float(self.ui.displayLeft.text())
+    self.m_displays[curDisplay]["height"] = float(self.ui.displayHeight.text())
+    self.m_displays[curDisplay]["width"] = float(self.ui.displayWidth.text())
+    
+  # onDisplayScaleChanged
+  #
+  #   the y-axis or x-axis is changed, pass the new parameters to the <m_display> structure
+  
+  def onDisplayScaleChanged(self) :
+    
+    curDisplay = self.ui.displaySelected.value() - 1
+    
+    self.m_displays[curDisplay]["ymin"] = float(self.ui.displayYmin.text())
+    self.m_displays[curDisplay]["ymax"] = float(self.ui.displayYmax.text())
+    self.m_displays[curDisplay]["timecale"] = float(self.ui.displayXaxis.text())
+ 
+  # onDisplayModeChanged
+  #
+  #   another mode of displaying the signals is choosen, update the structure
+    
+  def onDisplayModeChanged(self) :
+    
+    curDisplay = self.ui.displaySelected.value() - 1
+
+    if self.ui.displaySweepChart_rb.isChecked() :
+      self.m_displays[curDisplay]["mode"] = "sweep"
+    if self.ui.displayScopeChart_rb.isChecked() :
+       self.m_displays[curDisplay]["mode"] = "scope"
+    if self.ui.displayStripChart_rb.isChecked() :
+       self.m_displays[curDisplay]["mode"] = "strip"
+    if self.ui.displayNumeric_rb.isChecked() :
+       self.m_displays[curDisplay]["mode"] = "numeric"
+  
+  # onChannelSelected
+  #   
+  #   another channel is selected, update the channel pareameters
+    
+  def onChannelSelected(self) :
+
+    curChannel = self.ui.channelSelected.value()
+
+    self.ui.channelDisplaySelected.setValue(self.m_channels[curChannel]["display"])
+    self.ui.channelName.setText(self.m_channels[0]["name"])
+    self.ui.channelSignalSelect.setCurrentIndex(self.m_channels[curChannel]["source"])
+    
+    self.setChannelRadioButtons(self.m_channels[curChannel]["mode"].lower())
+
+  # onChannelNameChanged
+  #
+  #   the channel name is modified, pass it into the <m__channels> structure
+    
+  def onChannelNameChanged(self) :
+
+    curChannel = self.ui.channelSelected.value()    
+    self.m_channels[curChannel]["name"] = self.ui.channelName.text()
+    
+  # onChannelSourceCHanged
+  #
+  #    the source of the current channel is changed
+
+  def onChannelSourceChanged(self) :
+
+    curChannel = self.ui.channelSelected.value()
+    self.m_channel[curChannel]["source"] = self.ui.channelSignalSelect.currentIndex()
+
+  # onChannelDisplayChanged
+  #
+  #     the current display is changed
+    
+  def onChannelDisplayChanged(self) :
+
+    curChannel = self.ui.channelSelected.value()
+    self.m_channel[curChannel]["display"] = self.ui.channelDisplaySelected.value()
+
+  # onChannelTypeChanged
+  #
+  #   this callback is called when one of the radio buttons is pressed
+    
+  def onChannelTypeChanged(self) :
+    
+    curChannel = self.ui.channelSelected.value()
+
+    if self.ui.channelAnalog_rb.isChecked() :
+      self.m_channels[curChannel]["type"] = 1
+    if self.ui.channelWaveform_rb.isChecked() :
+      self.m_channels[curChannel]["type"] = 2
+    if self.ui.channelNumeric_rb.isChecked() :
+      self.m_channels[curChannel]["type"] = 3
 
   # getModifiedValues
   #
@@ -188,5 +328,3 @@ class settings_dialog(QDialog) :
       self.ui.displayScopeChart_rb.setChecked(False)
       self.ui.displaySweepChart_rb.setChecked(False)
       self.ui.displayNumeric_rb.setChecked(True)
-
-

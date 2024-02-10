@@ -263,7 +263,7 @@ void settings_dialog::on_channelColor_editingFinished() {
 
 void settings_dialog::on_channelDisplaySelected_valueChanged(int value) {
 
-  int curItem = ui->channelSelected->value() - 1;
+  int curItem = ui->channelSelected->value();
   m_channels[curItem].display = value;
 }
 
