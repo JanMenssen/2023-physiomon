@@ -5,6 +5,7 @@
 //
 //  modifications
 //    08-jan-2024   JM  initial version
+//    11-feb-2024   JM  initialise removed, now in constructor 
 
 #ifndef ARDUINOCOMM_H
 #define ARDUINOCOMM_H
@@ -14,10 +15,10 @@
 class arduinoComm{
 
   public:
-    arduinoComm();
+    arduinoComm(QString port, int baudRate);
     ~arduinoComm();
 
-    void initialise(QString port);
+    //-jm void initialise(QString port);
     void startstop(bool onoff);
     QString isConnected();
     bool isStarted();

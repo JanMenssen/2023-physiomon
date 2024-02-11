@@ -33,7 +33,7 @@ devPhysioDaq::~devPhysioDaq() {
 
 void devPhysioDaq::initialise() {
 
-  m_arduino.initialise(m_address);
+  m_arduino = new arduinoComm(m_address,115200);
   return;
   
 }
@@ -44,7 +44,7 @@ void devPhysioDaq::initialise() {
 
 QString devPhysioDaq::isConnected() {
   
-  QString devInfo = m_arduino.isConnected();
+  QString devInfo = m_arduino->isConnected();
   return devInfo;
 }
 
@@ -55,7 +55,7 @@ QString devPhysioDaq::isConnected() {
 void devPhysioDaq::setSampleRate(int ms) {
 
   short data = ms;
-  m_arduino.sendMsg('c',1,&data);
+  m_arduino->sendMsg('c',1,&data);
   
   return;
 }
@@ -67,7 +67,7 @@ void devPhysioDaq::setSampleRate(int ms) {
 void devPhysioDaq::setStartStop(bool started) {
 
   measureDevice::setStartStop(started);
-  m_arduino.startstop(started);
+  m_arduino->startstop(started);
 
   return;
 }
@@ -122,7 +122,7 @@ void devPhysioDaq::read(physiomon_channels *channels) {
     bool msgOK = true;
     while (msgOK == true) {
       
-      msgOK = m_arduino.rcvMsg(&cmd,&n,data);
+      msgOK = m_arduino->rcvMsg(&cmd,&n,data);
       if (cmd == ANALOG_CMD) {
         for (int i=0;i<n;i++) writeValueToAllChannels(&m_analogIn[i],channels,data[i]);
       }

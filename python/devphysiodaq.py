@@ -22,7 +22,6 @@ class devPhysioDaq(measureDevice) :
   def __init__(self) :
     
     super().__init__()
-    self.m_arduino = arduinoComm()
     self.m_address = []
 
   # intialise
@@ -31,7 +30,7 @@ class devPhysioDaq(measureDevice) :
 
   def initialise(self) :
     
-    self.m_arduino.initialise(self.m_address)
+    self.m_arduino = arduinoComm(self.m_address,115200)
     return
 
   # isConnected

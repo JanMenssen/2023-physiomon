@@ -11,36 +11,27 @@ from PySide6.QtSerialPort import QSerialPort
 from PySide6.QtCore import QByteArray, QIODevice
 import struct
 
-BAUDRATE = 115200
-
 class arduinoComm :
 
   # constructor, nothing is done
 
-  def __init__(self) :
+  def __init__(self,port,baudrate = 115200) :
     
     self.rcvBuffer = QByteArray()
     self.m_started = False
-    return
 
-  # initialise the port
-
-  def initialise(self,port) :
-  
     self.m_port = QSerialPort()
 
     self.m_port.setPortName(port)
     self.m_port.open(QIODevice.ReadWrite)
   
-    self.m_port.setBaudRate(BAUDRATE)
+    self.m_port.setBaudRate(baudrate)
     self.m_port.setDataBits(QSerialPort.Data8)
     self.m_port.setFlowControl(QSerialPort.NoFlowControl)
     self.m_port.setParity(QSerialPort.NoParity)
     self.m_port.setStopBits(QSerialPort.OneStop)
     
     self.m_port.flush()
-    
-    self.m_started = False
     
     return
   

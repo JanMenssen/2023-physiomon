@@ -6,6 +6,7 @@
 //
 //  modifications
 //    08-jan-2024   JM    initial version
+//    11-feb-2024   JM    initialise removed, now in constructor
 
 #include "arduinocomm.h"
 
@@ -24,7 +25,21 @@
 
 // constructor
 
-arduinoComm::arduinoComm() {
+arduinoComm::arduinoComm(QString port, int baudRate) {
+
+  m_port = new QSerialPort();
+
+  m_port->setPortName(port);
+  m_port->open(QIODevice::ReadWrite);
+  
+  m_port->setBaudRate(baudRate);
+
+  m_port->setDataBits(QSerialPort::Data8);
+  m_port->setFlowControl(QSerialPort::NoFlowControl);
+  m_port->setParity(QSerialPort::NoParity);
+  m_port->setStopBits(QSerialPort::OneStop);
+
+  m_port->flush();
 
   m_started = false;
 }
@@ -38,34 +53,6 @@ arduinoComm::~arduinoComm() {
 
   return;
 }
-
-// initialize
-//
-//    initialises the serial port. This is a seperate routine and not in the constructor
-//    because the device address (portname) is not known when the constructor is called
-
-void arduinoComm::initialise(QString port) {
-
-  m_port =new QSerialPort();
-
-  m_port->setPortName(port);
-  m_port->open(QIODevice::ReadWrite);
-  
-  m_port->setBaudRate(BAUDRATE);
-
-  m_port->setDataBits(QSerialPort::Data8);
-  m_port->setFlowControl(QSerialPort::NoFlowControl);
-  m_port->setParity(QSerialPort::NoParity);
-  m_port->setStopBits(QSerialPort::OneStop);
-
-  m_port->flush();
-
-  m_started = false;
-
-  return;
-
-}
-
 
 // startstop
 //
