@@ -12,9 +12,9 @@ from PySide6.QtGui import QAction, QShortcut, QKeySequence, QIcon
 from PySide6.QtCore import QTimer, Qt, QObject, QSize
 
 from statusbar import statusBarNew
-from settings import settings
-from displays import displays
-from channels import channels
+from physiomon_settings import physiomon_settings
+from physiomon_displays import physiomon_displays
+from physiomon_channels import physiomon_channels
 from devphysiodaq import devPhysioDaq
 from devphysiodaq_dialog import devPhsyioDaq_dialog
 from settings_dialog import settings_dialog
@@ -61,7 +61,7 @@ class mainWindow(QMainWindow) :
 
     # read the general and specific settings
 
-    self.m_settings = settings()
+    self.m_settings = physiomon_settings()
     deviceName = self.m_settings.iniRead()
 
     if (deviceName == "physiodaq") :    
@@ -74,8 +74,8 @@ class mainWindow(QMainWindow) :
 
     #-jm self.m_displays = displays(self.mdi)
 
-    self.m_displays = displays(centralWidget)
-    self.m_channels = channels(MAX_CHANNELS)
+    self.m_displays = physiomon_displays(centralWidget)
+    self.m_channels = physiomon_channels(MAX_CHANNELS)
 
     self.onConfigure()
     

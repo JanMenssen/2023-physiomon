@@ -113,7 +113,7 @@ void measureDevice::getAnalogInfo(int *n, analogInStruct *analogInfo) {
 //
 //    given the settings, configures the device handler
 
-void measureDevice::configure(settings *settings) {
+void measureDevice::configure(physiomon_settings *settings) {
 
 
   int numchan = settings->m_numchan;

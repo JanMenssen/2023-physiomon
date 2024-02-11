@@ -10,7 +10,7 @@
 #include <QString>
 #include "arduinocomm.h"
 #include "measuredevice.h"
-#include "channels.h"
+#include "physiomon_channels.h"
 
 class devPhysioDaq : public measureDevice {
 
@@ -25,14 +25,14 @@ class devPhysioDaq : public measureDevice {
     bool isStarted();
     void setStartStop(bool start);
     void iniRead(QString deviceName);
-    void read(channels *channels); 
+    void read(physiomon_channels *channels); 
 
   private :
 
     QString m_address = "";
     arduinoComm m_arduino;
    
-    void writeValueToAllChannels(analogInStruct *analogIn,channels *channels,short value);
+    void writeValueToAllChannels(analogInStruct *analogIn,physiomon_channels *channels,short value);
 };
 
 #endif

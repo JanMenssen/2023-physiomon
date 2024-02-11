@@ -1,5 +1,5 @@
 //
-// channels.cpp
+// phsyiomon_channels.cpp
 //
 //      implementation of the channels class in the fysiomon project. A channel contains information
 //      and databuffers. Data from the device is copied to the channels class and the display and 
@@ -7,9 +7,10 @@
 //
 //  modifications
 //    08-jan-2024   JM  initial version
+//    11-feb-2024   JM  renamed to <physiomon_channels>
 
 #include <QDebug.h>
-#include "channels.h"
+#include "physiomon_channels.h"
 
 // cyclicBuffer constructor
 //
@@ -66,7 +67,7 @@ void cyclicBuffer::write(int n, float *data) {
 //
 //    the length of the buffers in seconds is set
 
-channels::channels(float length) {
+physiomon_channels::physiomon_channels(float length) {
   
   m_lengthInSeconds = length;
 }
@@ -76,7 +77,7 @@ channels::channels(float length) {
 //    getting the info from the <settings> and <device> class, this method configures the 
 //    buffers in the <channels> class
 
-void channels::configure(settings *settings, measureDevice *device) {
+void physiomon_channels::configure(physiomon_settings *settings, measureDevice *device) {
 
   // for every channel
 
@@ -116,14 +117,14 @@ void channels::configure(settings *settings, measureDevice *device) {
 //
 //    returns the sample getSampleRate
 
-void channels::getSampleRate() {
+void physiomon_channels::getSampleRate() {
 }
 
 // readDisplay
 //
 //    reads the data for the display from a channel
 
-void channels::readDisplay(int ichan, int *nSamples, float *data) {
+void physiomon_channels::readDisplay(int ichan, int *nSamples, float *data) {
 
   m_buffers[ichan].display->read(nSamples, data);  
 }
@@ -132,7 +133,7 @@ void channels::readDisplay(int ichan, int *nSamples, float *data) {
 //
 //    reads the data for the storage from a channel
 
-void channels::readStore(int ichan, int *nSamples, float *data) {
+void physiomon_channels::readStore(int ichan, int *nSamples, float *data) {
 
   m_buffers[ichan].store->read(nSamples, data);
 }
@@ -141,7 +142,7 @@ void channels::readStore(int ichan, int *nSamples, float *data) {
 //
 //    writes data to the display and store buffers. Channel number is input
 
-void channels::writeData(int ichan, float data) {
+void physiomon_channels::writeData(int ichan, float data) {
 
   m_buffers[ichan].display->write(1,&data);
   //-jm m_buffers[ichan].store->write(1,&data);

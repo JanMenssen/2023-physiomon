@@ -10,10 +10,11 @@
 #define _MAINWINDOW_H
 
 #include "physiomon.h"
-#include "displays.h"
-#include "channels.h"
+#include "physiomon_displays.h"
+#include "physiomon_channels.h"
+#include "physiomon_settings.h"
 #include "devphysiodaq.h"
-#include "settings.h"
+
 
 #include <QMainWindow>
 #include <QObject>
@@ -59,11 +60,13 @@ class mainWindow : public QMainWindow {
   QShortcut *keyF9 = NULL;
   QShortcut *keyF10 = NULL;
 
-  settings *m_settings = nullptr;
+  physiomon_settings *m_settings = nullptr;
+  physiomon_channels *m_channels = nullptr;
+  physiomon_displays *m_displays = nullptr;
   devPhysioDaq *m_device = nullptr;
-  channels *m_channels = nullptr;
-  displays *m_displays = nullptr;
 
+  // actions for the GUI 
+  
   QAction *m_startButtonAction = nullptr;
   QAction *m_saveButtonAction = nullptr; 
   QAction *m_generalButtonAction = nullptr;

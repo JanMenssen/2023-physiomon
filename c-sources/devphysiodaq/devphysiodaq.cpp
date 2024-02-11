@@ -110,7 +110,7 @@ void devPhysioDaq::iniRead(QString deviceName) {
 //    reads samples (if available) from the device
 //    currenty 8 bytes could be read (device has 6 channels)
 
-void devPhysioDaq::read(channels *channels) {
+void devPhysioDaq::read(physiomon_channels *channels) {
 
   char cmd;
   char ANALOG_CMD = 65;
@@ -133,7 +133,7 @@ void devPhysioDaq::read(channels *channels) {
   return;
 }
 
-void devPhysioDaq::writeValueToAllChannels(analogInStruct *analogIn, channels *channels, short value) {
+void devPhysioDaq::writeValueToAllChannels(analogInStruct *analogIn, physiomon_channels *channels, short value) {
 
   // first convert do float data
 

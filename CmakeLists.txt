@@ -31,9 +31,9 @@ set(INSTALL_DIR "/Users/jan/")
     ${ROOT_DIR}/physiomon.cpp
     ${ROOT_DIR}/mainwindow.cpp
     ${ROOT_DIR}/statusbar/statusbar.cpp
-    ${ROOT_DIR}/channels/channels.cpp
-    ${ROOT_DIR}/displays/displays.cpp
-    ${ROOT_DIR}/settings/settings.cpp
+    ${ROOT_DIR}/channels/physiomon_channels.cpp
+    ${ROOT_DIR}/displays/physiomon_displays.cpp
+    ${ROOT_DIR}/settings/physiomon_settings.cpp
     ${ROOT_DIR}/settings/settings_ui/settings_dialog.cpp
     ${ROOT_DIR}/basechart/basechart.cpp 
     ${ROOT_DIR}/stripchart/stripchart.cpp

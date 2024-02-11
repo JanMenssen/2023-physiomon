@@ -11,7 +11,7 @@
 #define _MEASUREDEVICE_H
 
 #include <Qstring>
-#include "settings.h"
+#include "physiomon_settings.h"
 
 // analog structure. each data channel can be onnected to 5 display/stores
 
@@ -35,7 +35,7 @@ class measureDevice {
     bool isStarted();
     void setStartStop(bool start);
     void iniRead(QString device);
-    void configure(settings *settings);
+    void configure(physiomon_settings *settings);
     void getAnalogInfo(int *ntal, analogInStruct *analogInfo);
 
     int m_nrAnalogIn = 0;

@@ -1,7 +1,7 @@
 #ifndef _SETTINGS_DIALOG_H
 #define _SETTINGS_DIALOG_H
 
-#include "settings.h"
+#include "physiomon_settings.h"
 #include "physiomon.h"
 #include "measuredevice.h"
 

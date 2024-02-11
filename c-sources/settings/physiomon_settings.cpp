@@ -1,5 +1,5 @@
 //
-// settings.cpp
+// physiomon_settings.cpp
 //
 //    implementation of the settings class. This class reads the settings from the INI file and 
 //    distributes these to the other classes. It makes use of the Qsettings class of the QT
@@ -7,15 +7,16 @@
 //
 // modifications
 //    08-jan-2024 JM  initial version
+//    11-feb-2024 JM  renamed to <physiomon_settings>
 
 #include <stdio.h>
-#include "settings.h"
+#include "physiomon_settings.h"
 
 // constructor
 //
 //    initialise the superclass and set the default values
 
-settings::settings() {
+physiomon_settings::physiomon_settings() {
 
   m_settings = new QSettings(QSettings::IniFormat,QSettings::UserScope,"JanSoft","physiomon");
   
@@ -29,7 +30,7 @@ settings::settings() {
 //
 //    clear the memory
 
-settings::~settings() {
+physiomon_settings::~physiomon_settings() {
 
   //-jm if (m_displays != NULL) delete m_displays;
   //-jm if (m_channels != NULL) delete m_channels;
@@ -40,7 +41,7 @@ settings::~settings() {
 
 //  initialisation
 
-void settings::initialise() {
+void physiomon_settings::initialise() {
   return;
 }
 
@@ -51,7 +52,7 @@ void settings::initialise() {
 //
 //    The device name is returned
 
-QString settings::iniRead() {
+QString physiomon_settings::iniRead() {
 
   readGeneral();
   readChannels();
@@ -66,7 +67,7 @@ QString settings::iniRead() {
 //
 //    returns the event string beloning by the event
 
-QString settings::getEventString(int iEvent) {
+QString physiomon_settings::getEventString(int iEvent) {
 
   return m_events[iEvent];
 }
@@ -75,7 +76,7 @@ QString settings::getEventString(int iEvent) {
 //
 //    this (private) method reads the settings belonging to the keyword <general>
 
-void settings::readGeneral() {
+void physiomon_settings::readGeneral() {
 
   m_settings->beginGroup("algemeen");
   m_numchan = m_settings->value("numchan",1).toInt();
@@ -90,7 +91,7 @@ void settings::readGeneral() {
 //    this (private) method reads the information that are beloning to the channels and
 //    store these in the <m_channels> property
 
-void settings::readChannels() {
+void physiomon_settings::readChannels() {
 
   char keyName[10];
 
@@ -116,7 +117,7 @@ void settings::readChannels() {
 //
 //  this method reads about the size and position of the displays on the screen
 
-void settings::readDisplaySettings() {
+void physiomon_settings::readDisplaySettings() {
 
   char keyName[10];
 
@@ -147,7 +148,7 @@ void settings::readDisplaySettings() {
 //
 //    this (private) method reads the events labels
 
-void settings::readEventSettings() {
+void physiomon_settings::readEventSettings() {
 
   char eventNr[3];
   char eventStr[9];

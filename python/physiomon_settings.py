@@ -1,16 +1,17 @@
 #
-# settings
+# physiomon_settings
 #
 #     class containing the settings for the program
 #
 #   modifications
 #     18-dec-2023   JM    initial version
+#     11-feb-2024   JM    renamed to <physiomon_settings>
 
 TYPE_ANALOG_IN = 1
 
 from PySide6.QtCore import QSettings
 
-class settings() :
+class physiomon_settings() :
 
   # constructor
 

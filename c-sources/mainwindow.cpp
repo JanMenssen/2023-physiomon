@@ -5,8 +5,9 @@
 
 #include "mainwindow.h"
 #include "statusbar.h"
-#include "channels.h"
-#include "displays.h"
+#include "physiomon_channels.h"
+#include "physiomon_displays.h"
+#include "physiomon_settings.h"
 #include "devphysiodaq.h"
 #include "devphysiodaq_dialog.h"
 #include "settings_dialog.h"
@@ -44,7 +45,7 @@ mainWindow::mainWindow(int width, int height) {
   
   // read the general and specific settings
 
-  m_settings = new settings();
+  m_settings = new physiomon_settings();
   QString deviceName = m_settings->iniRead();
  
   // Note, this should be done better, device should be set
@@ -60,8 +61,8 @@ mainWindow::mainWindow(int width, int height) {
   QWidget *centralWidget = new QWidget();
   setCentralWidget(centralWidget);
 
-  m_displays = new displays(centralWidget);
-  m_channels = new channels(MAX_CHANNELS);
+  m_displays = new physiomon_displays(centralWidget);
+  m_channels = new physiomon_channels(MAX_CHANNELS);
 
   onConfigure();
 

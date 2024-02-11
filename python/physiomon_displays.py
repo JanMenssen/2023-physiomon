@@ -1,11 +1,12 @@
 #
-# displays.py
+# physiomon_displays.py
 #
 #         contains the software for the graphs and update the graphs on the screen. This in the
 #         grid implementation 
 #
 #   modifications
 #     16-jan-2024 JM    initial version
+#     11-feb-2024 JM    renamed to <physiomon_displays>
 
 from PySide6.QtWidgets import QGridLayout,QWidget
 from PySide6.QtCharts import QChartView
@@ -16,7 +17,7 @@ from scopechart import scopeChart
 
 RESOLUTION = 0.05
 
-class displays() :
+class physiomon_displays() :
 
   # constructor
 

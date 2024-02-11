@@ -1,13 +1,14 @@
 //
-// settings.h
+// physiomon_settings.h
 //
 //      header file for the settings class
 //
 // modifications
 //    08-jan-2024   JM    initial version 
+//    11-feb-2024   JM    renamed to <physiomon_settings>
 
-#ifndef _SETTINGS_H
-#define _SETTINGS_H
+#ifndef _PHYSIOMON_SETTINGS_H
+#define _PHYSIOMON_SETTINGS_H
 
 #include <QSettings>
 #include "physiomon.h"
@@ -35,12 +36,12 @@ struct displayStruct {
 };
 
 
-class settings {
+class physiomon_settings {
 
   public :
   
-    settings();
-    ~settings();
+    physiomon_settings();
+    ~physiomon_settings();
     void initialise();
     QString iniRead();
     QString getEventString(int iEvent);

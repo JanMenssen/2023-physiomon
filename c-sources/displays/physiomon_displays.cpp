@@ -1,20 +1,18 @@
 //
-// displays.cpp
+// physiomon_displays.cpp
 //
 //    implementation of the <displays> class. This class is responsible for the plotting
 //    of the data.
 //
 //  modifications
 //    14-jan-2024   JM  initial version
+//    11=feb-2024   JM  renamed to <physiomon_displays>
 
 #include "physiomon.h"
-#include "displays.h"
+#include "physiomon_displays.h"
 #include "stripchart.h"
 #include "sweepchart.h"
 #include "scopechart.h"
-
-#include <QDebug>
-
 
 // we use a 20x20 grid this means a resolution of 0.05
 
@@ -22,7 +20,7 @@
 
 // constructor
 
-displays::displays(QWidget *centralWidget) {
+physiomon_displays::physiomon_displays(QWidget *centralWidget) {
 
   m_numDisplays = 0;
   
@@ -35,7 +33,7 @@ displays::displays(QWidget *centralWidget) {
 
 // destructor
 
-displays::~displays() {
+physiomon_displays::~physiomon_displays() {
 /*
   if (m_layout != NULL) delete m_layout;
   if (m_dispContents != NULL) delete m_dispContents;
@@ -44,12 +42,12 @@ displays::~displays() {
 
 // initialise
 
-void displays::initialise() {
+void physiomon_displays::initialise() {
 
 }
 // configure
 
-void displays::configure(settings *settings) {
+void physiomon_displays::configure(physiomon_settings *settings) {
   
   // these parameters are needed to calculate the position in the grid
 
@@ -140,7 +138,7 @@ void displays::configure(settings *settings) {
 //
 //    plots the new data
 
-void displays::plot(channels *channels) {
+void physiomon_displays::plot(physiomon_channels *channels) {
 
   float data[100];          // max 100 samples can be read
   int nSamples = 0;       

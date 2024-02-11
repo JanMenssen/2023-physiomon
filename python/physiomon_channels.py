@@ -1,10 +1,11 @@
 #
-# channels.py
+# physiomon_channels.py
 #
 #       contains the channels and buffers classes
 #
 #   modifications
 #     18-dec-2023  JM   initial version
+#     11-feb-2024  JM   renamed to <physiomon_channels>
 
 TYPE_ANALOG_IN = 1
 
@@ -52,7 +53,7 @@ class buffer() :
     return
   
 
-class channels() :
+class physiomon_channels() :
 
   # constructor
   #

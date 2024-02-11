@@ -7,7 +7,7 @@
 # modifications
 #   07-nov-2023  JM   initial version
 
-from PySide6.QtSerialPort import QSerialPort, QSerialPortInfo 
+from PySide6.QtSerialPort import QSerialPort
 from PySide6.QtCore import QByteArray, QIODevice
 import struct
 

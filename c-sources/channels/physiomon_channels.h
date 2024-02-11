@@ -1,15 +1,16 @@
 //
-//  channels.h
+//  physiomon_channels.h
 //
 //      header file for the channels class in the fysiomon project
 //
 //  modifications
 //    08-jan-2024   JM  initial version
+//    11-feb-2024   JM  renamed to <physiomon_channels
 
-#ifndef CHANNELS_H
-#define CHANNELS_H
+#ifndef _PHYSIOMON_CHANNELS_H
+#define _PHYSIOMON_CHANNELS_H
 
-#include "settings.h"
+#include "physiomon_settings.h"
 #include "measuredevice.h"
 
 // cyclic buffer stores the samples
@@ -39,13 +40,13 @@ struct bufferStruct {
   cyclicBuffer *store;
 };
 
-class channels{
+class physiomon_channels{
 
   public:
 
-    channels(float length);
+    physiomon_channels(float length);
   
-    void configure(settings *settings, measureDevice *device);
+    void configure(physiomon_settings *settings, measureDevice *device);
     void getSampleRate();
     void readDisplay(int nchan, int *nSamples, float *data);
     void readStore(int nchan, int *nSamples, float *data);
