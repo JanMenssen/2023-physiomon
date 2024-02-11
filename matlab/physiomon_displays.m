@@ -6,7 +6,7 @@
 % modifications
 %   02-feb-2024   JM    initial version
 
-classdef displays
+classdef physiomon_displays
 
   properties (Access = private)
     m_chart = {};
@@ -16,7 +16,7 @@ classdef displays
 
     %% constructor
 
-    function obj = displays()
+    function obj = physiomon_displays()
     
       % constructor of the class, members are initialised
       %
