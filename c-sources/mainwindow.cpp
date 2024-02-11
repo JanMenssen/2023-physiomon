@@ -371,14 +371,17 @@ void mainWindow::onDeviceSettingsChanged() {
   analogInStruct *analogInfo = m_device->m_analogIn;
 
   statusBarNew *status = (statusBarNew *)statusBar();
-  status->setText("device settings are modified ...",3.0);
+  status->setText("edit device settings ...",3.0);
 
   // get the analogInfo data and copy this to the dialog widget before executing it
   // m_device->getAnalogInfo(&n,analogInfo);
 
   devphysiodaq_dialog dlgBox(this,n,analogInfo);
-  dlgBox.exec();
-
+  if (dlgBox.exec() == QDialog::Accepted) {
+    status-setText("changed settings are saved ...",3.0);
+  } else {}
+    status-setText("changed settings not saved ...",3.0);
+  }
 }
 
 // onSettingsChanged
@@ -388,22 +391,24 @@ void mainWindow::onDeviceSettingsChanged() {
 
 void mainWindow::onSettingsChanged() {
   
-int numdisp = m_settings->m_numdisp;
-int numchan = m_settings->m_numchan;
-int numanalog = m_device->m_nrAnalogIn;
+  int numdisp = m_settings->m_numdisp;
+  int numchan = m_settings->m_numchan;
+  int numanalog = m_device->m_nrAnalogIn;
 
-channelStruct *channelInfo = m_settings->m_channels;
-displayStruct *displayInfo = m_settings->m_displays;
-QString *eventInfo = m_settings->m_events;
-analogInStruct *analogInfo = m_device->m_analogIn;
+  channelStruct *channelInfo = m_settings->m_channels;
+  displayStruct *displayInfo = m_settings->m_displays;
+  QString *eventInfo = m_settings->m_events;
+  analogInStruct *analogInfo = m_device->m_analogIn;
 
-statusBarNew *status = (statusBarNew *)statusBar();
-status->setText("general settings are modified ...",3.0);
+  statusBarNew *status = (statusBarNew *)statusBar();
+  status->setText("edit general settings ...",3.0);
 
-settings_dialog dlgBox(this,&numchan,channelInfo,&numdisp,displayInfo,eventInfo,numanalog,analogInfo);
-dlgBox.exec();
-
-}
+  settings_dialog dlgBox(this,&numchan,channelInfo,&numdisp,displayInfo,eventInfo,numanalog,analogInfo);
+  if (dlgBox.exec() == QDialog::Accepted) {
+    status-setText("changed settings are saved ...",3.0);
+  } else {}
+    status-setText("changed settings not saved ...",3.0);
+  }
 
 // onEvent 
 //

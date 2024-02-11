@@ -360,14 +360,14 @@ class mainWindow(QMainWindow) :
 
   def onDeviceSettingsChanged(self) :
     
-    self.statusBar().setText("device settings modified ...",3)
+    self.statusBar().setText("edit device settings ...",3)
     
     dlgBox = devPhsyioDaq_dialog(self.m_device.m_analogIn)
     if dlgBox.exec() :
       self.m_device.m_analogIn = dlgBox.getAnalogInfo()
-      self.statusBar().setText("display settings are modified ...",3)
+      self.statusBar().setText("changed settings are saved ...",3)
     else : 
-      self.statusBar().setText("display settings not modified ...",3)
+      self.statusBar().setText("changed settings not saved ...",3)
       
   # onGeneralSettingsChanged
   #
@@ -375,7 +375,7 @@ class mainWindow(QMainWindow) :
 
   def onGeneralSettingsChanged(self) :
     
-    self.statusBar().setText("general settings are modified changed",2)
+    self.statusBar().setText("edit general settings ... ",2)
     
     channels = self.m_settings.m_channels
     displays = self.m_settings.m_displays
@@ -385,9 +385,9 @@ class mainWindow(QMainWindow) :
     dlgBox = settings_dialog(channels,displays,events,analog)
     if dlgBox.exec() :
       self.m_device.m_channels,self.m_settings.m_displays,self.m_settings.m_events = dlgBox.getModifiedValues()
-      self.statusBar().setText("general settings are modified ...",3)
+      self.statusBar().setText("changed ettings are saved ...",3)
     else : 
-      self.statusBar().setText("general settings not modified ...",3)
+      self.statusBar().setText("changed settings not saved ...",3)
    
   # onEvent
   #
