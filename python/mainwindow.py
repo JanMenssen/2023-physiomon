@@ -22,6 +22,8 @@ from physiomon_icons import qInitResources
 
 
 MAX_CHANNELS = 5
+ICON_FIXED_WIDTH = 40
+ICON_SIZE = 20
 
 class mainWindow(QMainWindow) :
 
@@ -117,25 +119,25 @@ class mainWindow(QMainWindow) :
     bar.addMenu(editMenu)
     bar.addMenu(helpMenu)
 
-    startAction = QAction("Start",self)
-    startAction.triggered.connect(self.onStart)
-    fileMenu.addAction(startAction)
+    self.m_startMenuAction = QAction("Start",self)
+    self.m_startMenuAction.triggered.connect(self.onStart)
+    fileMenu.addAction(self.m_startMenuAction)
 
-    saveAction = QAction("Save",self)
-    saveAction.triggered.connect(self.onSave)
-    fileMenu.addAction(saveAction)
+    self.m_saveMenuAction = QAction("Save",self)
+    self.m_saveMenuAction.triggered.connect(self.onSave)
+    fileMenu.addAction(self.m_saveMenuAction)
 
-    settingsChangeAction = QAction("General Settings ",self)
-    settingsChangeAction.triggered.connect(self.onGeneralSettingsChanged)
-    editMenu.addAction(settingsChangeAction)
+    self.m_generalMenuAction = QAction("General Settings ",self)
+    self.m_generalMenuAction.triggered.connect(self.onGeneralSettingsChanged)
+    editMenu.addAction(self.m_generalMenuAction)
 
-    deviceSettingsChangeAction = QAction("Device Settings ",self)
-    deviceSettingsChangeAction.triggered.connect(self.onDeviceSettingsChanged)
-    editMenu.addAction(deviceSettingsChangeAction)
+    self.m_deviceMenuAction = QAction("Device Settings ",self)
+    self.m_deviceMenuAction.triggered.connect(self.onDeviceSettingsChanged)
+    editMenu.addAction(self.m_deviceMenuAction)
 
-    PhysiomonHelpAction = QAction("PhysioMon Help",self)
-    deviceSettingsChangeAction.triggered.connect(self.onPhysiomonHelp)
-    helpMenu.addAction(PhysiomonHelpAction)
+    self.m_physiomonHelpMenuAction = QAction("PhysioMon Help",self)
+    self.m_physiomonHelpMenuAction.triggered.connect(self.onPhysiomonHelp)
+    helpMenu.addAction(self.m_physiomonHelpMenuAction)
 
     return
 
@@ -146,86 +148,91 @@ class mainWindow(QMainWindow) :
   def createToolBar(self) :
 
     toolbar = QToolBar("main toolbar")
-    toolbar.setIconSize(QSize(24,24))
+    toolbar.setIconSize(QSize(ICON_SIZE,ICON_SIZE))
     toolbar.setFixedHeight(60)
     self.addToolBar(toolbar)
 
     # start
 
-    startAction = QAction(self)
-    startAction.setIcon(QIcon(":/icons/play_13794082.png"))
-    startAction.setText("start")
-    startAction.setToolTip("start/stop the program")
-    startAction.triggered.connect(self.onStart)
+    self.m_startButtonAction = QAction(self)
+    self.m_startButtonAction.setIcon(QIcon(":/icons/play_13794082.png"))
+    self.m_startButtonAction.setText("start")
+    self.m_startButtonAction.setToolTip("start/stop the program")
+    self.m_startButtonAction.triggered.connect(self.onStart)
    
     startButton = QToolButton()
     startButton.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-    startButton.setDefaultAction(startAction)
-    
+    startButton.setDefaultAction(self.m_startButtonAction)
+    startButton.setFixedWidth(ICON_FIXED_WIDTH)
+
     toolbar.addWidget(startButton)
 
     # save
 
-    saveAction = QAction(self)
-    saveAction.setToolTip("save the measurement")
-    saveAction.setIcon(QIcon(":/icons/adjust_6048035.png"))
-    saveAction.setText("save")
-    saveAction.triggered.connect(self.onSave)
+    self.m_saveButtonAction = QAction(self)
+    self.m_saveButtonAction.setToolTip("save the measurement")
+    self.m_saveButtonAction.setIcon(QIcon(":/icons/adjust_6048035.png"))
+    self.m_saveButtonAction.setText("save")
+    self.m_saveButtonAction.triggered.connect(self.onSave)
     
     saveButton = QToolButton()
     saveButton.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-    saveButton.setDefaultAction(saveAction)
+    saveButton.setDefaultAction(self.m_saveButtonAction)
+    saveButton.setFixedWidth(ICON_FIXED_WIDTH)
 
     toolbar.addWidget(saveButton)
 
     # change general settings
 
-    generalAction = QAction(self)
-    generalAction.setToolTip("change general settings")
-    generalAction.setIcon(QIcon(":/icons/adjust_6048035.png"))
-    generalAction.setText("general")
-    generalAction.triggered.connect(self.onGeneralSettingsChanged)
+    self.m_generalButtonAction = QAction(self)
+    self.m_generalButtonAction.setToolTip("change general settings")
+    self.m_generalButtonAction.setIcon(QIcon(":/icons/adjust_6048035.png"))
+    self.m_generalButtonAction.setText("general")
+    self.m_generalButtonAction.triggered.connect(self.onGeneralSettingsChanged)
   
     generalButton = QToolButton()
     generalButton.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-    generalButton.setDefaultAction(generalAction)
-    
+    generalButton.setDefaultAction(self.m_generalButtonAction)
+    generalButton.setFixedWidth(ICON_FIXED_WIDTH) 
+
     toolbar.addWidget(generalButton)
 
     # change device settings
 
-    deviceAction = QAction(self)
-    deviceAction.setToolTip("change device settings")
-    deviceAction.setIcon(QIcon(":/icons/repair_5064596.png"))
-    deviceAction.setText("device")
-    deviceAction.triggered.connect(self.onDeviceSettingsChanged)
+    self.m_deviceButtonAction = QAction(self)
+    self.m_deviceButtonAction.setToolTip("change device settings")
+    self.m_deviceButtonAction.setIcon(QIcon(":/icons/repair_5064596.png"))
+    self.m_deviceButtonAction.setText("device")
+    self.m_deviceButtonAction.triggered.connect(self.onDeviceSettingsChanged)
 
     deviceButton = QToolButton()
     deviceButton.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-    deviceButton.setDefaultAction(deviceAction)
+    deviceButton.setDefaultAction(self.m_deviceButtonAction)
+    deviceButton.setFixedWidth(ICON_FIXED_WIDTH)
     
     toolbar.addWidget(deviceButton)
 
     # device info
 
-    infoAction = QAction(self)
-    infoAction.setToolTip("get device info")
-    infoAction.setIcon(QIcon(":/icons/stop_9503472.png"))
-    infoAction.setText("info")
-    infoAction.triggered.connect(self.onDeviceInfo)
+    self.m_infoButtonAction = QAction(self)
+    self.m_infoButtonAction.setToolTip("get device info")
+    self.m_infoButtonAction.setIcon(QIcon(":/icons/stop_9503472.png"))
+    self.m_infoButtonAction.setText("info")
+    self.m_infoButtonAction.triggered.connect(self.onDeviceInfo)
   
     infoButton = QToolButton()
     infoButton.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-    infoButton.setDefaultAction(infoAction)
+    infoButton.setDefaultAction(self.m_infoButtonAction)
+    infoButton.setFixedWidth(ICON_FIXED_WIDTH)  
     
     toolbar.addWidget(infoButton)
 
     return
   
+  
   # createEventKeys
   #
   #     sets the function kesy F1-F10 for an event
-
 
   def createEventKeys(self) :
 
@@ -295,9 +302,36 @@ class mainWindow(QMainWindow) :
     started = self.m_device.isStarted()
 
     if (not started) :
+
+      # start the device, change icon and disable menu and toolbar items
+
+      self.m_startButtonAction.setIcon(QIcon(":/icons/stop_9503472.png"))
+      self.m_startButtonAction.setText("stop")
+      self.m_startMenuAction.setText("Stop")
+                                   
+      self.m_generalButtonAction.setDisabled(True)
+      self.m_deviceButtonAction.setDisabled(True)
+      self.m_infoButtonAction.setDisabled(True)
+
+      self.m_generalMenuAction.setDisabled(True)
+      self.m_deviceMenuAction.setDisabled(True)
+ 
       self.m_device.setStartStop(True)
       self.statusBar().setText("device started",5)
+
     else :
+      
+      self.m_startButtonAction.setIcon(QIcon(":/icons/play_13794082.png"))
+      self.m_startButtonAction.setText("tart")
+      self.m_startMenuAction.setText("Start")
+
+      self.m_generalButtonAction.setDisabled(False)
+      self.m_deviceButtonAction.setDisabled(False)
+      self.m_infoButtonAction.setDisabled(False)
+      
+      self.m_generalMenuAction.setDisabled(False)
+      self.m_deviceMenuAction.setDisabled(False)
+
       self.m_device.setStartStop(False)
       self.statusBar().setText("device stopped",5)
    

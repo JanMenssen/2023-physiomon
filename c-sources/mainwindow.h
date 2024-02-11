@@ -64,6 +64,17 @@ class mainWindow : public QMainWindow {
   channels *m_channels = nullptr;
   displays *m_displays = nullptr;
 
+  QAction *m_startButtonAction = nullptr;
+  QAction *m_saveButtonAction = nullptr; 
+  QAction *m_generalButtonAction = nullptr;
+  QAction *m_deviceButtonAction = nullptr;
+  QAction *m_infoButtonAction = nullptr;
+
+  QAction *m_startMenuAction = nullptr;
+  QAction *m_saveMenuAction = nullptr; 
+  QAction *m_generalMenuAction = nullptr;
+  QAction *m_deviceMenuAction = nullptr;
+  QAction *m_physiomonHelpMenuAction = nullptr;
 };
 
 #endif

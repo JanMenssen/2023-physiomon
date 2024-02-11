@@ -22,6 +22,8 @@
 #include <QDebug>
 #include <QWidget>
 
+#define ICON_SIZE 20
+#define ICON_FIXED_WIDTH 40
 
 // constructor
 
@@ -108,29 +110,30 @@ void mainWindow::createMenu() {
   QMenu *editMenu = menuBar()->addMenu(tr(("&Edit")));
   QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
 
-  QAction *startAction = new QAction(tr("&Start"));
-  //-jm startAction->setStatusTip("start/stop the program");
-  connect(startAction,SIGNAL(triggered()),this, SLOT(onStart()));
-  fileMenu->addAction(startAction);
+  m_startMenuAction = new QAction(tr("&Start"));
+  m_startMenuAction->setToolTip("start/stop acquisiiton");
+  connect(m_startMenuAction,SIGNAL(triggered()),this, SLOT(onStart()));
+  fileMenu->addAction(m_startMenuAction);
 
-  QAction *saveAction = new QAction(tr("Save"));
-  //-jm saveAction->setStatusTip("save data to file");
-  connect(startAction,SIGNAL(triggered()),this, SLOT(onSave()));
-  fileMenu->addAction(saveAction);
+  m_saveMenuAction = new QAction(tr("Save"));
+  m_saveMenuAction->setToolTip("save data to disk");
+  connect(m_saveMenuAction,SIGNAL(triggered()),this, SLOT(onSave()));
+  fileMenu->addAction(m_saveMenuAction);
  
-  QAction *settingsChangeAction = new QAction(tr("General Settings"));
-  //-jm dispSettingsChangeAction->setStatusTip("edit display settings");
-  connect(settingsChangeAction,SIGNAL(triggered()),this,SLOT(onSettingsChanged()));
-  editMenu->addAction(settingsChangeAction);
+  m_generalMenuAction = new QAction(tr("General Settings"));
+  m_generalMenuAction->setToolTip("change general settings");
+  connect(m_generalMenuAction,SIGNAL(triggered()),this,SLOT(onSettingsChanged()));
+  editMenu->addAction(m_generalMenuAction);
 
-  QAction *deviceSettingsChangeAction = new QAction(tr("Device Settings"));
-  //-jm deviceSettingsChangeAction->setStatusTip("edit device settings");
-  connect(deviceSettingsChangeAction,SIGNAL(triggered()),this,SLOT(onDeviceSettingsChanged()));
-  editMenu->addAction(deviceSettingsChangeAction);
+  m_deviceMenuAction = new QAction(tr("Device Settings"));
+  m_deviceMenuAction->setToolTip("change device settings");
+  connect(m_deviceMenuAction,SIGNAL(triggered()),this,SLOT(onDeviceSettingsChanged()));
+  editMenu->addAction(m_deviceMenuAction);
 
-  QAction *physiomonHelpAction = new QAction(tr("Physiomon Help"));
-  connect(physiomonHelpAction,SIGNAL(triggered()),this, SLOT(onPhysiomonHelp()));
-  helpMenu->addAction(physiomonHelpAction);  
+  m_physiomonHelpMenuAction = new QAction(tr("Physiomon Help"));
+  m_physiomonHelpMenuAction->setToolTip("gives help");
+  connect(m_physiomonHelpMenuAction,SIGNAL(triggered()),this, SLOT(onPhysiomonHelp()));
+  helpMenu->addAction(m_physiomonHelpMenuAction);  
 }
 
 // createToolBar
@@ -140,75 +143,80 @@ void mainWindow::createMenu() {
 void mainWindow::createToolBar() {
 
   QToolBar *toolbar = new QToolBar;
-  toolbar->setIconSize(QSize(24, 24));
+  toolbar->setIconSize(QSize(ICON_SIZE, ICON_SIZE));
   toolbar->setFixedHeight(60);
   addToolBar(toolbar);
 
   // start
 
-  QAction *startAction = new QAction();
-  startAction->setIcon(QIcon(":/icons/play_13794082.png"));
-  startAction->setText("start");
-  startAction->setToolTip("start/stop the program");
-  connect(startAction,SIGNAL(triggered()),this,SLOT(onStart()));
+  m_startButtonAction = new QAction();
+  m_startButtonAction->setIcon(QIcon(":/icons/play_13794082.png"));
+  m_startButtonAction->setText("start");
+  m_startButtonAction->setToolTip("start/stop the program");
+  connect(m_startButtonAction,SIGNAL(triggered()),this,SLOT(onStart()));
   
   QToolButton *startButton = new QToolButton();
   startButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-  startButton->setDefaultAction(startAction);
+  startButton->setDefaultAction(m_startButtonAction);
+  startButton->setFixedWidth(ICON_FIXED_WIDTH);
 
   toolbar->addWidget(startButton);
   
-  QAction *saveAction = new QAction();
-  saveAction->setIcon(QIcon(":/icons/adjust_6048035.png"));
-  saveAction->setText("save");
-  saveAction->setToolTip("save data to file ");
-  connect(saveAction,SIGNAL(triggered()),this,SLOT(onSave()));
+  m_saveButtonAction = new QAction();
+  m_saveButtonAction->setIcon(QIcon(":/icons/adjust_6048035.png"));
+  m_saveButtonAction->setText("save");
+  m_saveButtonAction->setToolTip("save data to file ");
+  connect(m_saveButtonAction,SIGNAL(triggered()),this,SLOT(onSave()));
 
   QToolButton *saveButton = new QToolButton();
   saveButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-  saveButton->setDefaultAction(saveAction);
+  saveButton->setDefaultAction(m_saveButtonAction);
+  saveButton->setFixedWidth(ICON_FIXED_WIDTH);
 
   toolbar->addWidget(saveButton);
 
-  // display settings
+  // general settings
 
-  QAction *generalAction = new QAction();
-  generalAction->setIcon(QIcon(":/icons/adjust_6048035.png"));
-  generalAction->setText("general");
-  generalAction->setToolTip("change general settings");
-  connect(generalAction,SIGNAL(triggered()),this,SLOT(onSettingsChanged()));
+  m_generalButtonAction = new QAction();
+  m_generalButtonAction->setIcon(QIcon(":/icons/adjust_6048035.png"));
+  m_generalButtonAction->setText("general");
+  m_generalButtonAction->setToolTip("change general settings");
+  connect(m_generalButtonAction,SIGNAL(triggered()),this,SLOT(onSettingsChanged()));
   
   QToolButton *generalButton = new QToolButton();
   generalButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-  generalButton->setDefaultAction(generalAction);
+  generalButton->setDefaultAction(m_generalButtonAction);
+  generalButton->setFixedWidth(ICON_FIXED_WIDTH);
 
   toolbar->addWidget(generalButton);
 
   // device settings
 
-  QAction *deviceAction = new QAction();
-  deviceAction->setIcon(QIcon(":/icons/repair_5064596.png"));
-  deviceAction->setText("device");
-  deviceAction->setToolTip("change device settings");
-  connect(deviceAction,SIGNAL(triggered()),this,SLOT(onDeviceSettingsChanged()));
+  m_deviceButtonAction = new QAction();
+  m_deviceButtonAction->setIcon(QIcon(":/icons/repair_5064596.png"));
+  m_deviceButtonAction->setText("device");
+  m_deviceButtonAction->setToolTip("change device settings");
+  connect(m_deviceButtonAction,SIGNAL(triggered()),this,SLOT(onDeviceSettingsChanged()));
     
   QToolButton *deviceButton = new QToolButton();
   deviceButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-  deviceButton->setDefaultAction(deviceAction);
+  deviceButton->setDefaultAction(m_deviceButtonAction);
+  deviceButton->setFixedWidth(ICON_FIXED_WIDTH);
 
   toolbar->addWidget(deviceButton);
   
   // device info
 
-  QAction *infoAction = new QAction();
-  infoAction->setIcon(QIcon(":/icons/stop_9503472"));
-  infoAction->setText("info");
-  infoAction->setToolTip("get info about the device");
-  connect(infoAction,SIGNAL(triggered()),this,SLOT(onDeviceInfo()));
+  m_infoButtonAction = new QAction();
+  m_infoButtonAction->setIcon(QIcon(":/icons/stop_9503472"));
+  m_infoButtonAction->setText("info");
+  m_infoButtonAction->setToolTip("get info about the device");
+  connect(m_infoButtonAction,SIGNAL(triggered()),this,SLOT(onDeviceInfo()));
 
   QToolButton *infoButton = new QToolButton();
   infoButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-  infoButton->setDefaultAction(infoAction);
+  infoButton->setDefaultAction(m_infoButtonAction);
+  infoButton->setFixedWidth(ICON_FIXED_WIDTH);
 
   toolbar->addWidget(infoButton);
 
@@ -275,9 +283,34 @@ void mainWindow::onStart() {
   statusBarNew *status = (statusBarNew *)statusBar();
  
   if (!started) {
+
+    m_startButtonAction->setIcon(QIcon(":/icons/stop_9503472.png"));
+    m_startButtonAction->setText("stop");
+    m_startMenuAction->setText("Stop");
+                                   
+    m_generalButtonAction->setDisabled(true);
+    m_deviceButtonAction->setDisabled(true);
+    m_infoButtonAction->setDisabled(true);
+
+    m_generalMenuAction->setDisabled(true);
+    m_deviceMenuAction->setDisabled(true);
+
     m_device->setStartStop(true);
     status->setText("device is started ...",2.5);
+  
   } else {
+
+    m_startButtonAction->setIcon(QIcon(":/icons/play_13794082.png"));
+    m_startButtonAction->setText("start");
+    m_startMenuAction->setText("Start");
+                                   
+    m_generalButtonAction->setDisabled(false);
+    m_deviceButtonAction->setDisabled(false);
+    m_infoButtonAction->setDisabled(false);
+
+    m_generalMenuAction->setDisabled(false);
+    m_deviceMenuAction->setDisabled(false);
+
     m_device->setStartStop(false);
     status->setText("device is stopped ...",2.5);
   }
