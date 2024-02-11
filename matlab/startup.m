@@ -14,6 +14,7 @@
 
     if (ismac)
       addpath('/Users/jan/Library/CloudStorage/OneDrive-Radboudumc/my matlab');
+      addpath('/Users/jan/Library/CloudStorage/OneDrive-Personal/my projects/2024 physiomon');
     end
   
   end

@@ -45,7 +45,7 @@ classdef basechart
       obj.m_handle = axisHandle;
       obj.m_channels = channels;
       obj.m_numchan = length(obj.m_channels);
-
+  
       for i=1:obj.m_numchan
         obj.m_downSampler{i} = downsampler(); 
         obj.m_buffer{i} = [];

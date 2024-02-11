@@ -46,6 +46,11 @@ classdef displays
       % with <mySettings> a "filled" instance of the <phsyiomon_settings> class and
       % <canvasHandle> a handle to the canvas (figure)
  
+      PIXELS_TOP = 30;
+      PIXELS_LEFT = 50;
+      PIXELS_BOTTOM = 80;
+      PIXELS_RIGHT = 40;
+
       % first remove the the exisiting charts
 
       obj.m_chart = {};
@@ -58,11 +63,12 @@ classdef displays
       myDisplays = mySettings.getDisplays();
       myChannels = mySettings.getChannels();
 
-      background = canvasHandle.BackgroundColor;
+      background = canvasHandle.Color;
 
-      canvasLeft = canvasHandle.Position(1);
-      canvasWidth = canvasHandle.Position(3);
-      canvasHeight = canvasHandle.Position(4) - 75;       % size of the banner
+      %-jm canvasLeft = canvasHandle.Position(1);
+      %-jm canvasTop = canvasHandle.Position(2);
+      canvasWidth = canvasHandle.Position(3) - (PIXELS_LEFT);
+      canvasHeight = canvasHandle.Position(4) - (PIXELS_BOTTOM);
 
       for iDisp = 1:length(myDisplays)
 
@@ -82,12 +88,15 @@ classdef displays
         channels((i):3) = [];
 
         % and create the current display (position is different compared to Qt). around
-        % the borders, 10 pixels are used for a nicer layout
+        % the borders, 10 pixels are used for a nicer layout. Note Matlab starts in the
+        % lower left corner so modify it
 
-        left = ceil(curDisp.left * canvasWidth) + 50;
-        top = ceil(curDisp.top * canvasHeight) + 35;
-        width = floor(curDisp.width * (canvasWidth - canvasLeft)) - 75;
-        height = floor(curDisp.height * canvasHeight) - 35;
+        curDisp.top = 1 - curDisp.top - curDisp.height;
+
+        left = ceil(curDisp.left * canvasWidth) + PIXELS_LEFT;
+        top = ceil(curDisp.top * canvasHeight) + PIXELS_BOTTOM;
+        width = floor(curDisp.width * canvasWidth - PIXELS_RIGHT);
+        height = floor(curDisp.height * canvasHeight) - PIXELS_TOP;
 
         handle = uiaxes(parent = canvasHandle, InnerPosition = [left top width height],Color=background);
         switch curDisp.mode
