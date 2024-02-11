@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>stop_9503472.png</file>
+        <file>repair_5064596.png</file>
+        <file>play_13794082.png</file>
+        <file>adjust_6048035.png</file>
+    </qresource>
+</RCC>

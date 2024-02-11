@@ -140,13 +140,14 @@ void mainWindow::createMenu() {
 void mainWindow::createToolBar() {
 
   QToolBar *toolbar = new QToolBar;
-  toolbar->setFixedHeight(75);
+  toolbar->setIconSize(QSize(24, 24));
+  toolbar->setFixedHeight(60);
   addToolBar(toolbar);
 
   // start
 
   QAction *startAction = new QAction();
-  startAction->setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/play_13794082.png"));
+  startAction->setIcon(QIcon(":/icons/play_13794082.png"));
   startAction->setText("start");
   startAction->setToolTip("start/stop the program");
   connect(startAction,SIGNAL(triggered()),this,SLOT(onStart()));
@@ -158,7 +159,7 @@ void mainWindow::createToolBar() {
   toolbar->addWidget(startButton);
   
   QAction *saveAction = new QAction();
-  saveAction->setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/adjust_6048035.png"));
+  saveAction->setIcon(QIcon(":/icons/adjust_6048035.png"));
   saveAction->setText("save");
   saveAction->setToolTip("save data to file ");
   connect(saveAction,SIGNAL(triggered()),this,SLOT(onSave()));
@@ -172,7 +173,7 @@ void mainWindow::createToolBar() {
   // display settings
 
   QAction *generalAction = new QAction();
-  generalAction->setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/adjust_6048035.png"));
+  generalAction->setIcon(QIcon(":/icons/adjust_6048035.png"));
   generalAction->setText("general");
   generalAction->setToolTip("change general settings");
   connect(generalAction,SIGNAL(triggered()),this,SLOT(onSettingsChanged()));
@@ -186,7 +187,7 @@ void mainWindow::createToolBar() {
   // device settings
 
   QAction *deviceAction = new QAction();
-  deviceAction->setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/repair_5064596.png"));
+  deviceAction->setIcon(QIcon(":/icons/repair_5064596.png"));
   deviceAction->setText("device");
   deviceAction->setToolTip("change device settings");
   connect(deviceAction,SIGNAL(triggered()),this,SLOT(onDeviceSettingsChanged()));
@@ -200,7 +201,7 @@ void mainWindow::createToolBar() {
   // device info
 
   QAction *infoAction = new QAction();
-  infoAction->setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/repair_5064596.png"));
+  infoAction->setIcon(QIcon(":/icons/stop_9503472"));
   infoAction->setText("info");
   infoAction->setToolTip("get info about the device");
   connect(infoAction,SIGNAL(triggered()),this,SLOT(onDeviceInfo()));

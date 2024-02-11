@@ -9,7 +9,7 @@
 
 from PySide6.QtWidgets import QMainWindow, QMenu, QToolBar, QWidget, QToolButton
 from PySide6.QtGui import QAction, QShortcut, QKeySequence, QIcon
-from PySide6.QtCore import QTimer, Qt, QObject
+from PySide6.QtCore import QTimer, Qt, QObject, QSize
 
 from statusbar import statusBarNew
 from settings import settings
@@ -18,6 +18,8 @@ from channels import channels
 from devphysiodaq import devPhysioDaq
 from devphysiodaq_dialog import devPhsyioDaq_dialog
 from settings_dialog import settings_dialog
+from physiomon_icons import qInitResources
+
 
 MAX_CHANNELS = 5
 
@@ -144,13 +146,14 @@ class mainWindow(QMainWindow) :
   def createToolBar(self) :
 
     toolbar = QToolBar("main toolbar")
-    toolbar.setFixedHeight(75)
+    toolbar.setIconSize(QSize(24,24))
+    toolbar.setFixedHeight(60)
     self.addToolBar(toolbar)
 
     # start
 
     startAction = QAction(self)
-    startAction.setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/play_13794082.png"))
+    startAction.setIcon(QIcon(":/icons/play_13794082.png"))
     startAction.setText("start")
     startAction.setToolTip("start/stop the program")
     startAction.triggered.connect(self.onStart)
@@ -165,7 +168,7 @@ class mainWindow(QMainWindow) :
 
     saveAction = QAction(self)
     saveAction.setToolTip("save the measurement")
-    saveAction.setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/adjust_6048035.png"))
+    saveAction.setIcon(QIcon(":/icons/adjust_6048035.png"))
     saveAction.setText("save")
     saveAction.triggered.connect(self.onSave)
     
@@ -179,7 +182,7 @@ class mainWindow(QMainWindow) :
 
     generalAction = QAction(self)
     generalAction.setToolTip("change general settings")
-    generalAction.setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/adjust_6048035.png"))
+    generalAction.setIcon(QIcon(":/icons/adjust_6048035.png"))
     generalAction.setText("general")
     generalAction.triggered.connect(self.onGeneralSettingsChanged)
   
@@ -193,7 +196,7 @@ class mainWindow(QMainWindow) :
 
     deviceAction = QAction(self)
     deviceAction.setToolTip("change device settings")
-    deviceAction.setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/repair_5064596.png"))
+    deviceAction.setIcon(QIcon(":/icons/repair_5064596.png"))
     deviceAction.setText("device")
     deviceAction.triggered.connect(self.onDeviceSettingsChanged)
 
@@ -207,7 +210,7 @@ class mainWindow(QMainWindow) :
 
     infoAction = QAction(self)
     infoAction.setToolTip("get device info")
-    infoAction.setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/repair_5064596.png"))
+    infoAction.setIcon(QIcon(":/icons/stop_9503472.png"))
     infoAction.setText("info")
     infoAction.triggered.connect(self.onDeviceInfo)
   
