@@ -25,9 +25,3 @@ if __name__ == '__main__' :
   # and return until exit
 
   sys.exit(app.exec())
-
-
-
-    
-
-    

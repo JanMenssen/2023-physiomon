@@ -7,8 +7,8 @@
 #  modifications
 #     12-jan-2024   JM    initial version
 
-from PySide6.QtWidgets import QMainWindow, QMenu, QToolBar, QWidget
-from PySide6.QtGui import QAction, QShortcut, QKeySequence
+from PySide6.QtWidgets import QMainWindow, QMenu, QToolBar, QWidget, QToolButton
+from PySide6.QtGui import QAction, QShortcut, QKeySequence, QIcon
 from PySide6.QtCore import QTimer, Qt, QObject
 
 from statusbar import statusBarNew
@@ -144,42 +144,78 @@ class mainWindow(QMainWindow) :
   def createToolBar(self) :
 
     toolbar = QToolBar("main toolbar")
+    toolbar.setFixedHeight(75)
     self.addToolBar(toolbar)
 
     # start
 
-    startButton = QAction("start",self)
-    startButton.setToolTip("start/stop the program")
-    startButton.triggered.connect(self.onStart)
-    toolbar.addAction(startButton)
+    startAction = QAction(self)
+    startAction.setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/play_13794082.png"))
+    startAction.setText("start")
+    startAction.setToolTip("start/stop the program")
+    startAction.triggered.connect(self.onStart)
+   
+    startButton = QToolButton()
+    startButton.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+    startButton.setDefaultAction(startAction)
+    
+    toolbar.addWidget(startButton)
 
     # save
 
-    saveButton = QAction("save",self)
-    saveButton.setToolTip("save the measurement")
-    saveButton.triggered.connect(self.onSave)
-    toolbar.addAction(saveButton)
+    saveAction = QAction(self)
+    saveAction.setToolTip("save the measurement")
+    saveAction.setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/adjust_6048035.png"))
+    saveAction.setText("save")
+    saveAction.triggered.connect(self.onSave)
+    
+    saveButton = QToolButton()
+    saveButton.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+    saveButton.setDefaultAction(saveAction)
 
-    # change display settings
+    toolbar.addWidget(saveButton)
 
-    changeGeneralSettingsButton = QAction("general",self)
-    changeGeneralSettingsButton.setToolTip("change display settings")
-    changeGeneralSettingsButton.triggered.connect(self.onGeneralSettingsChanged)
-    toolbar.addAction(changeGeneralSettingsButton)
+    # change general settings
+
+    generalAction = QAction(self)
+    generalAction.setToolTip("change general settings")
+    generalAction.setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/adjust_6048035.png"))
+    generalAction.setText("general")
+    generalAction.triggered.connect(self.onGeneralSettingsChanged)
+  
+    generalButton = QToolButton()
+    generalButton.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+    generalButton.setDefaultAction(generalAction)
+    
+    toolbar.addWidget(generalButton)
 
     # change device settings
 
-    changeDeviceButton = QAction("device",self)
-    changeDeviceButton.setToolTip("change device settings")
-    changeDeviceButton.triggered.connect(self.onDeviceSettingsChanged)
-    toolbar.addAction(changeDeviceButton)
+    deviceAction = QAction(self)
+    deviceAction.setToolTip("change device settings")
+    deviceAction.setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/repair_5064596.png"))
+    deviceAction.setText("device")
+    deviceAction.triggered.connect(self.onDeviceSettingsChanged)
+
+    deviceButton = QToolButton()
+    deviceButton.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+    deviceButton.setDefaultAction(deviceAction)
     
+    toolbar.addWidget(deviceButton)
+
     # device info
 
-    deviceInfoButton = QAction("info",self)
-    deviceInfoButton.setToolTip("get device info")
-    deviceInfoButton.triggered.connect(self.onDeviceInfo)
-    toolbar.addAction(deviceInfoButton)
+    infoAction = QAction(self)
+    infoAction.setToolTip("get device info")
+    infoAction.setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/repair_5064596.png"))
+    infoAction.setText("info")
+    infoAction.triggered.connect(self.onDeviceInfo)
+  
+    infoButton = QToolButton()
+    infoButton.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+    infoButton.setDefaultAction(infoAction)
+    
+    toolbar.addWidget(infoButton)
 
     return
   

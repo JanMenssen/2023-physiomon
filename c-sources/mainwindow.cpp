@@ -14,6 +14,8 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QToolBar>
+#include <QToolButton>
+#include <QIcon>
 #include <QAction>
 #include <QShortcut>
 #include <QTimer>
@@ -138,42 +140,77 @@ void mainWindow::createMenu() {
 void mainWindow::createToolBar() {
 
   QToolBar *toolbar = new QToolBar;
+  toolbar->setFixedHeight(75);
   addToolBar(toolbar);
 
   // start
-  
-  QAction *startAction = new QAction("start");
+
+  QAction *startAction = new QAction();
+  startAction->setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/play_13794082.png"));
+  startAction->setText("start");
   startAction->setToolTip("start/stop the program");
-  toolbar->addAction(startAction);
   connect(startAction,SIGNAL(triggered()),this,SLOT(onStart()));
   
-  // save 
+  QToolButton *startButton = new QToolButton();
+  startButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+  startButton->setDefaultAction(startAction);
+
+  toolbar->addWidget(startButton);
   
-  QAction *saveAction = new QAction("save");
+  QAction *saveAction = new QAction();
+  saveAction->setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/adjust_6048035.png"));
+  saveAction->setText("save");
   saveAction->setToolTip("save data to file ");
-  toolbar->addAction(saveAction);
   connect(saveAction,SIGNAL(triggered()),this,SLOT(onSave()));
+
+  QToolButton *saveButton = new QToolButton();
+  saveButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+  saveButton->setDefaultAction(saveAction);
+
+  toolbar->addWidget(saveButton);
 
   // display settings
 
-  QAction *changeDisplayAction = new QAction("general");
-  changeDisplayAction->setToolTip("change general settings");
-  toolbar->addAction(changeDisplayAction);
-  connect(changeDisplayAction,SIGNAL(triggered()),this,SLOT(onSettingsChanged()));
+  QAction *generalAction = new QAction();
+  generalAction->setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/adjust_6048035.png"));
+  generalAction->setText("general");
+  generalAction->setToolTip("change general settings");
+  connect(generalAction,SIGNAL(triggered()),this,SLOT(onSettingsChanged()));
   
+  QToolButton *generalButton = new QToolButton();
+  generalButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+  generalButton->setDefaultAction(generalAction);
+
+  toolbar->addWidget(generalButton);
+
   // device settings
 
-  QAction *changeDeviceAction = new QAction("device");
-  changeDeviceAction->setToolTip("change device settings");
-  toolbar->addAction(changeDeviceAction);
-  connect(changeDeviceAction,SIGNAL(triggered()),this,SLOT(onDeviceSettingsChanged()));
+  QAction *deviceAction = new QAction();
+  deviceAction->setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/repair_5064596.png"));
+  deviceAction->setText("device");
+  deviceAction->setToolTip("change device settings");
+  connect(deviceAction,SIGNAL(triggered()),this,SLOT(onDeviceSettingsChanged()));
+    
+  QToolButton *deviceButton = new QToolButton();
+  deviceButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+  deviceButton->setDefaultAction(deviceAction);
+
+  toolbar->addWidget(deviceButton);
   
   // device info
 
-  QAction *devInfoAction = new QAction("info");
-  devInfoAction->setToolTip("get info about the device");
-  toolbar->addAction(devInfoAction);
-  connect(devInfoAction,SIGNAL(triggered()),this,SLOT(onDeviceInfo()));
+  QAction *infoAction = new QAction();
+  infoAction->setIcon(QIcon("/Users/jan/OneDrive - Personal/my projects/2024 physiomon/repair_5064596.png"));
+  infoAction->setText("info");
+  infoAction->setToolTip("get info about the device");
+  connect(infoAction,SIGNAL(triggered()),this,SLOT(onDeviceInfo()));
+
+  QToolButton *infoButton = new QToolButton();
+  infoButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+  infoButton->setDefaultAction(infoAction);
+
+  toolbar->addWidget(infoButton);
+
 }
 
 // createEventKeys
