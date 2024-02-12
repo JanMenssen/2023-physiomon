@@ -164,7 +164,7 @@ void mainWindow::createToolBar() {
   toolbar->addWidget(startButton);
   
   m_saveButtonAction = new QAction();
-  m_saveButtonAction->setIcon(QIcon(":/icons/adjust_6048035.png"));
+  m_saveButtonAction->setIcon(QIcon(":/icons/saving-content_11753556.png"));
   m_saveButtonAction->setText("save");
   m_saveButtonAction->setToolTip("save data to file ");
   connect(m_saveButtonAction,SIGNAL(triggered()),this,SLOT(onSave()));
@@ -209,7 +209,7 @@ void mainWindow::createToolBar() {
   // device info
 
   m_infoButtonAction = new QAction();
-  m_infoButtonAction->setIcon(QIcon(":/icons/stop_9503472"));
+  m_infoButtonAction->setIcon(QIcon(":/icons/report_4517968"));
   m_infoButtonAction->setText("info");
   m_infoButtonAction->setToolTip("get info about the device");
   connect(m_infoButtonAction,SIGNAL(triggered()),this,SLOT(onDeviceInfo()));
@@ -337,10 +337,12 @@ void mainWindow::onSave() {
 
 void mainWindow::onDeviceInfo() {
   
-  qDebug() << "--> onDeviceInfo";
+  QString dataStr = m_device->isConnected();
+  
+  qDebug() << "-" << dataStr << "-";
 
   statusBarNew *status = (statusBarNew *)statusBar();
-  status->setText("on device info presed",1.0);
+  status->setText(dataStr,1.0);
 }
 
 // onTimeOut
@@ -378,9 +380,9 @@ void mainWindow::onDeviceSettingsChanged() {
 
   devphysiodaq_dialog dlgBox(this,n,analogInfo);
   if (dlgBox.exec() == QDialog::Accepted) {
-    status-setText("changed settings are saved ...",3.0);
-  } else {}
-    status-setText("changed settings not saved ...",3.0);
+    status->setText("changed settings are saved ...",3.0);
+  } else {
+    status->setText("changed settings not saved ...",3.0);
   }
 }
 
@@ -405,9 +407,9 @@ void mainWindow::onSettingsChanged() {
 
   settings_dialog dlgBox(this,&numchan,channelInfo,&numdisp,displayInfo,eventInfo,numanalog,analogInfo);
   if (dlgBox.exec() == QDialog::Accepted) {
-    status-setText("changed settings are saved ...",3.0);
+    status->setText("changed settings are saved ...",3.0);
   } else {}
-    status-setText("changed settings not saved ...",3.0);
+    status->setText("changed settings not saved ...",3.0);
   }
 
 // onEvent 

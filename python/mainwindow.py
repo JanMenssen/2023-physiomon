@@ -171,7 +171,7 @@ class mainWindow(QMainWindow) :
 
     self.m_saveButtonAction = QAction(self)
     self.m_saveButtonAction.setToolTip("save the measurement")
-    self.m_saveButtonAction.setIcon(QIcon(":/icons/adjust_6048035.png"))
+    self.m_saveButtonAction.setIcon(QIcon(":/icons/saving-content_11753556.png"))
     self.m_saveButtonAction.setText("save")
     self.m_saveButtonAction.triggered.connect(self.onSave)
     
@@ -216,7 +216,7 @@ class mainWindow(QMainWindow) :
 
     self.m_infoButtonAction = QAction(self)
     self.m_infoButtonAction.setToolTip("get device info")
-    self.m_infoButtonAction.setIcon(QIcon(":/icons/stop_9503472.png"))
+    self.m_infoButtonAction.setIcon(QIcon(":/icons/report_4517968.png"))
     self.m_infoButtonAction.setText("info")
     self.m_infoButtonAction.triggered.connect(self.onDeviceInfo)
   
@@ -278,14 +278,7 @@ class mainWindow(QMainWindow) :
     self.m_displays.plot(self.m_channels) 
      
     return
-  
-  # devicePressed
-  #
-  #     settings of the device are changed
-        
-  def devicePressed(self) :
-    return
-  
+   
   # onSave
   #
   #     measurement is stored
