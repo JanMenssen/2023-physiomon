@@ -1,12 +1,13 @@
 %
-% displays
+% physiomon_displays
 %
 %     a class which is responsible for the displaying of the acquired data
 %
 % modifications
 %   02-feb-2024   JM    initial version
+%   12-feb-2024   JM    now derivated from handle class (pointer logic)
 
-classdef physiomon_displays
+classdef physiomon_displays <handle
 
   properties (Access = private)
     m_chart = {};
@@ -25,23 +26,23 @@ classdef physiomon_displays
 
     %% initialise
 
-    function obj = initialise(obj)
+    function initialise(obj)
     
       % this is a stub method, nothing is done in this method
       %
-      %     syntax : obj = initialise(obj)
+      %     syntax : initialise(obj)
 
     end
 
     %% configure
    
-    function obj = configure(obj,mySettings,canvasHandle)
+    function configure(obj,mySettings,canvasHandle)
     
       % in configure, the displays are configured using the information from an instance
       % of the <physiomon_settings> class. The number of displays are placed on the canvas
       % on the desired place and scaling is done. 
       %
-      %     syntax : obj = configure(obj,mySettings,canvasHandle)
+      %     syntax : configure(obj,mySettings,canvasHandle)
       %
       % with <mySettings> a "filled" instance of the <phsyiomon_settings> class and
       % <canvasHandle> a handle to the canvas (figure)
@@ -118,32 +119,32 @@ classdef physiomon_displays
 
     %% plot
 
-    function [obj,myChannels] = plot(obj,myChannels)
+    function plot(obj,myChannels)
     
       % using the new data from the buffers in the instance of the <physiomon_channels> class 
       % (written by the read method of the instance of <measuredevice>, this method plots
       % this new data on the charts, using the method thas is selected (strip, scope,
       % sweep or numeric)
       %
-      %     syntax : [obj,myChannels] = plot(obj,myChannels)
+      %     syntax : plot(obj,myChannels)
       %
       % with <myChannels> and instance of the <physiomon_channels> 
       
       numDisp = length(obj.m_chart);
       for iDisp = 1:numDisp
-      
+
         % a display could have more channels, so we need the data for all channels in this
         % display
 
         for iChan = 1:length(obj.m_chart{iDisp}.m_channels)
-        
+
           % get the channel number and get the data and update display
 
           curChannel = obj.m_chart{iDisp}.m_channels(iChan);
-          [myChannels,data] = myChannels.readDisplay(curChannel);
-       
+          data = myChannels.readDisplay(curChannel);
+
           if ~isempty(data), obj.m_chart{iDisp} = obj.m_chart{iDisp}.update(iChan,data); end
-          
+
         end
         obj.m_chart{iDisp} = obj.m_chart{iDisp}.finishUpdate();
       end

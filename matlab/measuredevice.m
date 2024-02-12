@@ -7,9 +7,10 @@
 %
 % modifications
 %   31-jan-2024   JM    initial version
+%   12-feb-2024   JM    now derivated from handle class (pointer logic)
 
 
-classdef measuredevice
+classdef measuredevice < handle
 
   properties(Access = private)
     m_started = [];
@@ -46,12 +47,12 @@ classdef measuredevice
 
     %% setAnalogChannels
 
-    function obj = setAnalogChannels(obj,analogIn)
+    function setAnalogChannels(obj,analogIn)
 
       % given an array of the <m_analogIn> struct, this methods set the internal <m_analogIn> 
       % property
       %
-      %     syntax : obj = setAnalogChannels(obj,analogIn)
+      %     syntax : setAnalogChannels(obj,analogIn)
       %
       % with <analogIn> an array of the analog structure used
 
@@ -60,12 +61,12 @@ classdef measuredevice
     end  
     %% initialise
 
-    function obj = initialise(obj)
+    function initialise(obj)
     
       % initialise is an abstract method that should be overwritten by thc children
       % classes
       %
-      %     syntax : obj = initialise(obj)
+      %     syntax : initialise(obj)
 
     end
 
@@ -83,11 +84,11 @@ classdef measuredevice
 
     %% setStartStop
 
-    function obj = setStartStop(obj,state)
+    function setStartStop(obj,state)
 
       % setStartStop starts or stops the device
       %
-      %     syntax : obj = setStartStop(obj,state)
+      %     syntax : setStartStop(obj,state)
       %
       % with <state> is true to start the device and false to stop the device
 
@@ -97,7 +98,7 @@ classdef measuredevice
 
     %% iniRead
 
-    function obj = iniRead(obj,name)
+    function iniRead(obj,name)
     
       % iniRead reads the driver *.INI file. 
       % This are number of channels, channel names and gain and offset. These settings 
@@ -105,7 +106,7 @@ classdef measuredevice
       %   - m_analogIn  : for analog channels
       %   - m_numeric   : for numeric channels
       %
-      %     syntax obj = iniRead(obj,name)
+      %     syntax : iniRead(obj,name)
       %
       % with <name> the name of the device (ini file name
     
@@ -133,11 +134,11 @@ classdef measuredevice
 
     %% configure
 
-    function obj = configure(obj,mySettings)
+    function configure(obj,mySettings)
     
       % the <configure> method connects channels to the appropriate analog channel.
       %
-      %       syntax : obj = configure(obj,mySettings)
+      %       syntax : configure(obj,mySettings)
       %
       % with <mySettings> an instance of the <physiomon_settings> class (after iniRead)
 

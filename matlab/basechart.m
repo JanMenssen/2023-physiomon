@@ -45,7 +45,7 @@ classdef basechart
       obj.m_handle = axisHandle;
       obj.m_channels = channels;
       obj.m_numchan = length(obj.m_channels);
-  
+      
       for i=1:obj.m_numchan
         obj.m_downSampler{i} = downsampler(); 
         obj.m_buffer{i} = [];
@@ -82,7 +82,7 @@ classdef basechart
       obj.m_pntsInGraph = round(nsec * obj.m_sampleRate) ./ rate;
       obj.m_deltaT = rate ./ obj.m_sampleRate;
     
-      for i = 1:obj.m_numchan, obj.m_downSampler{i} = obj.m_downSampler{i}.setRate(rate(i)); end
+      for i = 1:obj.m_numchan, obj.m_downSampler{i}.setRate(rate(i)); end
 
       % set the points for the x-axis, these can be calculated and plot NaN's for the
       % yaxis and plot

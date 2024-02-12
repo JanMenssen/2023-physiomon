@@ -75,7 +75,7 @@ classdef sweepchart < basechart
 
       % downsample and add to buffer
 
-      [obj.m_downSampler{nchan},data] = obj.m_downSampler{nchan}.getData(data);  
+      data = obj.m_downSampler{nchan}.getData(data);  
       obj.m_buffer{nchan} = [obj.m_buffer{nchan} data];
 
       % and plot

@@ -8,6 +8,7 @@
 %
 % modifications
 %   01-feb-2024   JM    initial version
+%   12-feb-2024   JM    measure device now handle class
 
 classdef devPhysioDaq < measuredevice
 
@@ -29,12 +30,12 @@ classdef devPhysioDaq < measuredevice
 
     %% initialise
 
-    function obj = initialise(obj)
+    function initialise(obj)
     
       % initialise starts the arduino controller. Baudrate is set and the port
       % adress is from read in <iniRead>
       %
-      %     syntax : obj = initialise(obj)
+      %     syntax : initialise(obj)
 
       obj.m_arduino = arduinocomm(obj.m_address,115200);
 
@@ -70,20 +71,20 @@ classdef devPhysioDaq < measuredevice
 
     %% iniRead
 
-    function obj = iniRead(obj,deviceName)
+    function iniRead(obj,deviceName)
 
       % reads the settings, number of channels, gain, offset and sample frequency for each
       % channel that is acquired by teh firmware. These are read from the parent class,
       % only the address of the device is read by this child class
       %
-      %     syntax : obj = iniRead(obj,deviceName)
+      %     syntax : iniRead(obj,deviceName)
       %
       % with <deviceName> the name of the device  (= devPhysioDaq)
 
         if ismac(), filename = ['/Users/Jan/.config/Jansoft/' deviceName '.ini']; end
         if ispc(), filename = ['C:\users\z558043\appdata\roaming\Jansoft\' filename '.ini']; end
 
-        obj = obj.iniRead@measuredevice(deviceName);
+        obj.iniRead@measuredevice(deviceName);
        
         tmpStruct = ini2struct(filename);
         if isfield(tmpStruct.algemeen,'address'), obj.m_address = tmpStruct.algemeen.address; end
@@ -92,17 +93,17 @@ classdef devPhysioDaq < measuredevice
 
     %% setStartStop
 
-    function obj = setStartStop(obj,started)
+    function setStartStop(obj,started)
 
       % setStartStop starts or stops the sampling in the device. the argument <started>
       % must be true to start the device and false to stop the device
       %
-      %     syntax : obj = setStartStop(obj,state)
+      %     syntax : setStartStop(obj,state)
       %
       % with <state> is true (start) or false (stop)
 
       obj.m_arduino.startstop(started);
-      obj = obj.setStartStop@measuredevice(started);    
+      obj.setStartStop@measuredevice(started);    
 
        % copy the analog information to be fast
        
@@ -127,30 +128,29 @@ classdef devPhysioDaq < measuredevice
 
     %% read
 
-    function [obj,myChannels] = read(obj,myChannels)
+    function read(obj,myChannels)
 
       % reads the data from the device and store this data in the buffers of the connected
       % channels
       %
-      %     syntax : [obj,myChannels] = read(obj,myChannels)
+      %     syntax : read(obj,myChannels)
       %
       % with <myChannels> an instance of the channels class
       
       if obj.isStarted()
-
+  
         cmd = '-';
         while ~isempty(cmd)
 
-          [obj.m_arduino,cmd,data] = obj.m_arduino.rcvMsg();
-          
+          [cmd,data] = obj.m_arduino.rcvMsg();
+
           % analog signale
-
+ 
           if (cmd == 'A')
-            for i =1:length(data), myChannels = obj.writeValuesToAllChannels(obj.m_analogInfo(i),myChannels,data(i)); end
+            for i =1:length(data), obj.writeValuesToAllChannels(i,myChannels,data(i)); end
           end
-
-        end
-      end
+         end
+       end
     end
       
   end
@@ -159,26 +159,26 @@ classdef devPhysioDaq < measuredevice
 
     %% writeValuesToAllChannels
 
-    function myChannels = writeValuesToAllChannels(~,analogStruct,myChannels,value)
+    function writeValuesToAllChannels(obj,i,myChannels,value)
     
       % writeAllChannels writes the data that is acquired by the analog port to all
       % connected channels, read from the myChannels instance of the channels class
       %
-      %     syntax : myChannels = writeValuesToAllChannels(obj,analogStruct,myChannels,data)
+      %     syntax : writeValuesToAllChannels(obj,analogStruct,myChannels,data)
       %
       % with
       %   - analogStruct      : a structure containing gain, offset and selected channels
       %   - myChannels        : instance of myChannels class, output also because it is modified
       %   - value             : the acquired data
 
-        realValue = analogStruct.gain * double(value) + analogStruct.offset;
-        
-        numChan = length(analogStruct.channels);
-        for i=1:numChan
-          ichan = analogStruct.channels(i);
-          myChannels = myChannels.writeData(ichan,realValue);
-        end
-    end
+        analogInfo = obj.m_analogInfo(i);
+
+        realValue = analogInfo.gain * double(value) + analogInfo.offset;
+         
+        numChan = length(analogInfo.channels);
+        for i=1:numChan, myChannels.writeData(analogInfo.channels(i),realValue); end
+
+      end
 
   end
 

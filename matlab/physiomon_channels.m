@@ -11,8 +11,9 @@
 %
 % modifications
 %   31-jan-2024   JM    initial version
+%   12-feb-2024   JM    now derivated from handle class (pointer logic)
 
-classdef physiomon_channels
+classdef physiomon_channels < handle
 
   properties (Access = private)
     m_buffers = []
@@ -33,12 +34,12 @@ classdef physiomon_channels
 
     %% configure
 
-    function obj = configure(obj,mySettings,myDevice)
+    function configure(obj,mySettings,myDevice)
 
       % getting the information that is in instance of the classes <settings> and <device>
       % this method configures the classes buffers and set some properties
       %
-      %     syntax : obj = configure(obj,settings,device)
+      %     syntax : configure(obj,settings,device)
       %
       % with <settings> and instance of the settings class and <device> an instance of the
       % device class
@@ -78,7 +79,7 @@ classdef physiomon_channels
 
     %% readDisplay
 
-    function [obj,data] = readDisplay(obj,channel)
+    function data = readDisplay(obj,channel)
     
       % readDisplay reads the data from the <display> buffer for the appropriate channel.
       % Note, altough this is a read routine, indices in the buffers are updated and so it
@@ -88,14 +89,13 @@ classdef physiomon_channels
       %
       % with <channel> the channel number and <data> a vector with returned data
 
-      [writeIndx,readIndx] = obj.m_buffers(channel).display.getIndices();
-      [obj.m_buffers(channel).display,data] = obj.m_buffers(channel).display.read();
+      data = obj.m_buffers(channel).display.read();
       
     end
 
     %% readStore
    
-    function [obj,data] = readStore(obj,channel)
+    function data = readStore(obj,channel)
     
       % readStore reads the data from the <store> buffer for the appropriate channel.
       % Note, altough this is a read routine, indices in the buffers are updated and so it
@@ -111,18 +111,17 @@ classdef physiomon_channels
 
     %% writeData
 
-    function obj = writeData(obj,channel,data)
+    function writeData(obj,channel,data)
     
       % the method <writeData> writes <data> to the buffers (display and store) of channel
       % <channel>
       %
-      %     syntax : obj = writeData(obj,channel,data)
+      %     syntax : writeData(obj,channel,data)
       %
       % with <channel> the appropriate channel and <data> the data to be written (vector)
 
-      [writeIndx,readIndx] = obj.m_buffers(channel).display.getIndices();
-      obj.m_buffers(channel).display = obj.m_buffers(channel).display.write(data);
-      obj.m_buffers(channel).store = obj.m_buffers(channel).store.write(data);
+      obj.m_buffers(channel).display.write(data);
+      obj.m_buffers(channel).store.write(data);
 
     end
   end

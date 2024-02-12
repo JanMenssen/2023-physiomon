@@ -10,8 +10,9 @@
 %
 % modifications
 %   25-jan-2024   JM    initial version
+%   11-feb-2024   JM    now derivated from a handle class (pointer logic)
 
-classdef physiomon_settings
+classdef physiomon_settings < handle
 
   properties (Access = private)
     
@@ -78,12 +79,12 @@ classdef physiomon_settings
 
     %% setChannels
 
-    function obj = setChannels(obj,channels)
+    function setChannels(obj,channels)
     
       % the method <setChannels> copies information from <channels> to the internal
       % private propertie <m_channels> This method is used in the dialog boxes
       %
-      %     syntax : obj = setChannels(obj,channels)
+      %     syntax : setChannels(obj,channels)
       %
       % with <channels> an vector of a channelStruct
 
@@ -93,12 +94,12 @@ classdef physiomon_settings
 
     %% setDisplays
 
-    function obj = setDisplays(obj,displays)
+    function setDisplays(obj,displays)
 
       % the method <setDisplays> copies information from <displays> to the internal
       % private propertie <m_displays> This method is used in the dialog boxes
       %
-      %     syntax : obj = setDisplays(obj,displays)
+      %     syntax : setDisplays(obj,displays)
       %
       % with <displays> an vector of a displayStruct
 
@@ -108,12 +109,12 @@ classdef physiomon_settings
 
     %% setEvents
 
-    function obj = setEvents(obj,events)
+    function setEvents(obj,events)
 
       % the method <setEvents> copies an list of events (<events>) to the internal
       % private propertie <m_events> This method is used in the dialog boxes
       %
-      %     syntax : obj = setEvents(obj,events)
+      %     syntax : setEvents(obj,events)
       %
       % with <events> a list of events
       
@@ -123,7 +124,7 @@ classdef physiomon_settings
 
     %% iniRead
 
-    function [obj,devicename] = iniRead(obj)
+    function devicename = iniRead(obj)
     
       % reads the *.INI file and make 3 structures, depending on the information in the *.INI
       % file
@@ -131,8 +132,7 @@ classdef physiomon_settings
       %     - m_displays    : contains the event settings
       %     - m_events      : contains information for the events
       %
-      %
-      %   syntax : [obj,devicdename] = iniRead(obj)
+      %   syntax : devicdename = iniRead(obj)
       %
       % this method differs from the one used in Qt (python and C++). No defaults values
       % are given except for the event structure. <devicename> is returned, the name of
@@ -144,9 +144,9 @@ classdef physiomon_settings
       numDisp = round(str2double(tmpStruct.algemeen.numdisp));
       numEvents = 10;
 
-      obj = obj.readDisplays(tmpStruct,numDisp);
-      obj = obj.readChannels(tmpStruct,numChan);
-      obj = obj.readEvents(tmpStruct,numEvents);
+      obj.readDisplays(tmpStruct,numDisp);
+      obj.readChannels(tmpStruct,numChan);
+      obj.readEvents(tmpStruct,numEvents);
       
       devicename = tmpStruct.algemeen.device;
     end
@@ -157,12 +157,12 @@ classdef physiomon_settings
   
     % readChannels
 
-    function obj = readChannels(obj,tmpStruct,numChannels)
+    function readChannels(obj,tmpStruct,numChannels)
       
       % readChannels decodes the <tmpStruct>, containing the whole *.INI file in an array
       % of <m_channels> with size <numChannels
       %
-      %   syntax : obj = readChannels(obj,tmpStruct,numChannels)
+      %   syntax : readChannels(obj,tmpStruct,numChannels)
       %
       % <m_channels> is an internal private member of the class
 
@@ -187,12 +187,12 @@ classdef physiomon_settings
 
     % readDisplays
 
-    function obj = readDisplays(obj,tmpStruct,numDisplays)
+    function readDisplays(obj,tmpStruct,numDisplays)
 
       % readDisplay decodes the <tmpStruct>, containing the whole *.INI file in an array
       % of <m_displays> with size <numDisplays
       %
-      %   syntax : obj = readDisplays(obj,tmpStruct,numDisplays)
+      %   syntax : readDisplays(obj,tmpStruct,numDisplays)
       %
       % <m_displays> is an internal private member of the class
 
@@ -226,12 +226,12 @@ classdef physiomon_settings
         
     % readEvents
 
-    function obj = readEvents(obj,tmpStruct,numEvents)
+    function readEvents(obj,tmpStruct,numEvents)
     
       % readEvents decodes the <tmpStruct>, containing the whole *.INI file in an array
       % of <m_events> with size <numEvents>
       %
-      %   syntax : obj = readEvents(obj,tmpStruct,numEvents)
+      %   syntax : readEvents(obj,tmpStruct,numEvents)
       %
       % <m_events> is an internal private member of the class. If the event number in the
       % *.INI file is not found a default string "this is event <nr>" is added

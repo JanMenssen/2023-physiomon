@@ -6,8 +6,9 @@
 %
 % modifications
 %     06-feb-2024   JM    initial version
+%     12-feb-2024   JM    derivated from class handle (pointer logic)
 
-classdef downsampler
+classdef downsampler < handle
 
   properties
   
@@ -34,12 +35,12 @@ classdef downsampler
 
     %% setRate
 
-    function obj = setRate(obj,rate)
+    function setRate(obj,rate)
 
       % the method <setRate> sets the decimation rate. Every <rate> samples a new output
       % sample is obtained
       %
-      %     syntax : obj = setRate(obj,rate)
+      %     syntax : setRate(obj,rate)
       %
       % with <rate> the decimation factor
     
@@ -49,12 +50,12 @@ classdef downsampler
 
     %% getData
 
-    function [obj,outData] = getData(obj,inData)
+    function outData = getData(obj,inData)
     
       % decimates the number of input samples with a factor that is set in <setRate> so
       % the number of samples to the graphs are reduced
       %
-      %     syntax [obj,outData] = getData(obj,inData)
+      %     syntax outData = getData(obj,inData)
       %
       % with <inData> the input data and <outData> the downsampled data
 

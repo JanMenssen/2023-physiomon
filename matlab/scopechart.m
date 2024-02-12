@@ -76,7 +76,7 @@ classdef scopechart < basechart
 
       % downsample
 
-      [obj.m_downSampler{nchan},data] = obj.m_downSampler{nchan}.getData(data);
+      data = obj.m_downSampler{nchan}.getData(data);
       nPoints = length(data);
 
       if obj.m_first(nchan)
