@@ -129,7 +129,8 @@ baseChart::baseChart(int nchan) {
   // create the graphics 
 
   m_chart = new QChart;
-  
+  m_chart->setMargins(QMargins(10,5,5,5));
+
   m_axisX = new QValueAxis();
   m_axisY = new QValueAxis();
 
@@ -137,10 +138,10 @@ baseChart::baseChart(int nchan) {
   m_chart->addAxis(m_axisY,Qt::AlignLeft);
 
   m_axisX->setGridLineVisible(false);
-  m_axisX->setLabelsColor(Qt::cyan);
+  m_axisX->setLabelsColor(Qt::lightGray);
 
   m_axisY->setGridLineVisible(false);
-  m_axisY->setLabelsColor(Qt::cyan);
+  m_axisY->setLabelsColor(Qt::lightGray);
 
   m_chart->legend()->hide();
   m_chart->setBackgroundVisible(false);

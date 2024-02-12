@@ -88,7 +88,7 @@ class mainWindow(QMainWindow) :
     # and set ready
 
     self.setWindowTitle("PhysioMon v3.01")
-    self.statusBar().setText("ready ...",5.0)
+    self.statusBar().setText("ready ...",3.0)
 
   # onConfigure
   #

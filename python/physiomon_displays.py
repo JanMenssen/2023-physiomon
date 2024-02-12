@@ -31,7 +31,7 @@ class physiomon_displays() :
     self.m_layout.setHorizontalSpacing(0)
     self.m_layout.setVerticalSpacing(0)
     centralWidget.setLayout(self.m_layout)
-      
+          
     return
   
   # initialise

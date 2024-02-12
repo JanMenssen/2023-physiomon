@@ -28,7 +28,6 @@ physiomon_displays::physiomon_displays(QWidget *centralWidget) {
   m_layout->setHorizontalSpacing(0);
   m_layout->setVerticalSpacing(0);
   centralWidget->setLayout(m_layout);
-
 }
 
 // destructor

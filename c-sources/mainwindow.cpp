@@ -75,7 +75,7 @@ mainWindow::mainWindow(int width, int height) {
   // and set ready
 
   setWindowTitle("PhysioMon v3.01");
-  status->setText("ready ...",5.0);
+  status->setText("ready ...",3.0);
 }
  
 // destructor

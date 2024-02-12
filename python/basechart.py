@@ -7,7 +7,7 @@
 #     28-jan-2024   JM    initial version
 
 from PySide6.QtCharts import QChart,QLineSeries,QValueAxis
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt,QMargins
 
 # some settings to speed up the software
 
@@ -65,10 +65,12 @@ class baseChart :
       self.m_pntsInGraph.append(0)
       self.m_downSampler.append(downSampler())
 
-    # create a new chart and disable the mouse event on these charts
+    # create a new chart, margins are set to zero. Note this could be have strange effects
+    # (labels, legends don't fit)
       
     self.m_chart = QChart()
-
+    self.m_chart.setMargins(QMargins(10,5,5,5))
+  
     self.m_axisX = QValueAxis()
     self.m_axisY = QValueAxis()
 
@@ -76,10 +78,10 @@ class baseChart :
     self.m_chart.addAxis(self.m_axisY,Qt.AlignmentFlag.AlignLeft)
 
     self.m_axisX.setGridLineVisible(False)
-    self.m_axisX.setLabelsColor(Qt.cyan)
+    self.m_axisX.setLabelsColor(Qt.lightGray)
 
     self.m_axisY.setGridLineVisible(False)
-    self.m_axisY.setLabelsColor(Qt.cyan)
+    self.m_axisY.setLabelsColor(Qt.lightGray)
 
     self.m_chart.legend().hide()
     self.m_chart.setBackgroundVisible(False)
