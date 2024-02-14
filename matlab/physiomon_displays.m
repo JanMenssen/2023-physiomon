@@ -26,7 +26,7 @@ classdef physiomon_displays <handle
 
     %% initialise
 
-    function initialise(obj)
+    function initialise(~)
     
       % this is a stub method, nothing is done in this method
       %
@@ -64,10 +64,6 @@ classdef physiomon_displays <handle
       myDisplays = mySettings.getDisplays();
       myChannels = mySettings.getChannels();
 
-      background = canvasHandle.Color;
-
-      %-jm canvasLeft = canvasHandle.Position(1);
-      %-jm canvasTop = canvasHandle.Position(2);
       canvasWidth = canvasHandle.Position(3) - (PIXELS_LEFT);
       canvasHeight = canvasHandle.Position(4) - (PIXELS_BOTTOM);
 
@@ -78,16 +74,16 @@ classdef physiomon_displays <handle
         % get the channels which should be on the current display, currently
         % max 3 channels are allowed
 
-        channels = zeros(3,1);
+        channels = cell([]);
+
         i = 1;
         for iChan = 1:length(myChannels)
           if (myChannels(iChan).display == iDisp)
-            channels(i) = iChan;
+            channels{i} = iChan;
             i = i + 1;
           end     
         end
-        channels((i):3) = [];
-
+        
         % and create the current display (position is different compared to Qt). around
         % the borders, 10 pixels are used for a nicer layout. Note Matlab starts in the
         % lower left corner so modify it
@@ -99,7 +95,7 @@ classdef physiomon_displays <handle
         width = floor(curDisp.width * canvasWidth - PIXELS_RIGHT);
         height = floor(curDisp.height * canvasHeight) - PIXELS_TOP;
 
-        handle = uiaxes(parent = canvasHandle, InnerPosition = [left top width height],Color=background);
+        handle = uiaxes(parent = canvasHandle, InnerPosition = [left top width height],Color = canvasHandle.Color);
         switch curDisp.mode
           case 1
             obj.m_chart{iDisp} = stripchart(handle,channels);
@@ -111,48 +107,67 @@ classdef physiomon_displays <handle
 
         % and set the Y-axis and time axis for the current chart
 
-        obj.m_chart{iDisp} = obj.m_chart{iDisp}.setYaxis(curDisp.ymin,curDisp.ymax);
-        obj.m_chart{iDisp} = obj.m_chart{iDisp}.setTimeAxis(curDisp.timescale);
+        obj.m_chart{iDisp}.setYaxis(curDisp.ymin,curDisp.ymax);
+        obj.m_chart{iDisp}.setTimeAxis(curDisp.timescale);
+      
+      end
+    end
+
+    %% initPlot
+  
+    function initPlot(obj,channels)
+    
+      % using the information from <myChannels> the charts are initialised with the
+      % <sampleRate> and buffers are create for the x-axis and y-axis. Therefore this
+      % routine must be called after the <configure> method
+      %
+      %     syntax : initPlot(channels)
+      %
+      % with <channels> an instance of the <phsyiomon_channels> class
+
+      for iDisp = 1:length(obj.m_chart)
+
+        numChan = length(obj.m_chart{iDisp}.m_channels);
+        sampleRate = zeros(numChan,1);
+        for iChan = 1:numChan, sampleRate(iChan) = channels.getSampleRate(iChan); end
+        obj.m_chart{iDisp}.initPlot(sampleRate)
       
       end
     end
 
     %% plot
 
-    function plot(obj,myChannels)
+    function plot(obj,channels)
     
       % using the new data from the buffers in the instance of the <physiomon_channels> class 
       % (written by the read method of the instance of <measuredevice>, this method plots
       % this new data on the charts, using the method thas is selected (strip, scope,
       % sweep or numeric)
       %
-      %     syntax : plot(obj,myChannels)
+      %     syntax : plot(obj,channels)
       %
-      % with <myChannels> and instance of the <physiomon_channels> 
+      % with <channels> and instance of the <physiomon_channels> 
       
-      numDisp = length(obj.m_chart);
-      for iDisp = 1:numDisp
-
+      for iDisp = 1:length(obj.m_chart)
+        
         % a display could have more channels, so we need the data for all channels in this
         % display
-
+        
+        obj.m_chart{iDisp}.initUpdate();
+        
         for iChan = 1:length(obj.m_chart{iDisp}.m_channels)
 
           % get the channel number and get the data and update display
 
           curChannel = obj.m_chart{iDisp}.m_channels(iChan);
-          data = myChannels.readDisplay(curChannel);
+          data = channels.readDisplay(curChannel);
 
-          if ~isempty(data), obj.m_chart{iDisp} = obj.m_chart{iDisp}.update(iChan,data); end
+          if ~isempty(data), obj.m_chart{iDisp}.update(iChan,data); end
 
         end
-        obj.m_chart{iDisp} = obj.m_chart{iDisp}.finishUpdate();
       end
 
-      %-jm drawnow limitrate
-      drawnow();
     end
 
   end
-
 end

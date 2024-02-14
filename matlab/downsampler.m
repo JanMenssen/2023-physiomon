@@ -40,7 +40,7 @@ classdef downsampler < handle
       % the method <setRate> sets the decimation rate. Every <rate> samples a new output
       % sample is obtained
       %
-      %     syntax : setRate(obj,rate)
+      %     syntax : setRate(rate)
       %
       % with <rate> the decimation factor
     

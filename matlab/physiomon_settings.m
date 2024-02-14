@@ -166,7 +166,7 @@ classdef physiomon_settings < handle
       %
       % <m_channels> is an internal private member of the class
 
-      obj.m_channels = repmat(struct('name',[],'type',[],'source',[],'display',[]),numChannels,1);
+      obj.m_channels = repmat(struct('name',[],'type',[],'source',[],'display',[],'sampleRate',[]),numChannels,1);
 
       for iChan = 1:numChannels
 

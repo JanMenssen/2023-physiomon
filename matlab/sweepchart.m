@@ -23,70 +23,65 @@ classdef sweepchart < basechart
       % in the constructor the constructor of the parent class is called and some
       % variables are initialised
       %
-      %     syntax : obj = sweephart(axisHandle,channels)
+      %     syntax : sweephart(axisHandle,channels)
       %
       % with <axixHandle> a handle to the axis of the chart and <channels> a list of
       % channcels that should be plotted in this chart
 
-      obj = obj@basechart(axisHandle,channels);
-
+      obj@basechart(axisHandle,channels);
       obj.m_curIndx = ones(size(channels));
 
     end
 
-    %% setTimeAxis
-
-    function obj = setTimeAxis(obj,nsec)
-      
-      % in the method <setTimeAxis> the time scale is set to the graph and 
-      % some variablea are initialised
-      %
-      %       syntax : obj = setTimeAxis(obj,nsec)
-      %
-      % with <nsec> the length of the time axis
-
-      obj = obj.setTimeAxis@basechart(nsec);
-      
-      obj.m_curIndx = 0;
-
-    end
-
-
-
     %% update
 
-    function obj = update(obj,nchan,data)
+    function update(obj,ichan,data)
 
       % <update> updates the graph for channel <ichan> with the data from <data>. Point are 
       % added to the graph until the then of the screen is reached on the right. Then the
       % screen is cleared an new points are plotted and added to the left
       %
-      %     syntax : obj = update(obj,ichan,data)
+      %     syntax : update(ichan,data)
       %
       % with <ichan> the channel that should be updated and <data> the new data that is
       % added to the graph
       
-      % sweep back to the beginning of the screen
-
-      nPoints = length(obj.m_buffer{nchan});
-      if (nPoints >= obj.m_pntsInGraph(nchan))
-        obj.m_buffer{nchan} = [];
-      end
-
       % downsample and add to buffer
 
-      data = obj.m_downSampler{nchan}.getData(data);  
-      obj.m_buffer{nchan} = [obj.m_buffer{nchan} data];
+      data = obj.m_downSampler{ichan}.getData(data);
 
+      obj.m_dataBuffer(ichan).y = [obj.m_dataBuffer(ichan).y data];
+      obj.m_curIndx(ichan) = length(obj.m_dataBuffer(ichan).y);
+  
       % and plot
 
-      lenData = length(obj.m_buffer{nchan});
-      xdata = obj.m_deltaT(nchan) * (1:lenData);
-      plot(obj.m_handle,xdata,obj.m_buffer{nchan});
+      set(obj.m_lineHandles{ichan},xdata = obj.m_dataBuffer(ichan).x(1:obj.m_curIndx(ichan)), ydata = obj.m_dataBuffer(ichan).y);
   
       % done
-     
+
     end
+
+    %% finishUpdate
+    
+    function initUpdate(obj)
+    
+      % called before the real update is done. It checks if end of the screen is reached
+      % and takes action (clear buffers and start on the left on the screen again)
+      %
+      %     syntax : initUpdate()
+
+      if all(obj.m_curIndx >= obj.m_pntsInGraph)
+
+        obj.m_curIndx = 1;
+
+        for ichan=1:obj.m_numchan 
+          set(obj.m_lineHandles{ichan},xdata = [], ydata = []); 
+          obj.m_dataBuffer(ichan).y = [];
+        end
+      
+      end
+    end
+
 
   end
 

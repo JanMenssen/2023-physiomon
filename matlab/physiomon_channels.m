@@ -124,6 +124,21 @@ classdef physiomon_channels < handle
       obj.m_buffers(channel).store.write(data);
 
     end
+
+    %% getSampleRate
+
+    function rate = getSampleRate(obj,channel)
+
+      % this method returns the sanplerate for the desired channel
+      %
+      %     syntax : rate = getSampleRate(obj,channel)
+      %
+      % with <channel> the desired number and <rate> the returned samplerate
+    
+      rate = obj.m_buffers(channel).sampleRate;
+    end
+
+
   end
 
 end

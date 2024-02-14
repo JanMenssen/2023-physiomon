@@ -13,18 +13,17 @@
 % modifications
 %     02-feb-2024  JM initial version
 
-classdef basechart
+classdef basechart < handle
 
   properties
   
     m_channels = []               % list with channels that should be plotted in the display
-    m_handle = []                 % handle to the axis 
+    m_axisHandle = []             % handle to the axis 
+    m_lineHandles = [];           % handles to the lines (for every channel a line) in the graph
     m_downSampler = [];           % downsample class
-    m_buffer = {};                % contains the data points (cell array
     m_pntsInGraph = [];           % number of points in the graph
-    m_sampleRate = [500 500 500]; % sampleRate (Hz)
     m_numchan = [];               % number of channels in graphs (used to speed up things)
-    m_deltaT = [];                % time step
+    m_dataBuffer = []             % buffer containing xData points
 
   end
 
@@ -42,20 +41,50 @@ classdef basechart
       % with <axisHandle> a handle that is created and channels a list of channels that
       % should be plotted
       
-      obj.m_handle = axisHandle;
-      obj.m_channels = channels;
-      obj.m_numchan = length(obj.m_channels);
+      obj.m_axisHandle = axisHandle;
+      obj.m_axisHandle.NextPlot = "add";
+
+      obj.m_numchan = length(channels);
+      obj.m_channels = zeros(obj.m_numchan,1);
+      for i=1:obj.m_numchan, obj.m_channels(i) = channels{i}; end
+      for i=1:obj.m_numchan, obj.m_lineHandles{i} = plot(obj.m_axisHandle,NaN); end
+       
+      obj.m_dataBuffer = repmat(struct('x',[],'y',[]),obj.m_numchan,1);
       
-      for i=1:obj.m_numchan
-        obj.m_downSampler{i} = downsampler(); 
-        obj.m_buffer{i} = [];
-      end 
+      for i=1:obj.m_numchan, obj.m_downSampler{i} = downsampler(); end
+
+    end
+
+    %% initPlot
+
+    function initPlot(obj,sampleRate)
+      
+      % configures the x-data using <sampleRate and the downsampler. For 100 ms (the timer
+      % interval extra points are added to be sure all new samples are plotted
+      %
+      %     syntax : initPlot(obj,sampleRate)
+      %
+      % with <sampleRate> a vector with the sampleRate for each channel
+
+      % get the time on the X-axis and calculate the number of points in the graph
+
+      nsec = obj.m_axisHandle.XLim(2);
+
+      rate = round((nsec .* sampleRate) ./ 2500);
+      rate(rate == 0) = 1;
+      obj.m_pntsInGraph = round(nsec * sampleRate) ./ rate;
+    
+      % add for 100 ms extra points 
+
+      extraPoints = 0.1 .* sampleRate ./ rate;
+      for i=1:obj.m_numchan, obj.m_dataBuffer(i).x = rate(i)/sampleRate(i) * (1:(obj.m_pntsInGraph(i) + extraPoints(i))); end
+      for i = 1:obj.m_numchan, obj.m_downSampler{i}.setRate(rate(i)); end
 
     end
 
     %% setYaxis
 
-    function obj = setYaxis(obj,ymin,ymax)
+    function setYaxis(obj,ymin,ymax)
 
       % setYaxis sets the limit of the y-axis
       %
@@ -63,35 +92,18 @@ classdef basechart
       %
       % with <ymin> the lower boundary and <ymax> the upper boundary of the y-axis
 
-      obj.m_handle.YLim = [ymin ymax];
+      obj.m_axisHandle.YLim = [ymin ymax];
 
     end
 
     %% setTimeAxis
 
-    function obj = setTimeAxis(obj,nsec)
+    function setTimeAxis(obj,nsec)
 
       % set the time scale
 
-      obj.m_handle.XLim = [0 nsec];
-      
-      % calculate the number of points in the graph
+      obj.m_axisHandle.XLim = [0 nsec];
 
-      rate = round((nsec * obj.m_sampleRate) ./ 2500);
-      rate(rate == 0) = 1;
-      obj.m_pntsInGraph = round(nsec * obj.m_sampleRate) ./ rate;
-      obj.m_deltaT = rate ./ obj.m_sampleRate;
-    
-      for i = 1:obj.m_numchan, obj.m_downSampler{i}.setRate(rate(i)); end
-
-      % set the points for the x-axis, these can be calculated and plot NaN's for the
-      % yaxis and plot
-
-    end
-
-    %% finishUpdate
-
-    function obj = finishUpdate(obj)
     end
 
   end
