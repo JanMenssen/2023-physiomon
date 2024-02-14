@@ -61,7 +61,7 @@ classdef measuredevice < handle
     end  
     %% initialise
 
-    function initialise(obj)
+    function initialise(~)
     
       % initialise is an abstract method that should be overwritten by thc children
       % classes

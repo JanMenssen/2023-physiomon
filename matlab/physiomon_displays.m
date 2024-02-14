@@ -9,8 +9,20 @@
 
 classdef physiomon_displays <handle
 
+  properties (Constant)
+  
+    PIXELS_TOP = 30;
+    PIXELS_LEFT = 50;
+    PIXELS_BOTTOM = 80;
+    PIXELS_RIGHT = 40;
+
+  end
+
   properties (Access = private)
+
     m_chart = {};
+    defs = defines()              % defines 
+  
   end
 
   methods
@@ -47,11 +59,6 @@ classdef physiomon_displays <handle
       % with <mySettings> a "filled" instance of the <phsyiomon_settings> class and
       % <canvasHandle> a handle to the canvas (figure)
  
-      PIXELS_TOP = 30;
-      PIXELS_LEFT = 50;
-      PIXELS_BOTTOM = 80;
-      PIXELS_RIGHT = 40;
-
       % first remove the the exisiting charts
 
       obj.m_chart = {};
@@ -64,8 +71,8 @@ classdef physiomon_displays <handle
       myDisplays = mySettings.getDisplays();
       myChannels = mySettings.getChannels();
 
-      canvasWidth = canvasHandle.Position(3) - (PIXELS_LEFT);
-      canvasHeight = canvasHandle.Position(4) - (PIXELS_BOTTOM);
+      canvasWidth = canvasHandle.Position(3) - (obj.PIXELS_LEFT);
+      canvasHeight = canvasHandle.Position(4) - (obj.PIXELS_BOTTOM);
 
       for iDisp = 1:length(myDisplays)
 
@@ -90,18 +97,18 @@ classdef physiomon_displays <handle
 
         curDisp.top = 1 - curDisp.top - curDisp.height;
 
-        left = ceil(curDisp.left * canvasWidth) + PIXELS_LEFT;
-        top = ceil(curDisp.top * canvasHeight) + PIXELS_BOTTOM;
-        width = floor(curDisp.width * canvasWidth - PIXELS_RIGHT);
-        height = floor(curDisp.height * canvasHeight) - PIXELS_TOP;
+        left = ceil(curDisp.left * canvasWidth) + obj.PIXELS_LEFT;
+        top = ceil(curDisp.top * canvasHeight) + obj.PIXELS_BOTTOM;
+        width = floor(curDisp.width * canvasWidth - obj.PIXELS_RIGHT);
+        height = floor(curDisp.height * canvasHeight) - obj.PIXELS_TOP;
 
         handle = uiaxes(parent = canvasHandle, InnerPosition = [left top width height],Color = canvasHandle.Color);
         switch curDisp.mode
-          case 1
+          case obj.defs.DISPLAY_MODE_STRIP
             obj.m_chart{iDisp} = stripchart(handle,channels);
-          case 2
+          case obj.defs.DISPLAY_MODE_SWEEP
             obj.m_chart{iDisp} = sweepchart(handle,channels);
-          case 3
+          case obj.defs.DISPLAY_MODE_SCOPE
             obj.m_chart{iDisp} = scopechart(handle,channels);
         end
 

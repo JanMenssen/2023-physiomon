@@ -19,7 +19,9 @@ classdef physiomon_settings < handle
     m_filename = [];
     m_channels = [];
     m_displays = [];
-    m_events = repmat("",10,1);
+    m_events = [];
+
+    defs = defines();       % load the defines
 
   end
 
@@ -33,6 +35,9 @@ classdef physiomon_settings < handle
       % operating system
 
       if ismac(), obj.m_filename = '/Users/jan/.config/JanSoft/physiomon.ini'; end
+      
+      obj.m_events = repmat("",obj.defs.MAX_EVENTS,1);
+    
     end
 
     %% getChannels
@@ -142,11 +147,10 @@ classdef physiomon_settings < handle
       
       numChan = round(str2double(tmpStruct.algemeen.numchan));
       numDisp = round(str2double(tmpStruct.algemeen.numdisp));
-      numEvents = 10;
 
       obj.readDisplays(tmpStruct,numDisp);
       obj.readChannels(tmpStruct,numChan);
-      obj.readEvents(tmpStruct,numEvents);
+      obj.readEvents(tmpStruct,obj.MAX_EVENTS);
       
       devicename = tmpStruct.algemeen.device;
     end
@@ -176,7 +180,7 @@ classdef physiomon_settings < handle
         switch lower(tmpStruct.(section).type) 
 
           case "analog in" 
-            obj.m_channels(iChan).type = 1;
+            obj.m_channels(iChan).type = obj.defs.TYPE_ANALOG_IN;
         end
 
         obj.m_channels(iChan).source = str2double(tmpStruct.(section).source);
@@ -213,11 +217,11 @@ classdef physiomon_settings < handle
         switch (lower(tmpStruct.(section).updatemode))
           
           case 'strip'
-            obj.m_displays(iDisplay).mode = 1;
+            obj.m_displays(iDisplay).mode = obj.defs.DISPLAY_MODE_STRIP;
           case 'sweep'
-            obj.m_displays(iDisplay).mode = 2;
+            obj.m_displays(iDisplay).mode = obj.defs.DISPLAY_MODE_SWEEP;
           case 'scope'
-            obj.m_displays(iDisplay).mode = 3;
+            obj.m_displays(iDisplay).mode = obj.defs.DISPLAY_MODE_SCOPE;
         end
 
       end

@@ -12,6 +12,12 @@
 
 classdef devPhysioDaq < measuredevice
 
+  properties (Constant)
+
+    BAUDRATE = 115200;            % baudrate of the serial port
+  
+  end
+
   properties
     
     m_address = [];
@@ -37,7 +43,7 @@ classdef devPhysioDaq < measuredevice
       %
       %     syntax : initialise(obj)
 
-      obj.m_arduino = arduinocomm(obj.m_address,115200);
+      obj.m_arduino = arduinocomm(obj.m_address,obj.BAUDRATE);
 
     end
       

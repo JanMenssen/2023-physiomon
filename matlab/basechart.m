@@ -13,6 +13,8 @@
 % modifications
 %     02-feb-2024  JM initial version
 
+% some defines
+
 classdef basechart < handle
 
   properties
@@ -24,6 +26,8 @@ classdef basechart < handle
     m_pntsInGraph = [];           % number of points in the graph
     m_numchan = [];               % number of channels in graphs (used to speed up things)
     m_dataBuffer = []             % buffer containing xData points
+
+    defs = defines();             % load the defines
 
   end
 
@@ -70,7 +74,7 @@ classdef basechart < handle
 
       nsec = obj.m_axisHandle.XLim(2);
 
-      rate = round((nsec .* sampleRate) ./ 2500);
+      rate = round((nsec .* sampleRate) ./ obj.defs.MAX_POINTS_IN_GRAPH);
       rate(rate == 0) = 1;
       obj.m_pntsInGraph = round(nsec * sampleRate) ./ rate;
     
