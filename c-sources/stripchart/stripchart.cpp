@@ -68,7 +68,7 @@ void stripChart::update(int ichan, int nsamples, float *data) {
 //
 //    performs actions on the chart, that are not series dependent
 
-void stripChart::finishUpdate() {
+void stripChart::initUpdate() {
 
   if (m_firstScreen) {
 

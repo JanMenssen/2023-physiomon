@@ -48,11 +48,12 @@ void sweepChart::update(int ichan, int nsamples, float *data) {
   m_curIndx[ichan] = indx + nsamples;
 }
 
-// finishUpdate
+// initUpdate
 //
-//    performs actions on the chart, that are not series dependent
+//    performs actions on the chart, that are not series dependent, checks if the plotting is 
+//    on the end of the screen
 
-void sweepChart::finishUpdate() {
+void sweepChart::initUpdate() {
 
   // check if end is reached for all channels and if this is the case reset the current index and clear the 
   // dataBuffer 

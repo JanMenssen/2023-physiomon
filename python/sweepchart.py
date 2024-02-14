@@ -63,11 +63,11 @@ class sweepChart(baseChart) :
     self.m_series[ichan].replace(self.m_dataBuffer[ichan])
     self.m_curIndx[ichan] = indx
 
-  # finishUpdate
+  # initUpdate
   #
   #   clears the buffer if the end of the screen is reached
 
-  def finishUpdate(self) :
+  def initUpdate(self) :
 
     endReached = True
     for i in range(self.m_numchan) :

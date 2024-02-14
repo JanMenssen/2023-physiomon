@@ -165,6 +165,7 @@ void physiomon_displays::plot(physiomon_channels *channels) {
   for (int iDisp = 0; iDisp < m_numDisplays ; iDisp++) {
 
     dispSettings = m_dispContents[iDisp];
+    dispSettings.chart->initUpdate();
 
     // a display can have more channels, do it for all channels
 
@@ -175,8 +176,6 @@ void physiomon_displays::plot(physiomon_channels *channels) {
       channels->readDisplay(curchan,&nSamples,data);
       dispSettings.chart->update(ichan,nSamples,data);
     }  
-    
-    dispSettings.chart->finishUpdate();
   }  
 
   return;

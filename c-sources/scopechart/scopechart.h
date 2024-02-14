@@ -20,7 +20,7 @@ class scopeChart: public baseChart {
     ~scopeChart();
     void setYaxis(float ymin, float ymax);
     void update(int ichan, int nsamples, float *data);
-    void finishUpdate();
+    void initUpdate();
     
   private :
   

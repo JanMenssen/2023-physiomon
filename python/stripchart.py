@@ -77,11 +77,11 @@ class stripChart(baseChart) :
     self.m_series[ichan].replace(self.m_dataBuffer[ichan])
     self.m_curIndx[ichan] = indx
 
-  # finishUpdate
+  # initUpdate
   #
   #   goto replace mode if the first screen is plotted
     
-  def finishUpdate(self) :
+  def initUpdate(self) :
 
     if (self.m_firstScreen == True) :
 

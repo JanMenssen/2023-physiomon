@@ -94,7 +94,7 @@ void scopeChart::update(int ichan, int nsamples, float *data) {
 //
 //    performs actions on the chart, that are not series dependent
 
-void scopeChart::finishUpdate() {
+void scopeChart::initUpdate() {
 
   bool endReached = true;
 

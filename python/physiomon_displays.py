@@ -171,6 +171,8 @@ class physiomon_displays() :
       for iDisplay in range(self.m_numDisplay) :
 
         # get the channel list for this display and update the display
+       
+        self.m_graphDisplay[iDisplay].initUpdate()
 
         chanList = self.m_chanlist[iDisplay]  
         nchan = len(chanList)
@@ -178,8 +180,4 @@ class physiomon_displays() :
         for iChannel, i in zip(chanList,range(nchan)) :  
           data = channels.readData(iChannel)
           self.m_graphDisplay[iDisplay].update(i,data)
-
-        self.m_graphDisplay[iDisplay].finishUpdate()
-          
-    return
   

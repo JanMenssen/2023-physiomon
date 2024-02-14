@@ -84,11 +84,26 @@ class scopeChart(baseChart) :
     self.m_series[ichan].replace(self.m_dataBuffer[ichan])
     self.m_curIndx[ichan] = indx
 
-  # finishUpdate
+  # addExtraPoints
   #
-  #   finishUpdate is for scope not an empty function, it draws the scope line
+  #     adds for <nsec> points to the buffer, this avoids checks in the update which
+  #     is faster
     
-  def finishUpdate(self) :
+  def addExtraPoints(self,nsec) :
+
+    nPoints = [round(nsec/ deltaT) for deltaT in self.m_deltaT]
+    for ichan in range(self.m_numchan) :
+      nsize = len(self.m_dataBuffer[ichan])
+      for nsample in range(nPoints[ichan]) :
+        self.m_dataBuffer[ichan].append(QPointF(2 * nsize,0.0))
+        
+
+
+  # initUpdate
+  #
+  #   initUpdate is for scope not an empty function, it draws the scope line
+    
+  def initUpdate(self) :
 
     # checck we are at the end of the screen with all channels
 
@@ -98,6 +113,8 @@ class scopeChart(baseChart) :
       endReached = endReached and self.m_curIndx[i] >= self.m_pntsInGraph[i]
 
     if (endReached) :
+      if (self.m_firstScreen == True) :
+        self.addExtraPoints(0.1)
       self.m_firstScreen = False
       self.m_curIndx = [0 for i in range(self.m_numchan)]
 

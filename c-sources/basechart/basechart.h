@@ -65,7 +65,7 @@ class baseChart {
     void setTimeAxis(float nsec);
     void initPlot(int *sampleRate);
     virtual void update(int ichan, int nsamples, float* data) {};
-    virtual void finishUpdate() {};
+    virtual void initUpdate() {};
 
     // some members are set to public, so they can be easy accessed by th child classes
 

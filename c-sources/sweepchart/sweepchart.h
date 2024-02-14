@@ -19,7 +19,7 @@ class sweepChart: public baseChart {
     sweepChart(int nchan);
     ~sweepChart(); 
     void setTimeAxis(float nsec);
-    void finishUpdate();
+    void initUpdate();
     void update(int ichan, int nsamples, float *data);
 
   private :
