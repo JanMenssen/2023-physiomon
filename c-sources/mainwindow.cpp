@@ -414,6 +414,7 @@ void mainWindow::onSettingsChanged() {
   } else {
     status->setText("changed settings not saved ...",3.0);
   }
+}
 
 // onEvent 
 //

@@ -1,0 +1,7 @@
+{
+    "sketch": "bleArduino.ino",
+    "board": "arduino:megaavr:uno2018",
+    "port": "/dev/tty.usbmodem14202",
+    "programmer": "avrisp",
+    "configuration": "mode=on"
+}

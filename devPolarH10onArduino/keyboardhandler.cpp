@@ -6,6 +6,7 @@
 //
 //  modifications
 //    17-jul-2022   JM    initial version
+//    14-feb-2024   JM    tmpData remmoed from c-case
 
 #include <Arduino.h>
 #include "keyboardHandler.h"
@@ -43,22 +44,20 @@ boolean keyBoardHandler::setEvent(char c, eventFunction callback) {
   return true;
 }
 
+
 // handleCmd
 //
 //    handles the input
 
 void keyBoardHandler::handleCmd() {
 
+  int tmpData[18] = {80,111,108,97,114,32,72,49,48,32,54,51,49,51,50,52,50,66};
+  
   if (Serial.available()) {
-    
-    // isConnected string that is returned, causes an compile error if added in the 
-    // case statement (cmd = c)
-
-    int tmpData[18] = {80,111,108,97,114,32,72,49,48,32,54,51,49,51,50,52,50,66};
     
     char mLastCmd = Serial.read();
     int eventNr = mLastCmd - byte('a');
-   
+ 
     Serial.print("---> "); Serial.println(mLastCmd);
 
     switch (mLastCmd) {
@@ -84,14 +83,13 @@ void keyBoardHandler::handleCmd() {
         (*cmdEvents[eventNr])(mDataLen,cmd_buffer);
         
         break;
-
       // c-command is used to configure
       
       case 'c'  :
     
         mDataLen = 18;
 
-        //-jm int tmpData[18] = {80,111,108,97,114,32,72,49,48,32,54,51,49,51,50,52,50,66};
+        
         for (int i=0;i<mDataLen;i++) cmd_buffer[i] = tmpData[i];
         (*cmdEvents[eventNr])(mDataLen,cmd_buffer);
         

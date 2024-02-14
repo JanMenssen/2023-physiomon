@@ -1,26 +1,26 @@
+#include <ArduinoBLE.h>
+
 //
-// polar_H10
+// bleArduino
 //
 //    this is a test program to read the Heart Rate from a Polar H10 
 //
 // modifications
 //   11-jan-2020  JM  initial version
 //   03-jul-2022  JM  a lot of changes
-//   14-feb-2024  JM  renamed from <bleArduino> to <polar_H10> and now on Arduino UNO R4
+//   14-feb-2024  JM  BleArduino renamed to <devPolarH10onArduino> and works on UNO R4
 
 #include "Arduino.h"
 #include "bleConnect.h"
 #include "bleHR.h"
 #include "bleECG.h"
-#include <ArduinoBLE.h>
-
-//-jm #include "hostinterface.h"
-#include "keyBoardHandler.h"
+#include "hostinterface.h"
+//-jm #include "keyBoardHandler.h"
 
 bleConnect myConnectDev;
 bleHR myHR;
 bleECG myECG;
-//-jm hostInterface myCommander(57600);
+hostInterface myCommander(57600);
 //-jm keyBoardHandler myCommander(57600);
 
 int len = 0;
@@ -28,27 +28,24 @@ int dataBuffer[100];
 
 // callback routines for the host Interface
 
-//-jm void setStartStop(int n, int *data);
-//-jm void connect(int n, int *data);
-//-jm void returnVersion(int *, int *data);
+void setStartStop(int n, int *data);
+void connect(int n, int *data);
+void returnVersion(int *, int *data);
 
 // setup function
 
 void setup() {
 
-  Serial.begin(9600);
-
-
-  //-jm BLEDevice usedPeripheral; 
+  BLEDevice usedPeripheral; 
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
 
-  //-jm myCommander.init();
+  myCommander.init();
 
-  //-jm myCommander.setEvent('v',returnVersion);
-  //-jm myCommander.setEvent('x',setStartStop);
-  //-jm myCommander.setEvent('c',connect);
+  myCommander.setEvent('v',returnVersion);
+  myCommander.setEvent('x',setStartStop);
+  myCommander.setEvent('c',connect);
 }
 
 
@@ -58,36 +55,26 @@ void setup() {
 
 void loop() {
 
-
-  digitalWrite(LED_BUILTIN,HIGH);
-  delay(500);
-  digitalWrite(LED_BUILTIN,LOW);
-  delay(500);
-
-  //-jm BLEDevice usedPeripheral;
-  //-jm boolean connected = false;
+  BLEDevice usedPeripheral;
+  boolean connected = false;
 
   // check new commands from host interface
-  
-  Serial.println("in loop");
 
-  //-jm myCommander.handleCmd();
+  myCommander.handleCmd();
 
   // and if connected update if new values
 
-  //-jm if (myConnectDev.isDeviceConnected(&usedPeripheral)) {
-
-    //-jm Serial.println("connected");
+  if (myConnectDev.isDeviceConnected(&usedPeripheral)) {
 
     // The labView progeam MusicDAQ expect one sample for all channels in the stream. However now we have
     // multiple samples for one channel, therefore we transmit every single sample seperate
     
-    //-jm if (myECG.isUpdated(&len,dataBuffer)) {
+    if (myECG.isUpdated(&len,dataBuffer)) {
 //-jm      myCommander.sendCmd(87,len,dataBuffer);    
-      //-jm for (int i=0;i<len;i++) myCommander.sendCmd(87,1,&dataBuffer[i]);
-    //-jm }
-    //-jm if (myHR.isUpdated(&len,dataBuffer)) myCommander.sendCmd(78,len,dataBuffer);
-  //-jm }    
+      for (int i=0;i<len;i++) myCommander.sendCmd(87,1,&dataBuffer[i]);
+    }
+    if (myHR.isUpdated(&len,dataBuffer)) myCommander.sendCmd(78,len,dataBuffer);
+  }    
 }
 
 
@@ -95,22 +82,21 @@ void loop() {
 //
 //    this routine returns the current version of the Arduino program
 
-//-jm void returnVersion(int n, int *data) {
+void returnVersion(int n, int *data) {
 
-//-jm  digitalWrite(LED_BUILTIN, LOW);
+  digitalWrite(LED_BUILTIN, LOW);
 
-//-jm  int returnData[21] = {77,117,115,105,99,68,97,113,32,45,32,80,111,108,97,114,32,118,48,46,49};
-//-JM  myCommander.sendCmd('V',21,returnData);
+  int returnData[21] = {77,117,115,105,99,68,97,113,32,45,32,80,111,108,97,114,32,118,48,46,49};
+  myCommander.sendCmd('V',21,returnData);
 
-//-jm  return;
-//-jm }
+  return;
+}
 
 
 // setStartStop
 //
 //    starts and stops the BLE data transfer
 
-/*
 void setStartStop(int n, int *data) {
 
   boolean startIt = bitRead(data[0],0);
@@ -125,12 +111,12 @@ void setStartStop(int n, int *data) {
 
   return;
 }
-*/
+
 
 // connect
 //
 //    initialises and tries to connect with the BLE peripheral.
-/*
+
 void connect(int n, int *data) {
 
   boolean status = true;
@@ -168,4 +154,3 @@ void connect(int n, int *data) {
   
   return;
 }
-*/
