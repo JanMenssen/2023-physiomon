@@ -39,6 +39,7 @@ class physiomon_displays {
 
     void initialise();
     void configure(physiomon_settings *settings);
+    void initPlot(physiomon_channels *channels);
     void plot(physiomon_channels *channels);
 
   private :

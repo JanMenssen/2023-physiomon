@@ -18,19 +18,19 @@ class scopeChart: public baseChart {
 
     scopeChart(int nchan);
     ~scopeChart();
-    void setTimeAxis(float nsec);
     void setYaxis(float ymin, float ymax);
-    void update(int nchan, int nsamples, float *data);
+    void update(int ichan, int nsamples, float *data);
     void finishUpdate();
-
+    
   private :
   
-    bool m_first[MAX_CHANNELS_IN_DISPLAY] = {true, true, true};
+    void addExtraPoints(float time);
+
+    bool m_firstScreen = true;
     int m_curIndx[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
+    float m_yLimits[2] = {0.0 , 0.0};                                      
 
     QLineSeries *m_scopeLine = NULL;
-    int m_yLimits[2] = {0,0};
-
 };
 
 #endif

@@ -54,14 +54,12 @@ class baseChart :
 
   def __init__(self,nchan) :
 
-    self.m_sampleRate = []
     self.m_deltaT = []
     self.m_pntsInGraph = []
     self.m_downSampler = []
 
     for i in range(nchan) :
-      self.m_sampleRate.append(500)
-      self.m_deltaT.append(1/500)
+      self.m_deltaT.append(0)
       self.m_pntsInGraph.append(0)
       self.m_downSampler.append(downSampler())
 
@@ -92,6 +90,7 @@ class baseChart :
     self.m_numchan = nchan
 
     self.m_series = []
+    self.m_dataBuffer = [[]]
 
     for ichan in range(self.m_numchan) :
       self.m_series.append(QLineSeries())
@@ -102,6 +101,8 @@ class baseChart :
 
       self.m_series[ichan].attachAxis(self.m_axisX)
       self.m_series[ichan].attachAxis(self.m_axisY)
+
+      self.m_dataBuffer.append([])
 
   # setYaxis
   #
@@ -127,22 +128,20 @@ class baseChart :
 
     self.m_axisX.setRange(0,nsec)
 
-    # calculte the reduction factor in plots on the screen 
-
-    for i in range(self.m_numchan) :
- 
-      rate = round(nsec * self.m_sampleRate[i] / MAX_POINTS_IN_GRAPH)
-      if (rate == 0) : 
-        rate = 1
-      self.m_pntsInGraph[i] = round(nsec * self.m_sampleRate[i] / rate)
-      self.m_deltaT[i] = rate / self.m_sampleRate[i]
-
-      self.m_downSampler[i].setRate(rate)
-
-      # and clear the data series
+  # initPlot
+  #
+  #   initialises plotting parameters, based on sampleRate. should be called after configure
       
-      self.m_series[i].clear()  
+  def initPlot(self,sampleRate) :
 
+    nsec = self.m_axisX.max()
+    rate = [int(round(nsec * iSample) / MAX_POINTS_IN_GRAPH) for iSample in sampleRate]
+    rate = list(map(lambda x: 1 if x == 0  else x, rate))
+    self.m_pntsInGraph = [round(nsec * iSampleRate/iRate) for iSampleRate, iRate in zip(sampleRate,rate)] 
+    self.m_deltaT = [iRate/iSampleRate  for iSampleRate,iRate  in zip(sampleRate,rate)]   
+    [idown.setRate(irate) for idown,irate in zip(self.m_downSampler,rate)]
+
+    
   # getXaxisRef
   #
   #     returns the reference to the X axis   
@@ -157,12 +156,6 @@ class baseChart :
   def getYaxisRef(self) :
     return self.m_axisY
 
-  # finshUpdate
-  #
-  #   empty function, only needed for scope display
-
-  def finishUpdate(self) :
-    return
   
       
 

@@ -113,13 +113,6 @@ void physiomon_channels::configure(physiomon_settings *settings, measureDevice *
   }
 }  
 
-// channels getSampleRate
-//
-//    returns the sample getSampleRate
-
-void physiomon_channels::getSampleRate() {
-}
-
 // readDisplay
 //
 //    reads the data for the display from a channel
@@ -147,4 +140,13 @@ void physiomon_channels::writeData(int ichan, float data) {
   m_buffers[ichan].display->write(1,&data);
   //-jm m_buffers[ichan].store->write(1,&data);
 
+}
+
+// channels getSampleRate
+//
+//    returns the sampleRate for the desired channel
+
+int physiomon_channels::getSampleRate(int channel) {
+
+  return m_buffers[channel].sampleRate;
 }

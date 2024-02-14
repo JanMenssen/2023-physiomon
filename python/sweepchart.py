@@ -17,8 +17,6 @@ class sweepChart(baseChart) :
 
   def __init__(self,nchan) :
 
-    empty_list = []
-
     super().__init__(nchan)
 
     self.m_curIndx = []
@@ -26,7 +24,7 @@ class sweepChart(baseChart) :
 
     for i in range(nchan) :
       self.m_curIndx.append(i)
-      self.m_buffer.append([])
+      self.m_dataBuffer.append([])
       
   # setTimeAxis
   #
@@ -35,45 +33,49 @@ class sweepChart(baseChart) :
   def setTimeAxis(self,nsec) :
 
     super().setTimeAxis(nsec)
-    for i in range(self.m_numchan) :
-      self.m_curIndx[i] = 0
+    self.m_curIndx = [0 for i in self.m_curIndx]
   
   # update
   #
   #   updates the graph with new samples
 
-  def update(self,nchan,data) :
+  def update(self,ichan,data) :
 
     # to make it faster
 
-    curIndx = self.m_curIndx[nchan]     
-    maxIndx = self.m_pntsInGraph[nchan]
-    deltaT = self.m_deltaT[nchan]
-    
-    # sweep back at the end of the scrren
-
-    if (curIndx >= maxIndx) :
-      curIndx = 0
-      self.m_series[nchan].clear()
-
+    indx = self.m_curIndx[ichan]     
+    deltaT = self.m_deltaT[ichan]
+  
     # downSample 
  
-    data = self.m_downSampler[nchan].getData(data)
+    data = self.m_downSampler[ichan].getData(data)
 
     # place the data in the (cleared) buffer
       
-    self.m_buffer[nchan].clear()
     nsamples = len(data)
 
     for i in range(nsamples) :
-      self.m_buffer[nchan].append(QPointF((curIndx * deltaT),data[i]))     
-      curIndx += 1
+      self.m_dataBuffer[ichan].append(QPointF((indx * deltaT),data[i]))     
+      indx += 1
 
     # and append the new data to the series
 
-    self.m_series[nchan].append(self.m_buffer[nchan])
-    self.m_curIndx[nchan] = curIndx
+    self.m_series[ichan].replace(self.m_dataBuffer[ichan])
+    self.m_curIndx[ichan] = indx
 
+  # finishUpdate
+  #
+  #   clears the buffer if the end of the screen is reached
+
+  def finishUpdate(self) :
+
+    endReached = True
+    for i in range(self.m_numchan) :
+      endReached = endReached and self.m_curIndx[i] >= self.m_pntsInGraph[i]
+
+    if (endReached == True) :
+      self.m_curIndx = [0 for i in self.m_curIndx]
+      [buffer.clear() for buffer in self.m_dataBuffer]
 
 
 

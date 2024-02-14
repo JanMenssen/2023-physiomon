@@ -19,10 +19,12 @@ class sweepChart: public baseChart {
     sweepChart(int nchan);
     ~sweepChart(); 
     void setTimeAxis(float nsec);
-    void update(int nchan, int nsamples, float *data);
+    void finishUpdate();
+    void update(int ichan, int nsamples, float *data);
 
   private :
-  
+
+    bool m_first = true;
     int m_curIndx[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
 };
 

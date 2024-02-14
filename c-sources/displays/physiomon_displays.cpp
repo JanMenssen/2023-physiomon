@@ -132,6 +132,25 @@ void physiomon_displays::configure(physiomon_settings *settings) {
   if (ncol > 0) m_layout->addWidget(tmp,0,icol,int(1/RESOLUTION),ncol);
   
 }
+// InitPlot
+//
+//    intialises the graphics, should be called after configure and before 
+//    plotting
+
+void physiomon_displays::initPlot(physiomon_channels *channels) {
+
+  dispSettingStruct dispSettings;
+  int sampleRate[MAX_CHANNELS_IN_DISPLAY];
+
+  for (int iDisp = 0; iDisp < m_numDisplays ; iDisp++) {
+    
+    dispSettings = m_dispContents[iDisp];
+    for (int ichan = 0; ichan < dispSettings.nchan ; ichan++) {
+      sampleRate[ichan] = channels->getSampleRate(dispSettings.chanlist[ichan]);
+    }
+    dispSettings.chart->initPlot(sampleRate);
+  }
+}
 
 // plot
 //

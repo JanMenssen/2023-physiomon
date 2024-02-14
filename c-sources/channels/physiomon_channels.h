@@ -47,10 +47,10 @@ class physiomon_channels{
     physiomon_channels(float length);
   
     void configure(physiomon_settings *settings, measureDevice *device);
-    void getSampleRate();
     void readDisplay(int nchan, int *nSamples, float *data);
     void readStore(int nchan, int *nSamples, float *data);
     void writeData(int ichan, float data);
+    int getSampleRate(int channel);
 
   private :
 

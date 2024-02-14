@@ -11,8 +11,6 @@ from basechart import baseChart
 from PySide6.QtCore import QPointF
 from PySide6.QtCharts import QLineSeries
 
-MAX_POINTS_IN_GRAPH = 2500
-
 class scopeChart(baseChart) :
 
   # constructor
@@ -20,14 +18,12 @@ class scopeChart(baseChart) :
   def __init__(self,nchan) :
     super().__init__(nchan)
 
-    self.m_first = []
+    self.m_firstScreen = True
     self.m_curIndx = []
-    self.m_buffer = [[]]
 
     for i in range(nchan) :
-      self.m_first.append(True)
       self.m_curIndx.append(0)
-      self.m_buffer.append([])
+      self.m_dataBuffer.append([])
 
     x_axis = super().getXaxisRef()
     y_axis = super().getYaxisRef()
@@ -42,20 +38,6 @@ class scopeChart(baseChart) :
     pen.setColor("red")
     self.m_scopeLine.setPen(pen)
      
-  # setTimeAxis
-  #
-  #    sets the time scale and peforms some initialisation
-    
-  def setTimeAxis(self,nsec) :
-
-    super().setTimeAxis(nsec)
-
-    for i in range(self.m_numchan) :
-      
-      self.m_first[i]= True
-      self.m_buffer[i].clear()
-      self.m_curIndx[i] = 0
-  
   # setYaxis
   #
   #   scope has it's own implementation of setYaxis, limits must be known for the
@@ -64,55 +46,43 @@ class scopeChart(baseChart) :
   def setYaxis(self,ymin,ymax) :
 
     super().setYaxis(ymin,ymax)  
-    self.m_yLimits = [ymin, ymax]
+    self.m_yLimits = [self.m_axisY.min(), self.m_axisY.max()]
   
 
   # update
   #
   #   updates the graph with new samples
 
-  def update(self,nchan,data) :
+  def update(self,ichan,data) :
 
     # to make it faster
 
-    curIndx = self.m_curIndx[nchan]     
-    maxIndx = self.m_pntsInGraph[nchan]
-    deltaT = self.m_deltaT[nchan]
-    
-    # sweep back at the end of the scrren
-
-    if (curIndx > maxIndx) :
-      curIndx = 0
-      if (self.m_first[nchan] == True) :
-        self.m_pntsInGraph[nchan] = self.m_series[nchan].count()
-        maxIndx = self.m_pntsInGraph[nchan]
-        self.m_first[nchan] = False
+    indx = self.m_curIndx[ichan]     
+    deltaT = self.m_deltaT[ichan]
 
     # downSample
     
-    data = self.m_downSampler[nchan].getData(data)
+    data = self.m_downSampler[ichan].getData(data)
       
     # the first points differ from the points after the screen is cleared when the right is reached
 
     nsamples = len(data)      
-    if (self.m_first[nchan] == True) :
+    if (self.m_firstScreen == True) :
 
       for i in range(nsamples) :
-        self.m_buffer[nchan].append(QPointF((curIndx * deltaT),data[i]))
-        curIndx += 1
+        self.m_dataBuffer[ichan].append(QPointF((indx * deltaT),data[i]))
+        indx += 1
         
     else :
       
       for i in range(nsamples) :
-        self.m_buffer[nchan][curIndx] = QPointF((curIndx * deltaT),data[i])
-        curIndx += 1
-        if (curIndx >= maxIndx) :
-          curIndx = 0
+        self.m_dataBuffer[ichan][indx] = QPointF((indx * deltaT),data[i])
+        indx += 1
 
     # and replace the new data to the series
 
-    self.m_series[nchan].replace(self.m_buffer[nchan])
-    self.m_curIndx[nchan] = curIndx
+    self.m_series[ichan].replace(self.m_dataBuffer[ichan])
+    self.m_curIndx[ichan] = indx
 
   # finishUpdate
   #
@@ -120,9 +90,21 @@ class scopeChart(baseChart) :
     
   def finishUpdate(self) :
 
+    # checck we are at the end of the screen with all channels
+
+    endReached = True
+
+    for i in range(self.m_numchan) :
+      endReached = endReached and self.m_curIndx[i] >= self.m_pntsInGraph[i]
+
+    if (endReached) :
+      self.m_firstScreen = False
+      self.m_curIndx = [0 for i in range(self.m_numchan)]
+
+
     # draw only after one sweep
 
-    if (self.m_first[0] == False) :
+    if (self.m_firstScreen == False) :
 
       pnt_lower = QPointF((self.m_curIndx[0] * self.m_deltaT[0]), self.m_yLimits[0])
       pnt_upper = QPointF((self.m_curIndx[0] * self.m_deltaT[0]), self.m_yLimits[1])

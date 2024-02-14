@@ -62,24 +62,23 @@ class baseChart {
     QChart *getChart();
 
     virtual void setYaxis(float ymin, float ymax);
-    virtual void setTimeAxis(float nsec);
-    virtual void update(int chan, int nsamples, float *data) {};
+    void setTimeAxis(float nsec);
+    void initPlot(int *sampleRate);
+    virtual void update(int ichan, int nsamples, float* data) {};
     virtual void finishUpdate() {};
 
     // some members are set to public, so they can be easy accessed by th child classes
 
     int m_pntsInGraph[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
     int m_numchan = 0;
-    double m_deltaT[MAX_CHANNELS_IN_DISPLAY] = {0.0, 0.0, 0.0};
-    
-    QChart *m_chart = NULL; 
+
+    QChart *m_chart = NULL;   
     QVector<QLineSeries *> m_series;
-    QVector<QPointF> m_buffer[MAX_CHANNELS_IN_DISPLAY];
+    QVector<QPointF> m_dataBuffer[MAX_CHANNELS_IN_DISPLAY];
     downSampler m_downSampler[MAX_CHANNELS_IN_DISPLAY];
+    float m_deltaT[MAX_CHANNELS_IN_DISPLAY] = {0.0,0.0,0.0};
   
   private :
-
-    int m_sampleRate[MAX_CHANNELS_IN_DISPLAY] = {500, 500, 500};
  
     QValueAxis *m_axisX = NULL;
     QValueAxis *m_axisY = NULL;

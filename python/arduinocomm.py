@@ -106,7 +106,6 @@ class arduinoComm :
   def sendMsg(self,cmd,data) :
 
     outputData = encode(cmd,data)
-    print(outputData)
     self.m_port.write(outputData)
     
     return

@@ -21,13 +21,14 @@ class stripChart: public baseChart {
 
     stripChart(int nchan);
     ~stripChart();
-    void setTimeAxis(float nsec);
-    void update(int nchan, int nsamples, float *data);
+    void update(int ichan, int nsamples, float *data);
+    void finishUpdate();
 
   private :
 
-    bool m_first[MAX_CHANNELS_IN_DISPLAY] = {true, true, true};
+    bool m_firstScreen = true;
     int m_curIndx[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
+    QVector<QPointF> m_tmpBuffer[MAX_CHANNELS_IN_DISPLAY];
  
 };
 

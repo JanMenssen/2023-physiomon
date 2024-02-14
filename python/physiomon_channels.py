@@ -76,7 +76,7 @@ class physiomon_channels() :
     numchan = settings.m_numchan
     for i in range(numchan) :
 
-      tmpBuffer = {"display" : [], "store" : [], "sampleRate" : 0 , "name" : ""}  
+      tmpBuffer = {"display" : [], "store" : [], "sampleRate" : 0}  
       
       # find the type and perform action depending on the type, currently analog_In is only
       # supported 
@@ -97,13 +97,6 @@ class physiomon_channels() :
           except ValueError :
             pass
 
-    return
-  
-  # getSampleRate
-  #
-  #     returns the sample rate
-
-  def getSampleRate(self) :
     return
   
   # readData
@@ -134,5 +127,13 @@ class physiomon_channels() :
     self.m_buffers[channel]["store"].write(data)
 
     return
+  
+  # getSampleRate
+  #
+  #     returns the sampleRate for the desired channel
+
+  def getSampleRate(self,channel) :
+
+    return self.m_buffers[channel]["sampleRate"]
   
   

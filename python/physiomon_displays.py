@@ -139,7 +139,27 @@ class physiomon_displays() :
 
     # and set the axis
 
+  # initPlot
+  #
+  #     initialises the current chart. Using the sampleRate information stored in the instance
+  #     of channels, the baseChart method <initBuffers> is called
+      
+  def initPlot(self,channels) :
     
+    if (self.m_numDisplay > 0) :
+
+      for iDisplay in range(self.m_numDisplay) :  
+
+        sampleRate = []
+        chanList = self.m_chanlist[iDisplay]  
+        nchan = len(chanList)
+
+        for iChannel, i in zip(chanList,range(nchan)) :  
+          sampleRate.append(channels.getSampleRate(iChannel))
+          
+        self.m_graphDisplay[iDisplay].initPlot(sampleRate)
+
+ 
   # plot
   #
   #   update the display with data
@@ -158,7 +178,8 @@ class physiomon_displays() :
         for iChannel, i in zip(chanList,range(nchan)) :  
           data = channels.readData(iChannel)
           self.m_graphDisplay[iDisplay].update(i,data)
-          self.m_graphDisplay[iDisplay].finishUpdate()
+
+        self.m_graphDisplay[iDisplay].finishUpdate()
           
     return
   

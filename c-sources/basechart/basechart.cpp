@@ -146,9 +146,9 @@ baseChart::baseChart(int nchan) {
   m_chart->legend()->hide();
   m_chart->setBackgroundVisible(false);
 
-  // create for every channel a QlineSeries object and add the axis to it
+  // create for every channel a QlineSeries object and add the axis to it. Reserve space 
+  // for the samples
   
- 
   m_chart->removeAllSeries();
 
   for (int ichan = 0; ichan < m_numchan; ichan++) {
@@ -158,7 +158,9 @@ baseChart::baseChart(int nchan) {
     m_chart->addSeries(m_series[ichan]);
     m_series[ichan]->attachAxis(m_axisX);
     m_series[ichan]->attachAxis(m_axisY);
-  }
+
+    m_dataBuffer[ichan].reserve(MAX_POINTS_IN_GRAPH);
+  }   
 }
 
 // baseChart destructor
@@ -177,6 +179,7 @@ baseChart::~baseChart() {
 void baseChart::setYaxis(float ymin, float ymax) {
 
   m_axisY->setRange(ymin,ymax);
+  //-jm m_axisY->applyNiceNumbers();
 }
 
 // baseChart getChart
@@ -206,8 +209,33 @@ QValueAxis *baseChart::getXaxisRef() {
   return m_axisX; 
 }
 
-// baseChart setTimeAxis
+// initPlot
 //
+// configures the x-data using <sampleRate and the downsampler. For 100 ms (the timer
+// interval extra points are added to be sure all new samples are plotted
+ 
+void baseChart::initPlot(int *sampleRate) {
+
+  float nsec = m_axisX->max();
+  for (int ichan = 0;ichan < m_numchan;ichan++) {
+  
+    // calculate the rate after downsampling
+
+    int rate = round(nsec * sampleRate[ichan] / MAX_POINTS_IN_GRAPH);
+    if (rate == 0) rate = 1;
+    m_pntsInGraph[ichan] = round(nsec * sampleRate[ichan] / rate);
+    m_downSampler[ichan].setRate(rate);  
+  
+    m_deltaT[ichan] = float(rate) / sampleRate[ichan];
+    
+    // and clear the series
+
+    m_series[ichan]->clear();
+  } 
+}
+
+// setTimeAxis
+//  
 //    set the X-axis (= time) from 0 to <nsec> seconds 
 
 void baseChart::setTimeAxis(float nsec) {
@@ -215,20 +243,7 @@ void baseChart::setTimeAxis(float nsec) {
   // set the axis
 
   m_axisX->setRange(0,nsec);
-
-  // create a downsampler and set the actual number of points for each channel
-
-  for (int i = 0;i < m_numchan; i++) {
-
-    int rate = round((nsec * m_sampleRate[i]) / MAX_POINTS_IN_GRAPH);
-    if (rate == 0) rate = 1;
-    m_pntsInGraph[i] = round(nsec * m_sampleRate[i] / rate);
-    m_deltaT[i] = double(rate) / m_sampleRate[i];
-
-    m_downSampler[i].setRate(rate);   
-  }
-
-  // clear the data series
-
-  for (int i=0;i<m_numchan;i++) m_series[i]->clear();
+  //-jm m_axisX->applyNiceNumbers();
 }
+
+

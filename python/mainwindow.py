@@ -100,7 +100,8 @@ class mainWindow(QMainWindow) :
     self.m_displays.configure(self.m_settings)
     self.m_device.configure(self.m_settings)
     self.m_channels.configure(self.m_settings,self.m_device)
-  
+    self.m_displays.initPlot(self.m_channels) 
+    
     return
   
   # createMenu

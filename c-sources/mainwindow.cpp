@@ -270,6 +270,7 @@ void mainWindow::onConfigure() {
   m_displays->configure(m_settings);
   m_device->configure(m_settings);
   m_channels->configure(m_settings,m_device);
+  m_displays->initPlot(m_channels);
 
   return;
 }

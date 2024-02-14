@@ -14,8 +14,7 @@
 //    allocate memory for the points buffer -> faster
 
 sweepChart::sweepChart(int nchan) : baseChart(nchan) {
-  
-  for (int i=0;i<nchan;i++) m_buffer[i].reserve(MAX_POINTS_IN_GRAPH);
+
 }
 
 // destructor
@@ -24,56 +23,52 @@ sweepChart::~sweepChart() {
   
 }
 
-// setTimeAxis
-//
-//    sets the time axis and together with the sample frequency, the number of points is known
-//    and the buffer can be allocated
-
-void sweepChart::setTimeAxis(float nsec) {
-
-  baseChart::setTimeAxis(nsec);
-  for (int i=0;i<MAX_CHANNELS_IN_DISPLAY;i++) m_curIndx[i] = 0;
- 
-}
-
 // update
 
-void sweepChart::update(int nchan, int nsamples, float *data) {
+void sweepChart::update(int ichan, int nsamples, float *data) {
 
   // faster
 
-  int curIndx = m_curIndx[nchan];           
-  int maxIndx = m_pntsInGraph[nchan];
-  double deltaT = m_deltaT[nchan];
-  QVector<QPointF> *buffer = &m_buffer[nchan];
+  int indx = m_curIndx[ichan];           
+  double deltaT = m_deltaT[ichan];
+  QVector<QPointF> *buffer = &m_dataBuffer[ichan];
 
-  // sweep back if we are on the end of the graph
-
-  if (curIndx >= maxIndx) {
-    curIndx = 0;
-    m_series[nchan]->clear();
-  }
-  
   // downsample the data
  
-  m_downSampler[nchan].getData(&nsamples,data);
+  m_downSampler[ichan].getData(&nsamples,data);
  
   // and place the data in the (cleared) buffer
 
-  QPointF tmp;
-  buffer->clear();
-
-  for (int i = 0 ; i < nsamples ; i++) {
-
-    tmp.setX(((curIndx++) * deltaT));
-    tmp.setY(data[i]);
-    
-    buffer->append(tmp);
-  }
+  for (int i = 0 ; i < nsamples ; i++) buffer->append(QPointF((indx+i) * deltaT,data[i]));
 
   // and append the new data to the series, this is not faster as append point for point
   // so m_buffer is in fact not needed. However, in stripchart and scopechart 
 
-  m_series[nchan]->append(buffer[nchan]);
-  m_curIndx[nchan] = curIndx;
+  m_series[ichan]->replace(m_dataBuffer[ichan]);
+  m_curIndx[ichan] = indx + nsamples;
 }
+
+// finishUpdate
+//
+//    performs actions on the chart, that are not series dependent
+
+void sweepChart::finishUpdate() {
+
+  // check if end is reached for all channels and if this is the case reset the current index and clear the 
+  // dataBuffer 
+
+  bool endReached = true;
+  for (int iChan=0;iChan<m_numchan;iChan++) endReached = endReached && (m_curIndx[iChan] >= m_pntsInGraph[iChan]);
+  
+  if (endReached) {
+    m_first = false;
+    for (int ichan=0;ichan<m_numchan;ichan++) {
+      m_curIndx[ichan] = 0;
+      m_dataBuffer[ichan].clear();
+    }
+  }
+
+  // done
+  
+}
+  
