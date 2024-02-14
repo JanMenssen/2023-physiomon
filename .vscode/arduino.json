@@ -1,6 +1,6 @@
 {
     "board": "arduino:renesas_uno:unor4wifi",
     "programmer": "cmsis-dap",
-    "sketch": "devPhysioDaq/devPhysioDaq.ino",
+    "sketch": "polar_H10/polar_H10.ino",
     "port": "/dev/tty.usbmodemF412FA9B49C42"
 }

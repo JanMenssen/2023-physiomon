@@ -150,7 +150,7 @@ classdef physiomon_settings < handle
 
       obj.readDisplays(tmpStruct,numDisp);
       obj.readChannels(tmpStruct,numChan);
-      obj.readEvents(tmpStruct,obj.MAX_EVENTS);
+      obj.readEvents(tmpStruct,obj.defs.MAX_EVENTS);
       
       devicename = tmpStruct.algemeen.device;
     end

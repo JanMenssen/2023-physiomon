@@ -17,6 +17,11 @@
 
 classdef basechart < handle
 
+  properties (Constant)
+
+    MAX_POINTS_IN_GRAPH = 2500;
+  end
+
   properties
   
     m_channels = []               % list with channels that should be plotted in the display
@@ -74,7 +79,7 @@ classdef basechart < handle
 
       nsec = obj.m_axisHandle.XLim(2);
 
-      rate = round((nsec .* sampleRate) ./ obj.defs.MAX_POINTS_IN_GRAPH);
+      rate = round((nsec .* sampleRate) ./ obj.MAX_POINTS_IN_GRAPH);
       rate(rate == 0) = 1;
       obj.m_pntsInGraph = round(nsec * sampleRate) ./ rate;
     

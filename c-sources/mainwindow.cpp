@@ -382,6 +382,7 @@ void mainWindow::onDeviceSettingsChanged() {
   devphysiodaq_dialog dlgBox(this,n,analogInfo);
   if (dlgBox.exec() == QDialog::Accepted) {
     status->setText("changed settings are saved ...",3.0);
+    onConfigure();
   } else {
     status->setText("changed settings not saved ...",3.0);
   }
@@ -409,7 +410,8 @@ void mainWindow::onSettingsChanged() {
   settings_dialog dlgBox(this,&numchan,channelInfo,&numdisp,displayInfo,eventInfo,numanalog,analogInfo);
   if (dlgBox.exec() == QDialog::Accepted) {
     status->setText("changed settings are saved ...",3.0);
-  } else {}
+    onConfigure();
+  } else {
     status->setText("changed settings not saved ...",3.0);
   }
 
