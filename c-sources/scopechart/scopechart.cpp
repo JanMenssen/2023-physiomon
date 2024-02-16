@@ -11,24 +11,21 @@
 
 // constructor
 
-scopeChart::scopeChart(int nchan) : baseChart(nchan) {
+scopeChart::scopeChart(int nchan, int *chanlist) : baseChart(nchan,chanlist) {
  
   // create a red line reference for the current position
 
-  QValueAxis *x_axis = getXaxisRef();
-  QValueAxis *y_axis = getYaxisRef();
-
   m_scopeLine = new QLineSeries();
   m_chart->addSeries(m_scopeLine);
-  m_scopeLine->attachAxis(x_axis);
-  m_scopeLine->attachAxis(y_axis);
+  m_scopeLine->attachAxis(getXaxisRef());
+  m_scopeLine->attachAxis(getYaxisRef());
 
   QPen pen = m_scopeLine->pen();
   pen.setWidth(1);
   pen.setColor("red");
   m_scopeLine->setPen(pen);
 
-  for (int i=0;i<m_numchan;i++) m_curIndx[i] = 0;
+  for (int i=0;i<m_numchan;i++) m_indx[i] = 0;
   for (int i=0;i<m_numchan;i++) m_dataBuffer[i].reserve(MAX_POINTS_IN_GRAPH);
 
   m_firstScreen = true;
@@ -63,7 +60,7 @@ void scopeChart::update(int ichan, int nsamples, float *data) {
 
   // locally variables are faster
   
-  int indx = m_curIndx[ichan];
+  int indx = m_indx[ichan];
   float deltaT = m_deltaT[ichan];
   int maxindx = m_pntsInGraph[ichan];
 
@@ -75,67 +72,37 @@ void scopeChart::update(int ichan, int nsamples, float *data) {
 
   if (m_firstScreen) {
 
-    // first screen, append to the buffer
+    // first screen, append to the buffer (until the number of samples exceed the buffer size)
     
+    if (indx + nsamples > maxindx) nsamples = maxindx - indx;
     for (int i = 0 ; i < nsamples ; i++) buffer->append(QPointF((indx+i) * deltaT, data[i]));
   
   } else {
 
     // replace points in the buffer
 
+    if (indx + nsamples > maxindx) nsamples = maxindx - indx;
     for (int i = 0 ; i < nsamples ; i++) buffer->replace(indx+i,QPointF((indx+i)*deltaT, data[i]));
   }
 
-  m_series[ichan]->replace(m_dataBuffer[ichan]);
-  m_curIndx[ichan] = indx + nsamples;
+  // donem update the current position
+
+  m_indx[ichan] = indx + nsamples;
 }
 
 // finishUpdate
 //
-//    performs actions on the chart, that are not series dependent
+//    draws the red line on the screen after the first screen
 
-void scopeChart::initUpdate() {
+void scopeChart::finishUpdate() {
 
-  bool endReached = true;
-
-  // check if end is reached for all channels and if this is the case reset the current index. Add some extra
-  // points to avoid in the update loop every time a check on (index + nsamples) m_pntsInGraph
-
-  for (int iChan=0;iChan<m_numchan;iChan++) endReached = endReached && (m_curIndx[iChan] >= m_pntsInGraph[iChan]);
+  baseChart::finishUpdate();
   
-  if (endReached) {
+  QVector<QPointF> posline;
+  float atX = m_indx[0] * m_deltaT[0];
+  posline.append(QPointF(atX,m_yLimits[0]));
+  posline.append(QPointF(atX,m_yLimits[1]));
 
-    for (int ichan=0;ichan<m_numchan;ichan++) m_curIndx[ichan] = 0;
-    if (m_firstScreen) addExtraPoints(0.1);
-    m_firstScreen = false;
-    
-  } 
+  m_scopeLine->replace(posline);
 
-  // draw a red horizontal line to indicate the current position, only after the first screen
-
-  if (!m_firstScreen) {
-  
-    QVector<QPointF> posline;
-    float atX = m_dataBuffer[0].at(m_curIndx[0]).x();
-    posline.append(QPointF(atX,m_yLimits[0]));
-    posline.append(QPointF(atX,m_yLimits[1]));
-
-    m_scopeLine->replace(posline);
-  }
-}
-
-// addExtraPoints
-//
-//    this routine add extra points for <time> s. This avoids the check in the update loop the current
-//    position is larger as the points in the buffer. However more points are plotted 
-
-void scopeChart::addExtraPoints(float time) {
-
-  for (int ichan=0;ichan<m_numchan;ichan++) {
-
-    QPointF tmp = QPointF((m_pntsInGraph[ichan] * m_deltaT[ichan]) + 0.1,0);
-
-    int nSamples = time / m_deltaT[ichan];
-    for (int iSample=0;iSample<nSamples;iSample++) m_dataBuffer[ichan].append(tmp);
-  }
 }

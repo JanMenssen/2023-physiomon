@@ -20,16 +20,6 @@
 #include <QGridLayout>
 #include <QChartView>
 
-
-
-struct dispSettingStruct {
-  int nchan = 0;
-  int chanlist[5];
-  //jm enum colors 
-  //jm labels ?
-  baseChart *chart = NULL;
-};
-
 class physiomon_displays {
 
   public :
@@ -38,14 +28,13 @@ class physiomon_displays {
     ~physiomon_displays();
 
     void initialise();
-    void configure(physiomon_settings *settings);
-    void initPlot(physiomon_channels *channels);
+    void configure(physiomon_settings *settings, physiomon_channels *channels);
     void plot(physiomon_channels *channels);
 
   private :
 
     int m_numDisplays = 0;
-    dispSettingStruct *m_dispContents = NULL;
+    baseChart **m_chart;
     QGridLayout *m_layout  = NULL;
 };
 

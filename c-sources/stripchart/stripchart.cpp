@@ -12,10 +12,8 @@
 
 // constructor
 
-stripChart::stripChart(int nchan) : baseChart(nchan) {
+stripChart::stripChart(int nchan, int *chanlist) : baseChart(nchan, chanlist) {
 
-  for (int i=0;i<m_numchan;i++) m_curIndx[i] = 0;
-  m_firstScreen = true;
 }
 
 // destructor
@@ -30,7 +28,7 @@ void stripChart::update(int ichan, int nsamples, float *data) {
 
   // locally variables are faster
 
-  int indx = m_curIndx[ichan];
+  int indx = m_indx[ichan];
   int maxindx = m_pntsInGraph[ichan];
   float deltaT = m_deltaT[ichan];
 
@@ -40,48 +38,37 @@ void stripChart::update(int ichan, int nsamples, float *data) {
 
   m_downSampler[ichan].getData(&nsamples,data);
 
-  // the first points differs, display is empty and buffer is empty
-  
   if (m_firstScreen) {
 
-    // first screen append to the buffer
+    // add samples to the buffer until the size of the buffer is reachdd, then shift
 
-    for (int i = 0 ; i < nsamples ; i++) buffer->append(QPointF((indx+i) * deltaT, data[i]));
-    m_curIndx[ichan] += nsamples;
+    int shift = nsamples - (maxindx - indx);
+
+    if (shift > 0) {
     
+      for (int i=shift;i<indx;i++) buffer->replace((i-shift),QPointF(buffer->at(i-shift).x(),buffer->at(i).y()));
+      for (int i=indx-shift;i<indx;i++) buffer->replace(i,QPointF(buffer->at(i).x(),data[i-indx+shift]));
+      for (int i=indx;i<maxindx;i++) buffer->append(QPointF(i * deltaT,data[i-indx+shift]));
+      indx += nsamples - shift;
+
+    }  else { 
+
+      for (int i=0;i<nsamples;i++) buffer->append(QPointF((indx+i) * deltaT, data[i]));
+      indx += nsamples;
+    }
+
   } else {
     
     // shift samples and add new samples
 
-    indx = maxindx - nsamples;
-    for (int i = 0 ; i < (indx) ; i++) buffer->replace(i,QPointF(buffer->at(i).x(),buffer->at(i+nsamples).y()));
-    for (int i = 0 ; i < nsamples ; i++) buffer->replace(i+indx,QPointF(buffer->at(i+indx).x(),data[i]));
+    int shift = maxindx - nsamples;
+    for (int i = 0 ; i < shift ; i++) buffer->replace(i,QPointF(buffer->at(i).x(),buffer->at(i+nsamples).y()));
+    for (int i = 0 ; i < nsamples ; i++) buffer->replace(i+shift,QPointF(buffer->at(i+shift).x(),data[i]));
 
   }
 
-  // and place the data into the series
+  // done, update the current positipm 
   
-  m_series[ichan]->replace(m_dataBuffer[ichan]);
+  m_indx[ichan] = indx; 
 }
 
-// finishUpdate
-//
-//    performs actions on the chart, that are not series dependent
-
-void stripChart::initUpdate() {
-
-  if (m_firstScreen) {
-
-    bool endReached = true;
-    
-    // check if end is reached for all channels and if this is the case reset the current index, and update the 
-    // points in the graph (in stripchart this check is only needed once)
-
-    for (int i=0;i<m_numchan;i++) endReached = endReached && (m_curIndx[i] >= m_pntsInGraph[i]);
-    
-    if (endReached) {
-      for (int i=0;i<m_numchan;i++) m_pntsInGraph[i] = m_dataBuffer[i].count();
-      m_firstScreen = false;
-    }
-  } 
-}

@@ -46,8 +46,11 @@ void physiomon_displays::initialise() {
 }
 // configure
 
-void physiomon_displays::configure(physiomon_settings *settings) {
+void physiomon_displays::configure(physiomon_settings *settings, physiomon_channels *channels) {
   
+  int chanlist[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
+  int nchan = 0;
+
   // these parameters are needed to calculate the position in the grid
 
   int irow = 0, nrow = 0, maxrow = 0;         
@@ -57,24 +60,22 @@ void physiomon_displays::configure(physiomon_settings *settings) {
 
   int count = m_layout->count();
   for (int i = 0 ; i < count ; i++) m_layout->removeItem(m_layout->itemAt(i));
-  if (m_dispContents != NULL) delete m_dispContents;
+  if (m_chart != nullptr) delete m_chart;
 
-  int numchan = settings->m_numchan;
-  m_numDisplays = settings->m_numdisp;
-  m_dispContents = new dispSettingStruct[m_numDisplays];
-
-  for (int iDisp = 0; iDisp < m_numDisplays ; iDisp++) {
+  // now make an array of pointers to a baseChart object
   
-    displayStruct curDisplay = settings->m_displays[iDisp];
+  m_numDisplays = settings->m_numdisp;
+  m_chart = new baseChart *[m_numDisplays];
+
+  for (int idisp = 0; idisp < m_numDisplays; idisp++) {
+  
+    nchan = 0;
+    displayStruct curDisplay = settings->m_displays[idisp];
     
     // find the channels for the current display
 
-    for (int iChan = 0 ; iChan < numchan ; iChan++) {
-    
-      if ((settings->m_channels[iChan].display-1) == iDisp) {
-        m_dispContents[iDisp].chanlist[m_dispContents[iDisp].nchan++] = iChan;
-   //-jm NITE, add colors and labels
-      }   
+    for (int ichan = 0 ; ichan < settings->m_numchan ; ichan++) {
+      if ((settings->m_channels[ichan].display-1) == idisp) chanlist[nchan++] = ichan;
     }
      
     // hwo to diplay the data
@@ -82,19 +83,19 @@ void physiomon_displays::configure(physiomon_settings *settings) {
     switch (curDisplay.mode) {
 
       case DISPLAY_MODE_STRIP :
-        m_dispContents[iDisp].chart = new stripChart(m_dispContents[iDisp].nchan);
+        m_chart[idisp] = new stripChart(nchan,chanlist);
         break;
 
       case DISPLAY_MODE_SWEEP :
-        m_dispContents[iDisp].chart = new sweepChart(m_dispContents[iDisp].nchan);
+        m_chart[idisp] = new sweepChart(nchan,chanlist);
         break;
 
       case DISPLAY_MODE_SCOPE :
-        m_dispContents[iDisp].chart = new scopeChart(m_dispContents[iDisp].nchan);
+        m_chart[idisp] = new scopeChart(nchan,chanlist);
         break;
 
       default :
-        m_dispContents[iDisp].chart = new stripChart(m_dispContents[iDisp].nchan);
+        m_chart[idisp] = new stripChart(nchan,chanlist);
         break;
     }
 
@@ -109,15 +110,20 @@ void physiomon_displays::configure(physiomon_settings *settings) {
     maxrow = (nrow > maxrow ? nrow : maxrow);
     maxcol = (ncol > maxcol ? ncol : maxcol);
 
-    QChartView *chartView = new QChartView(m_dispContents[iDisp].chart->getChart());
+    QChartView *chartView = new QChartView(m_chart[idisp]->getChart());
     m_layout->addWidget(chartView,irow,icol,nrow,ncol);
 
     // and set the graphic
 
-    m_dispContents[iDisp].chart->setYaxis(curDisplay.ymin, curDisplay.ymax);
-    m_dispContents[iDisp].chart->setTimeAxis(curDisplay.timescale);
+    m_chart[idisp]->setYaxis(curDisplay.ymin, curDisplay.ymax);
+    m_chart[idisp]->setTimeAxis(curDisplay.timescale);
+
     //-jm m_dispContents[iDisp].chart->setColors()
     //-jm m_dispContents[iDisp].chart->setLablels();
+
+    // and initialise the chart to prepare for plotting
+    
+    m_chart[idisp]->initPlot(channels);
   }
 
   // check there is space left in the grid and fill it up with an empty
@@ -132,25 +138,6 @@ void physiomon_displays::configure(physiomon_settings *settings) {
   if (ncol > 0) m_layout->addWidget(tmp,0,icol,int(1/RESOLUTION),ncol);
   
 }
-// InitPlot
-//
-//    intialises the graphics, should be called after configure and before 
-//    plotting
-
-void physiomon_displays::initPlot(physiomon_channels *channels) {
-
-  dispSettingStruct dispSettings;
-  int sampleRate[MAX_CHANNELS_IN_DISPLAY];
-
-  for (int iDisp = 0; iDisp < m_numDisplays ; iDisp++) {
-    
-    dispSettings = m_dispContents[iDisp];
-    for (int ichan = 0; ichan < dispSettings.nchan ; ichan++) {
-      sampleRate[ichan] = channels->getSampleRate(dispSettings.chanlist[ichan]);
-    }
-    dispSettings.chart->initPlot(sampleRate);
-  }
-}
 
 // plot
 //
@@ -158,24 +145,24 @@ void physiomon_displays::initPlot(physiomon_channels *channels) {
 
 void physiomon_displays::plot(physiomon_channels *channels) {
 
-  float data[100];          // max 100 samples can be read
+  float data[100];                        // max 100 samples can be read
+  int *chanlist = nullptr;
   int nSamples = 0;       
-  dispSettingStruct dispSettings;
 
-  for (int iDisp = 0; iDisp < m_numDisplays ; iDisp++) {
-
-    dispSettings = m_dispContents[iDisp];
-    dispSettings.chart->initUpdate();
+  for (int idisp = 0; idisp < m_numDisplays ; idisp++) {
+  
+    m_chart[idisp]->initUpdate();
+    chanlist = m_chart[idisp]->m_channels;
+    int nchan = m_chart[idisp]->m_numchan;
 
     // a display can have more channels, do it for all channels
 
-    for (int ichan = 0;ichan < dispSettings.nchan; ichan++) {
-
-      int curchan = dispSettings.chanlist[ichan];
-      
-      channels->readDisplay(curchan,&nSamples,data);
-      dispSettings.chart->update(ichan,nSamples,data);
+    for (int ichan = 0;ichan < nchan; ichan ++) {
+      channels->readDisplay(chanlist[ichan],&nSamples,data);
+      m_chart[idisp]->update(ichan,nSamples,data);
     }  
+
+    m_chart[idisp]->finishUpdate();
   }  
 
   return;

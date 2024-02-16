@@ -52,16 +52,19 @@ class baseChart :
   #
   #   axis and series are created
 
-  def __init__(self,nchan) :
+  def __init__(self,chanlist) :
 
-    self.m_deltaT = []
-    self.m_pntsInGraph = []
-    self.m_downSampler = []
+    self.m_firstScreen = True
 
-    for i in range(nchan) :
-      self.m_deltaT.append(0)
-      self.m_pntsInGraph.append(0)
-      self.m_downSampler.append(downSampler())
+    # channel list and umber of samples
+
+    self.m_channels = chanlist
+    self.m_numchan = len(chanlist)
+
+    self.m_indx = [0] * self.m_numchan
+    self.m_deltaT  = [0] * self.m_numchan
+    self.m_pntsInGraph = [0] * self.m_numchan
+    self.m_downSampler = [downSampler()] * self.m_numchan
 
     # create a new chart, margins are set to zero. Note this could be have strange effects
     # (labels, legends don't fit)
@@ -87,22 +90,41 @@ class baseChart :
     # create for every channe a QLineSeries object and attach the series to the axis
 
     self.m_chart.removeAllSeries()
-    self.m_numchan = nchan
-
+  
     self.m_series = []
     self.m_dataBuffer = [[]]
 
-    for ichan in range(self.m_numchan) :
+    for i in range(self.m_numchan) : 
+      
+      self.m_dataBuffer.append([])
       self.m_series.append(QLineSeries())
 
-    for ichan in range(self.m_numchan) :
+      self.m_chart.addSeries(self.m_series[i]) 
+      self.m_series[i].attachAxis(self.m_axisX)
+      self.m_series[i].attachAxis(self.m_axisY)
 
-      self.m_chart.addSeries(self.m_series[ichan])
+  # initUpdate
+  #
+  #     this routine is called just for updating the graphs, it:
+  #        - checks graph is on the end of the screen (start again)
+  #        - resets the first screen 
+      
+  def initUpdate(self) :
 
-      self.m_series[ichan].attachAxis(self.m_axisX)
-      self.m_series[ichan].attachAxis(self.m_axisY)
+    endReached = all([self.m_indx[i] >= self.m_pntsInGraph[i] for i in range(self.m_numchan)])
+    if endReached :
+      self.m_indx = [0] * self.m_numchan
+      self.m_firstScreen = False
+      
+    return endReached
+  
+  # finishUpdate
+  #
+  #     plots the data points in the buffers on the screen
+      
+  def finishUpdate(self) :
 
-      self.m_dataBuffer.append([])
+    for i in range(self.m_numchan) : self.m_series[i].replace(self.m_dataBuffer[i])
 
   # setYaxis
   #
@@ -130,18 +152,25 @@ class baseChart :
 
   # initPlot
   #
-  #   initialises plotting parameters, based on sampleRate. should be called after configure
-      
-  def initPlot(self,sampleRate) :
+  # configures the x-data using time on the x-axis and the sampleRate. To speed up the
+  # process, we limit the number of points in the graph and use a downsampler if the
+  # needed  
 
+  def initPlot(self,channels) :
+
+    # get the sample rate for each channel
+
+    sampleRate = [channels.getSampleRate(i) for i in self.m_channels]
+  
+    # and calculate the downsample factor 
+      
     nsec = self.m_axisX.max()
     rate = [int(round(nsec * iSample) / MAX_POINTS_IN_GRAPH) for iSample in sampleRate]
     rate = list(map(lambda x: 1 if x == 0  else x, rate))
     self.m_pntsInGraph = [round(nsec * iSampleRate/iRate) for iSampleRate, iRate in zip(sampleRate,rate)] 
     self.m_deltaT = [iRate/iSampleRate  for iSampleRate,iRate  in zip(sampleRate,rate)]   
-    [idown.setRate(irate) for idown,irate in zip(self.m_downSampler,rate)]
+    [sampler.setRate(irate) for sampler,irate in zip(self.m_downSampler,rate)]
 
-    
   # getXaxisRef
   #
   #     returns the reference to the X axis   

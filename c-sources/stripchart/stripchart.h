@@ -19,17 +19,9 @@ class stripChart: public baseChart {
 
   public :
 
-    stripChart(int nchan);
+    stripChart(int nchan,int *chanlist);
     ~stripChart();
-    void update(int ichan, int nsamples, float *data);
-    void initUpdate();
-
-  private :
-
-    bool m_firstScreen = true;
-    int m_curIndx[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
-    QVector<QPointF> m_tmpBuffer[MAX_CHANNELS_IN_DISPLAY];
- 
+    void update(int ichan, int nsamples, float *data); 
 };
 
 #endif

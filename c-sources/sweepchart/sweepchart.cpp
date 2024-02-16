@@ -13,7 +13,7 @@
 // 
 //    allocate memory for the points buffer -> faster
 
-sweepChart::sweepChart(int nchan) : baseChart(nchan) {
+sweepChart::sweepChart(int nchan, int *chanlist) : baseChart(nchan, chanlist) {
 
 }
 
@@ -27,9 +27,10 @@ sweepChart::~sweepChart() {
 
 void sweepChart::update(int ichan, int nsamples, float *data) {
 
-  // faster
+  // faster to use local variables
 
-  int indx = m_curIndx[ichan];           
+  int indx = m_indx[ichan];    
+  int maxindx = m_pntsInGraph[ichan];       
   double deltaT = m_deltaT[ichan];
   QVector<QPointF> *buffer = &m_dataBuffer[ichan];
 
@@ -37,39 +38,28 @@ void sweepChart::update(int ichan, int nsamples, float *data) {
  
   m_downSampler[ichan].getData(&nsamples,data);
  
-  // and place the data in the (cleared) buffer
+  // and place the data in the (cleared) buffer, checks the samples exceeds the size of the buffer
 
+  if (indx + nsamples > maxindx) nsamples = maxindx - indx;
   for (int i = 0 ; i < nsamples ; i++) buffer->append(QPointF((indx+i) * deltaT,data[i]));
 
-  // and append the new data to the series, this is not faster as append point for point
-  // so m_buffer is in fact not needed. However, in stripchart and scopechart 
+  // and update the current position
 
-  m_series[ichan]->replace(m_dataBuffer[ichan]);
-  m_curIndx[ichan] = indx + nsamples;
+  m_indx[ichan] = indx + nsamples;
 }
 
 // initUpdate
 //
-//    performs actions on the chart, that are not series dependent, checks if the plotting is 
-//    on the end of the screen
+//    clear the screen if the plotting is on the end of the screen 
 
-void sweepChart::initUpdate() {
+bool sweepChart::initUpdate() {
 
-  // check if end is reached for all channels and if this is the case reset the current index and clear the 
-  // dataBuffer 
-
-  bool endReached = true;
-  for (int iChan=0;iChan<m_numchan;iChan++) endReached = endReached && (m_curIndx[iChan] >= m_pntsInGraph[iChan]);
+  bool endReached  = baseChart::initUpdate();
   
   if (endReached) {
-    m_first = false;
-    for (int ichan=0;ichan<m_numchan;ichan++) {
-      m_curIndx[ichan] = 0;
-      m_dataBuffer[ichan].clear();
-    }
-  }
+    for (int ichan=0;ichan<m_numchan;ichan++) m_dataBuffer[ichan].clear();
+  }  
 
-  // done
-  
+  return endReached;
 }
   

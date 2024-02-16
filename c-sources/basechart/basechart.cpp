@@ -122,9 +122,10 @@ void downSampler::getData(int *n, float *data) {
 
 // baseChart constructor 
 
-baseChart::baseChart(int nchan) {
+baseChart::baseChart(int nchan, int *chanlist) {
 
   m_numchan = nchan;
+  for (int i=0;i<m_numchan;i++) m_channels[i] = chanlist[i];
 
   // create the graphics 
 
@@ -182,6 +183,18 @@ void baseChart::setYaxis(float ymin, float ymax) {
   //-jm m_axisY->applyNiceNumbers();
 }
 
+// setTimeAxis
+//  
+//    set the X-axis (= time) from 0 to <nsec> seconds 
+
+void baseChart::setTimeAxis(float nsec) {
+
+  // set the axis
+
+  m_axisX->setRange(0,nsec);
+  //-jm m_axisX->applyNiceNumbers();
+}
+
 // baseChart getChart
 //
 //    returns a reference to the used chart
@@ -211,22 +224,29 @@ QValueAxis *baseChart::getXaxisRef() {
 
 // initPlot
 //
-// configures the x-data using <sampleRate and the downsampler. For 100 ms (the timer
-// interval extra points are added to be sure all new samples are plotted
+// configures the x-data using time on the x-axis and the sampleRate. To speed up the
+// process, we limit the number of points in the graph and use a downsampler if the
+// needed
  
-void baseChart::initPlot(int *sampleRate) {
+void baseChart::initPlot(physiomon_channels *channels) {
 
   float nsec = m_axisX->max();
+  
   for (int ichan = 0;ichan < m_numchan;ichan++) {
   
-    // calculate the rate after downsampling
+    // get the sample rate
 
-    int rate = round(nsec * sampleRate[ichan] / MAX_POINTS_IN_GRAPH);
+    int curchan = m_channels[ichan];
+    int sampleRate = channels->getSampleRate(curchan);
+
+    // calculate the rate after downsampling
+    
+    int rate = round(nsec * sampleRate / MAX_POINTS_IN_GRAPH);
     if (rate == 0) rate = 1;
-    m_pntsInGraph[ichan] = round(nsec * sampleRate[ichan] / rate);
+    m_pntsInGraph[ichan] = round(nsec * sampleRate / rate);
     m_downSampler[ichan].setRate(rate);  
   
-    m_deltaT[ichan] = float(rate) / sampleRate[ichan];
+    m_deltaT[ichan] = float(rate) / sampleRate;
     
     // and clear the series
 
@@ -234,16 +254,31 @@ void baseChart::initPlot(int *sampleRate) {
   } 
 }
 
-// setTimeAxis
-//  
-//    set the X-axis (= time) from 0 to <nsec> seconds 
+// initUpdate
 
-void baseChart::setTimeAxis(float nsec) {
+bool baseChart::initUpdate() {
 
-  // set the axis
+  // check if end is reached for all channels and if this is the case reset the current index, and update the 
+  // points in the graph (in stripchart this check is only needed once)
+  
+  bool endReached = true;    
+  for (int i=0;i<m_numchan;i++) endReached = endReached && (m_indx[i] >= m_pntsInGraph[i]);
+  if (endReached) {
+    for (int i=0;i<m_numchan;i++) m_indx[i] = 0;
+    m_firstScreen = false;
+  }
 
-  m_axisX->setRange(0,nsec);
-  //-jm m_axisX->applyNiceNumbers();
+  return endReached;
 }
+
+// finishUpdate
+
+void baseChart::finishUpdate() {
+
+  // move the data in th databuffers to the axis
+
+  for (int i = 0; i < m_numchan ; i++) m_series[i]->replace(m_dataBuffer[i]);
+}
+
 
 

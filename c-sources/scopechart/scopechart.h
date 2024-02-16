@@ -16,20 +16,17 @@ class scopeChart: public baseChart {
 
   public :
 
-    scopeChart(int nchan);
+    scopeChart(int nchan, int *chanlist);
     ~scopeChart();
     void setYaxis(float ymin, float ymax);
     void update(int ichan, int nsamples, float *data);
-    void initUpdate();
+    void finishUpdate();
     
   private :
-  
-    void addExtraPoints(float time);
 
-    bool m_firstScreen = true;
-    int m_curIndx[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
+    // needed for the vertical line red line on the screen
+
     float m_yLimits[2] = {0.0 , 0.0};                                      
-
     QLineSeries *m_scopeLine = NULL;
 };
 

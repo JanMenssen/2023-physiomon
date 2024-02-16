@@ -23,9 +23,8 @@ class physiomon_displays() :
 
   def __init__(self,centralWidget) :
 
-    self.m_graphDisplay = []
+    self.m_chart = []
     self.m_numDisplay = 0
-    self.m_chanlist = []
 
     self.m_layout = QGridLayout()
     self.m_layout.setHorizontalSpacing(0)
@@ -46,49 +45,41 @@ class physiomon_displays() :
   #
   #   sets the number of required displays on the screen 
 
-  def configure(self,settings) :
+  def configure(self,settings,channels) :
   
     # clear the current settings
 
     nWidgets = self.m_layout.count()
     for item in range(nWidgets) :
       self.m_layout.removeItem(item)
-  
-    self.m_graphDisplay = []
-    self.m_numDisplay = 0
-    self.m_chanlist = []
-
-    # and add the stripcharts
 
     self.m_numDisplay = settings.m_numdisp
-    
+    numchan  = settings.m_numchan
+
     maxcol = 0
     maxrow = 0
 
-    for iDisp in range(self.m_numDisplay) :
-
-      curDisplay = settings.m_displays[iDisp]
-
-      self.m_chanlist.append([])
     
-      # get the channel
+    for idisp in range(self.m_numDisplay) :
+    
+      curDisplay = settings.m_displays[idisp]
 
-      numChannels = settings.m_numchan
-      for iChannel in range(numChannels) :
+      # create a list of channels that are in the display
 
-        if ((settings.m_channels[iChannel]["display"]-1) == iDisp) :
-          self.m_chanlist[iDisp].append(iChannel)
+      chanlist = []
+
+      for channel,i in zip(settings.m_channels,range(numchan)) :
+
+        if ((channel["display"]-1) == idisp) : chanlist.append(i)
 
       # mode for the display
 
-      nchan = len(self.m_chanlist[iDisp])
-
       if (curDisplay["mode"].lower() == 'sweep') :
-        self.m_graphDisplay.append(sweepChart(nchan))
+        self.m_chart.append(sweepChart(chanlist))
       if (curDisplay["mode"].lower() == 'scope') :
-        self.m_graphDisplay.append(scopeChart(nchan))
+        self.m_chart.append(scopeChart(chanlist))
       if (curDisplay["mode"].lower() == 'strip') :
-        self.m_graphDisplay.append(stripChart(nchan))
+        self.m_chart.append(stripChart(chanlist))
    
     
       # set the widget at the position, we assume to have a grid layout of 20 x 20, this means each
@@ -102,18 +93,10 @@ class physiomon_displays() :
 
       # display is waveform        
    
-      chartView = QChartView(self.m_graphDisplay[iDisp].m_chart)
+      chartView = QChartView(self.m_chart[idisp].m_chart)
       self.m_layout.addWidget(chartView,irow,icol,nrow,ncol)
 
-      # bug in using touchpad, changes in display causes a message, this bug is not solved by
-      # this command
-      
-      chartView.setAttribute(Qt.WidgetAttribute.WA_AcceptTouchEvents, False)
-
-      # display is numeric, numeric should be added  
-
-
-      # calculate max position
+      # calculate max position, needed to add extra widgets to fill the empty space
 
       if ((icol + ncol) > maxcol) :
         maxcol = icol + ncol
@@ -122,9 +105,13 @@ class physiomon_displays() :
 
       # and set the axis
         
-      self.m_graphDisplay[iDisp].setYaxis(curDisplay['ymin'],curDisplay["ymax"])
-      self.m_graphDisplay[iDisp].setTimeAxis(curDisplay["timescale"])
+      self.m_chart[idisp].setYaxis(curDisplay['ymin'],curDisplay["ymax"])
+      self.m_chart[idisp].setTimeAxis(curDisplay["timescale"])
       
+      # and initiate the chart to prepare for plotting
+
+      self.m_chart[idisp].initPlot(channels)
+
     # add items if necessary, to get a grid of 1/RESOLUTION x 1/RSOLUTION 
         
     irow = maxrow
@@ -139,45 +126,22 @@ class physiomon_displays() :
 
     # and set the axis
 
-  # initPlot
-  #
-  #     initialises the current chart. Using the sampleRate information stored in the instance
-  #     of channels, the baseChart method <initBuffers> is called
-      
-  def initPlot(self,channels) :
-    
-    if (self.m_numDisplay > 0) :
-
-      for iDisplay in range(self.m_numDisplay) :  
-
-        sampleRate = []
-        chanList = self.m_chanlist[iDisplay]  
-        nchan = len(chanList)
-
-        for iChannel, i in zip(chanList,range(nchan)) :  
-          sampleRate.append(channels.getSampleRate(iChannel))
-          
-        self.m_graphDisplay[iDisplay].initPlot(sampleRate)
-
- 
   # plot
   #
   #   update the display with data
 
   def plot(self,channels) :
 
-    if self.m_numDisplay > 0 :
+    for idisp in range(self.m_numDisplay) :
 
-      for iDisplay in range(self.m_numDisplay) :
+      # get the channel list for this display and update the display
+         
+      self.m_chart[idisp].initUpdate()
 
-        # get the channel list for this display and update the display
-       
-        self.m_graphDisplay[iDisplay].initUpdate()
-
-        chanList = self.m_chanlist[iDisplay]  
-        nchan = len(chanList)
-
-        for iChannel, i in zip(chanList,range(nchan)) :  
-          data = channels.readData(iChannel)
-          self.m_graphDisplay[iDisplay].update(i,data)
+      chanlist = self.m_chart[idisp].m_channels
+      for ichan,i in zip(chanlist,range(len(chanlist))) : 
+        data = channels.readData(ichan)
+        self.m_chart[idisp].update(i,data)
+        
+      self.m_chart[idisp].finishUpdate()
   

@@ -16,16 +16,10 @@ class sweepChart: public baseChart {
 
   public :
 
-    sweepChart(int nchan);
+    sweepChart(int nchan, int *chanlist);
     ~sweepChart(); 
-    void setTimeAxis(float nsec);
-    void initUpdate();
+    bool initUpdate();
     void update(int ichan, int nsamples, float *data);
-
-  private :
-
-    bool m_first = true;
-    int m_curIndx[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
 };
 
 #endif

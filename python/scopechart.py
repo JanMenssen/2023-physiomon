@@ -15,23 +15,17 @@ class scopeChart(baseChart) :
 
   # constructor
 
-  def __init__(self,nchan) :
-    super().__init__(nchan)
+  def __init__(self,channels) :
 
-    self.m_firstScreen = True
-    self.m_curIndx = []
+    super().__init__(channels)
 
-    for i in range(nchan) :
-      self.m_curIndx.append(0)
-      self.m_dataBuffer.append([])
-
-    x_axis = super().getXaxisRef()
-    y_axis = super().getYaxisRef()
+    # a vertical red position line should be drawn, make a series element
+    # that could be plotted on the screen
 
     self.m_scopeLine = QLineSeries()
     self.m_chart.addSeries(self.m_scopeLine)
-    self.m_scopeLine.attachAxis(x_axis)
-    self.m_scopeLine.attachAxis(y_axis)
+    self.m_scopeLine.attachAxis(self.m_axisX)
+    self.m_scopeLine.attachAxis(self.m_axisY)
 
     pen = self.m_scopeLine.pen()
     pen.setWidth(1)
@@ -57,16 +51,22 @@ class scopeChart(baseChart) :
 
     # to make it faster
 
-    indx = self.m_curIndx[ichan]     
+    indx = self.m_indx[ichan]     
     deltaT = self.m_deltaT[ichan]
+    maxindx = self.m_pntsInGraph[ichan]
 
     # downSample
     
     data = self.m_downSampler[ichan].getData(data)
-      
-    # the first points differ from the points after the screen is cleared when the right is reached
 
-    nsamples = len(data)      
+    # determint the numbef or samples that should be placed in the buffer, important if the
+    # end of the buffer is reached
+
+    nsamples = len(data)  
+    if (indx + nsamples > maxindx) : nsamples = maxindx - indx
+
+    # and place in the buffer, depending on the first screen 
+
     if (self.m_firstScreen == True) :
 
       for i in range(nsamples) :
@@ -79,53 +79,20 @@ class scopeChart(baseChart) :
         self.m_dataBuffer[ichan][indx] = QPointF((indx * deltaT),data[i])
         indx += 1
 
-    # and replace the new data to the series
+    # done, update the index
 
-    self.m_series[ichan].replace(self.m_dataBuffer[ichan])
-    self.m_curIndx[ichan] = indx
+    self.m_indx[ichan] = indx
 
-  # addExtraPoints
+  # finishUpdate
   #
-  #     adds for <nsec> points to the buffer, this avoids checks in the update which
-  #     is faster
+  #   finishUpdate draws the red vertical line on the screen (not the first screen)
     
-  def addExtraPoints(self,nsec) :
+  def finishUpdate(self) :
 
-    nPoints = [round(nsec/ deltaT) for deltaT in self.m_deltaT]
-    for ichan in range(self.m_numchan) :
-      nsize = len(self.m_dataBuffer[ichan])
-      for nsample in range(nPoints[ichan]) :
-        self.m_dataBuffer[ichan].append(QPointF(2 * nsize,0.0))
-        
+    super().finishUpdate()
 
+    pnt_lower = QPointF((self.m_indx[0] * self.m_deltaT[0]), self.m_yLimits[0])
+    pnt_upper = QPointF((self.m_indx[0] * self.m_deltaT[0]), self.m_yLimits[1])
 
-  # initUpdate
-  #
-  #   initUpdate is for scope not an empty function, it draws the scope line
-    
-  def initUpdate(self) :
-
-    # checck we are at the end of the screen with all channels
-
-    endReached = True
-
-    for i in range(self.m_numchan) :
-      endReached = endReached and self.m_curIndx[i] >= self.m_pntsInGraph[i]
-
-    if (endReached) :
-      if (self.m_firstScreen == True) :
-        self.addExtraPoints(0.1)
-      self.m_firstScreen = False
-      self.m_curIndx = [0 for i in range(self.m_numchan)]
-
-
-    # draw only after one sweep
-
-    if (self.m_firstScreen == False) :
-
-      pnt_lower = QPointF((self.m_curIndx[0] * self.m_deltaT[0]), self.m_yLimits[0])
-      pnt_upper = QPointF((self.m_curIndx[0] * self.m_deltaT[0]), self.m_yLimits[1])
-
-      line = [pnt_lower, pnt_upper]
-      self.m_scopeLine.replace(line)
+    self.m_scopeLine.replace([pnt_lower, pnt_upper])
               
