@@ -24,6 +24,7 @@ from physiomon_icons import qInitResources
 MAX_CHANNELS = 5
 ICON_FIXED_WIDTH = 40
 ICON_SIZE = 20
+TIMER_PERIOD = 100
 
 class mainWindow(QMainWindow) :
 
@@ -83,8 +84,7 @@ class mainWindow(QMainWindow) :
 
     self.m_timer = QTimer()
     self.m_timer.timeout.connect(self.onTimeOut)
-    self.m_timer.start(100) 
-
+  
     # and set ready
 
     self.setWindowTitle("PhysioMon v3.01")
@@ -310,6 +310,8 @@ class mainWindow(QMainWindow) :
       self.m_deviceMenuAction.setDisabled(True)
  
       self.m_device.setStartStop(True)
+      self.m_timer.start(TIMER_PERIOD) 
+
       self.statusBar().setText("device started",5)
 
     else :
@@ -326,6 +328,8 @@ class mainWindow(QMainWindow) :
       self.m_deviceMenuAction.setDisabled(False)
 
       self.m_device.setStartStop(False)
+      self.m_timer.stop()
+
       self.statusBar().setText("device stopped",5)
    
     return

@@ -25,6 +25,7 @@
 
 #define ICON_SIZE 20
 #define ICON_FIXED_WIDTH 40
+#define TIMER_PERIOD 100
 
 // constructor
 
@@ -68,9 +69,8 @@ mainWindow::mainWindow(int width, int height) {
 
   // create the timer
 
-  QTimer *myTimer = new QTimer();
-  myTimer->start(100);
-  connect(myTimer,SIGNAL(timeout()),this,SLOT(onTimeOut()));
+  m_timer = new QTimer();
+  connect(m_timer,SIGNAL(timeout()),this,SLOT(onTimeOut()));
 
   // and set ready
 
@@ -297,6 +297,7 @@ void mainWindow::onStart() {
     m_deviceMenuAction->setDisabled(true);
 
     m_device->setStartStop(true);
+    m_timer->start(TIMER_PERIOD);
     status->setText("device is started ...",2.5);
   
   } else {
@@ -313,6 +314,7 @@ void mainWindow::onStart() {
     m_deviceMenuAction->setDisabled(false);
 
     m_device->setStartStop(false);
+    m_timer->stop();
     status->setText("device is stopped ...",2.5);
   }
 

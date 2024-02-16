@@ -78,6 +78,10 @@ class mainWindow : public QMainWindow {
   QAction *m_generalMenuAction = nullptr;
   QAction *m_deviceMenuAction = nullptr;
   QAction *m_physiomonHelpMenuAction = nullptr;
+
+  // and the timer
+
+  QTimer *m_timer = nullptr;
 };
 
 #endif
