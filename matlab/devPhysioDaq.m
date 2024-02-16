@@ -46,6 +46,19 @@ classdef devPhysioDaq < measuredevice
       obj.m_arduino = arduinocomm(obj.m_address,obj.BAUDRATE);
 
     end
+
+    %% destructor
+
+    function delete(obj)
+    
+      % destructor of this objec, first the serial port is closed and next
+      % the object is deleted
+      %
+      %     syntax : delete(obj)
+
+        delete(obj.m_arduino);
+    end
+
       
     %% isConnected
 

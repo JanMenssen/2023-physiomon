@@ -30,7 +30,9 @@ classdef basechart < handle
     m_downSampler = [];           % downsample class
     m_pntsInGraph = [];           % number of points in the graph
     m_numchan = [];               % number of channels in graphs (used to speed up things)
-    m_dataBuffer = []             % buffer containing xData points
+    m_dataBuffer = [];            % buffer containing xData points
+    m_indx = [];                  % current position of plot
+    m_firstScreen = [];           % true if the first screen is plotted
 
     defs = defines();             % load the defines
 
@@ -59,36 +61,47 @@ classdef basechart < handle
       for i=1:obj.m_numchan, obj.m_lineHandles{i} = plot(obj.m_axisHandle,NaN); end
        
       obj.m_dataBuffer = repmat(struct('x',[],'y',[]),obj.m_numchan,1);
-      
+      obj.m_indx = ones(obj.m_numchan,1);      
+
       for i=1:obj.m_numchan, obj.m_downSampler{i} = downsampler(); end
+      obj.m_firstScreen = true;
 
     end
 
     %% initPlot
 
-    function initPlot(obj,sampleRate)
+    function initPlot(obj, channels)
       
-      % configures the x-data using <sampleRate and the downsampler. For 100 ms (the timer
-      % interval extra points are added to be sure all new samples are plotted
+      % configures the x-data using time on the x-axis and the sampleRate. To speed up the
+      % process, we limit the number of points in the graph and use a downsampler if the
+      % needed
       %
-      %     syntax : initPlot(obj,sampleRate)
+      %     syntax : initPlot(obj,channels)
       %
-      % with <sampleRate> a vector with the sampleRate for each channel
+      % with <channels> an instance of the channels object
 
-      % get the time on the X-axis and calculate the number of points in the graph
+      % get the sample frequency for each of the channels
+
+      sampleRate = zeros(obj.m_numchan,1);
+      for ichan = 1:obj.m_numchan
+        sampleRate(ichan) = channels.getSampleRate(obj.m_channels(ichan));
+      end
+
+      % based on the time on the x-axis, calculate the number of points in the graph 
 
       nsec = obj.m_axisHandle.XLim(2);
 
       rate = round((nsec .* sampleRate) ./ obj.MAX_POINTS_IN_GRAPH);
       rate(rate == 0) = 1;
       obj.m_pntsInGraph = round(nsec * sampleRate) ./ rate;
-    
-      % add for 100 ms extra points 
-
-      extraPoints = 0.1 .* sampleRate ./ rate;
-      for i=1:obj.m_numchan, obj.m_dataBuffer(i).x = rate(i)/sampleRate(i) * (1:(obj.m_pntsInGraph(i) + extraPoints(i))); end
-      for i = 1:obj.m_numchan, obj.m_downSampler{i}.setRate(rate(i)); end
-
+      
+      for i=1:obj.m_numchan
+        
+        obj.m_downSampler{i}.setRate(rate(i)); 
+        obj.m_dataBuffer(i).x = (1:obj.m_pntsInGraph(i)) * (rate(i) / sampleRate(i));
+      
+      end
+      
     end
 
     %% setYaxis
@@ -115,7 +128,42 @@ classdef basechart < handle
 
     end
 
-  end
+    %% initUpdate
 
+    function endReached = initUpdate(obj)
+    
+      % the method <initUpdate> checks if the end of the screen is reached for all
+      % channels in the display and take action depending on the display mode
+      %
+      %     syntax : endReached = initUpdate
+      %
+      % with <endReached> true if the end of the screen is reached, else false
+
+      endReached = all(obj.m_indx >= obj.m_pntsInGraph);
+      
+      if (endReached)
+        obj.m_firstScreen = false; 
+        obj.m_indx(:) = 1;
+      end
+
+    end
+
+    %% finishUpdate
+  
+    function finishUpdate(obj)
+    
+      % this methods performs the actual plotting of the data in the channels. This is a
+      % seperate method to avoid time delays between the different channels
+      %
+      %   syntax : finishUpdate
+
+      for i=1:obj.m_numchan
+        len = length(obj.m_dataBuffer(i).y);
+        set(obj.m_lineHandles{i},xdata = obj.m_dataBuffer(i).x(1:len),ydata = obj.m_dataBuffer(i).y);
+      end
+    end
+
+  end
+  
 end
 

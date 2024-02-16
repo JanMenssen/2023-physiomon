@@ -10,10 +10,6 @@
 
 classdef sweepchart < basechart
 
-  properties
-    m_curIndx = [];
-  end
-
   methods
 
     %% constructor
@@ -29,7 +25,6 @@ classdef sweepchart < basechart
       % channcels that should be plotted in this chart
 
       obj@basechart(axisHandle,channels);
-      obj.m_curIndx = ones(size(channels));
 
     end
 
@@ -48,41 +43,44 @@ classdef sweepchart < basechart
       
       % downsample and add to buffer
 
+      indx = obj.m_indx(ichan);
+      maxindx = obj.m_pntsInGraph(ichan);
+
       data = obj.m_downSampler{ichan}.getData(data);
+      nsamples = length(data);
 
-      obj.m_dataBuffer(ichan).y = [obj.m_dataBuffer(ichan).y data];
-      obj.m_curIndx(ichan) = length(obj.m_dataBuffer(ichan).y);
-  
-      % and plot
-
-      set(obj.m_lineHandles{ichan},xdata = obj.m_dataBuffer(ichan).x(1:obj.m_curIndx(ichan)), ydata = obj.m_dataBuffer(ichan).y);
-  
-      % done
-
-    end
-
-    %% finishUpdate
-    
-    function initUpdate(obj)
-    
-      % called before the real update is done. It checks if end of the screen is reached
-      % and takes action (clear buffers and start on the left on the screen again)
-      %
-      %     syntax : initUpdate()
-
-      if all(obj.m_curIndx >= obj.m_pntsInGraph)
-
-        obj.m_curIndx = 1;
-
-        for ichan=1:obj.m_numchan 
-          set(obj.m_lineHandles{ichan},xdata = [], ydata = []); 
-          obj.m_dataBuffer(ichan).y = [];
-        end
-      
+      if ((indx + nsamples) > maxindx)
+        obj.m_dataBuffer(ichan).y = [obj.m_dataBuffer(ichan).y data(1:(maxindx - indx))];
+      else
+        obj.m_dataBuffer(ichan).y = [obj.m_dataBuffer(ichan).y data];
       end
+
+      % done, update index 
+
+      obj.m_indx(ichan) = length(obj.m_dataBuffer(ichan).y);
+
     end
 
+    %% initUpdate
+
+    function endReached = initUpdate(obj)
+
+      % clears the screen at the beginning of a new screen
+      %
+      %     syntax : endReached = initUpdate
+      %
+      % with <endReached> is true if the end of the screen is reached, else false
+
+      endReached = initUpdate@basechart(obj);
+      
+      if (endReached)
+        for i = 1:obj.m_numchan 
+          set(obj.m_lineHandles{i},xdata = [], ydata = []); 
+          obj.m_dataBuffer(i).y = [];
+        end
+      end
+
+    end
 
   end
-
 end

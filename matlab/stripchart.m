@@ -10,10 +10,6 @@
 
 classdef stripchart < basechart
 
-  properties
-    m_firstScreen = [];
-  end
-
   methods
 
     %% constructor
@@ -29,7 +25,6 @@ classdef stripchart < basechart
       % channels that should be plotted in this chart
 
       obj = obj@basechart(axisHandle,channels);
-      obj.m_firstScreen = true;
 
     end
 
@@ -47,42 +42,34 @@ classdef stripchart < basechart
       % with <ichan> the channel that should be updated and <data> the new data that is
       % added to the graph
       
+      indx = obj.m_indx(ichan);
+      maxindx = obj.m_pntsInGraph(ichan);
+      
       % downsample
 
       data = obj.m_downSampler{ichan}.getData(data);
-      nPoints = length(data);
+      nsamples = length(data);
       
       % in the first screen points are added, to an empty buffer, later they are shifted
       
       if (obj.m_firstScreen)
-        obj.m_dataBuffer(ichan).y = [obj.m_dataBuffer(ichan).y data];
+
+        shift = indx + nsamples -maxindx;
+        if shift > 0
+          obj.m_dataBuffer(ichan).y = [obj.m_dataBuffer(ichan).y((shift+1):end) data];
+        else
+          obj.m_dataBuffer(ichan).y = [obj.m_dataBuffer(ichan).y data];
+        end
+
       else    
-        obj.m_dataBuffer(ichan).y = [obj.m_dataBuffer(ichan).y((nPoints+1):end) data];
+        obj.m_dataBuffer(ichan).y = [obj.m_dataBuffer(ichan).y((nsamples+1):end) data];
       end
       
-      % and draw the lines 
+      % done, store current position
 
-      lenY = length(obj.m_dataBuffer(ichan).y);
-      set(obj.m_lineHandles{ichan}, xdata = obj.m_dataBuffer(ichan).x(1:lenY), ydata = obj.m_dataBuffer(ichan).y);
-
-
-    end
-
-    %% initUpdate
-
-    function initUpdate(obj)
-
-      % this method checks for all lines in the graph if the end of the screen is reached
-      % and performs action (shift instead of add)
-      %
-      %     syntax : initUpdate()
- 
-      endReached = true;
-      for i=1:obj.m_numchan, endReached = (endReached && (length(obj.m_dataBuffer(i).y) >= obj.m_pntsInGraph(i))); end
-      if (endReached), obj.m_firstScreen = false; end
+      obj.m_indx(ichan) = length(obj.m_dataBuffer(ichan).y);
 
     end
 
   end
-
 end

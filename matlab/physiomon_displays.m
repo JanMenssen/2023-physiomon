@@ -11,7 +11,7 @@ classdef physiomon_displays <handle
 
   properties (Constant)
   
-    PIXELS_TOP = 30;
+    PIXELS_TOP = 40;
     PIXELS_LEFT = 50;
     PIXELS_BOTTOM = 80;
     PIXELS_RIGHT = 40;
@@ -48,16 +48,16 @@ classdef physiomon_displays <handle
 
     %% configure
    
-    function configure(obj,mySettings,canvasHandle)
+    function configure(obj,settings,channels,canvasHandle)
     
       % in configure, the displays are configured using the information from an instance
       % of the <physiomon_settings> class. The number of displays are placed on the canvas
       % on the desired place and scaling is done. 
       %
-      %     syntax : configure(obj,mySettings,canvasHandle)
+      %     syntax : configure(obj,mySettings,myChannels,canvasHandle)
       %
-      % with <mySettings> a "filled" instance of the <phsyiomon_settings> class and
-      % <canvasHandle> a handle to the canvas (figure)
+      % with <mySettings> a "filled" instance of the <phsyiomon_settings> class, myChannels an 
+      % instance of the channels <canvasHandle> a handle to the canvas (figure)
  
       % first remove the the exisiting charts
 
@@ -68,29 +68,28 @@ classdef physiomon_displays <handle
       % now create each display on the canvas, but before we must known the size of the
       % figure
 
-      myDisplays = mySettings.getDisplays();
-      myChannels = mySettings.getChannels();
+      allDisplays = settings.getDisplays();
+      allChannels = settings.getChannels();
 
       canvasWidth = canvasHandle.Position(3) - (obj.PIXELS_LEFT);
       canvasHeight = canvasHandle.Position(4) - (obj.PIXELS_BOTTOM);
 
-      for iDisp = 1:length(myDisplays)
+      for idisp = 1:length(allDisplays)
 
-        curDisp = myDisplays(iDisp);
+        curDisp = allDisplays(idisp);
 
-        % get the channels which should be on the current display, currently
-        % max 3 channels are allowed
+        % create a list of channels that are in the current display
 
-        channels = cell([]);
+        chanlist = cell([]);
 
         i = 1;
-        for iChan = 1:length(myChannels)
-          if (myChannels(iChan).display == iDisp)
-            channels{i} = iChan;
+        for ichan = 1:length(allChannels)
+          if (allChannels(ichan).display == idisp)
+            chanlist{i} = ichan;
             i = i + 1;
           end     
         end
-        
+
         % and create the current display (position is different compared to Qt). around
         % the borders, 10 pixels are used for a nicer layout. Note Matlab starts in the
         % lower left corner so modify it
@@ -105,39 +104,21 @@ classdef physiomon_displays <handle
         handle = uiaxes(parent = canvasHandle, InnerPosition = [left top width height],Color = canvasHandle.Color);
         switch curDisp.mode
           case obj.defs.DISPLAY_MODE_STRIP
-            obj.m_chart{iDisp} = stripchart(handle,channels);
+            obj.m_chart{idisp} = stripchart(handle,chanlist);
           case obj.defs.DISPLAY_MODE_SWEEP
-            obj.m_chart{iDisp} = sweepchart(handle,channels);
+            obj.m_chart{idisp} = sweepchart(handle,chanlist);
           case obj.defs.DISPLAY_MODE_SCOPE
-            obj.m_chart{iDisp} = scopechart(handle,channels);
+            obj.m_chart{idisp} = scopechart(handle,chanlist);
         end
 
         % and set the Y-axis and time axis for the current chart
 
-        obj.m_chart{iDisp}.setYaxis(curDisp.ymin,curDisp.ymax);
-        obj.m_chart{iDisp}.setTimeAxis(curDisp.timescale);
-      
-      end
-    end
+        obj.m_chart{idisp}.setYaxis(curDisp.ymin,curDisp.ymax);
+        obj.m_chart{idisp}.setTimeAxis(curDisp.timescale);
 
-    %% initPlot
-  
-    function initPlot(obj,channels)
-    
-      % using the information from <myChannels> the charts are initialised with the
-      % <sampleRate> and buffers are create for the x-axis and y-axis. Therefore this
-      % routine must be called after the <configure> method
-      %
-      %     syntax : initPlot(channels)
-      %
-      % with <channels> an instance of the <phsyiomon_channels> class
+        % and initialise the chart to prepare for plotting
 
-      for iDisp = 1:length(obj.m_chart)
-
-        numChan = length(obj.m_chart{iDisp}.m_channels);
-        sampleRate = zeros(numChan,1);
-        for iChan = 1:numChan, sampleRate(iChan) = channels.getSampleRate(iChan); end
-        obj.m_chart{iDisp}.initPlot(sampleRate)
+        obj.m_chart{idisp}.initPlot(channels);
       
       end
     end
@@ -168,10 +149,12 @@ classdef physiomon_displays <handle
 
           curChannel = obj.m_chart{iDisp}.m_channels(iChan);
           data = channels.readDisplay(curChannel);
-
-          if ~isempty(data), obj.m_chart{iDisp}.update(iChan,data); end
-
+          obj.m_chart{iDisp}.update(iChan,data);
+          
         end
+
+        obj.m_chart{iDisp}.finishUpdate();
+
       end
 
     end

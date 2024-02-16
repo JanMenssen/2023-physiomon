@@ -15,7 +15,7 @@
 
 classdef physiomon_channels < handle
 
-  properties (Access = private)
+  properties (GetAccess = public)
     m_buffers = []
     m_lengthInSeconds = [];
   end
