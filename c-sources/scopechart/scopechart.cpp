@@ -98,11 +98,13 @@ void scopeChart::finishUpdate() {
 
   baseChart::finishUpdate();
   
-  QVector<QPointF> posline;
-  float atX = m_indx[0] * m_deltaT[0];
-  posline.append(QPointF(atX,m_yLimits[0]));
-  posline.append(QPointF(atX,m_yLimits[1]));
+  if (!m_firstScreen) {
+    
+    QVector<QPointF> posline;
+    float atX = m_indx[0] * m_deltaT[0];
+    posline.append(QPointF(atX,m_yLimits[0]));
+    posline.append(QPointF(atX,m_yLimits[1]));
 
-  m_scopeLine->replace(posline);
-
+    m_scopeLine->replace(posline);
+  }
 }

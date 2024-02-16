@@ -91,8 +91,9 @@ class scopeChart(baseChart) :
 
     super().finishUpdate()
 
-    pnt_lower = QPointF((self.m_indx[0] * self.m_deltaT[0]), self.m_yLimits[0])
-    pnt_upper = QPointF((self.m_indx[0] * self.m_deltaT[0]), self.m_yLimits[1])
+    if self.m_firstScreen == False : 
+      pnt_lower = QPointF((self.m_indx[0] * self.m_deltaT[0]), self.m_yLimits[0])
+      pnt_upper = QPointF((self.m_indx[0] * self.m_deltaT[0]), self.m_yLimits[1])
 
-    self.m_scopeLine.replace([pnt_lower, pnt_upper])
+      self.m_scopeLine.replace([pnt_lower, pnt_upper])
               
