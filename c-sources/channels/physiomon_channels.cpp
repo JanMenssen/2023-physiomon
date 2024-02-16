@@ -8,6 +8,7 @@
 //  modifications
 //    08-jan-2024   JM  initial version
 //    11-feb-2024   JM  renamed to <physiomon_channels>
+//    16-feb-2024   JM  faster cyclic buffer (memcpy instead of for loop)
 
 #include <QDebug.h>
 #include "physiomon_channels.h"
@@ -40,14 +41,30 @@ cyclicBuffer::~cyclicBuffer() {
 
 void cyclicBuffer::read(int *n,float *data) {
 
-  int ntal = 0;
+  *n = 0;
 
-  while (m_indxRead != m_indxWrite) {
-    data[ntal++] = m_data[m_indxRead++];
-    if (m_indxRead >= m_len) m_indxRead = 0;
+  if (m_indxWrite > m_indxRead) {
+    memcpy(data,&m_data[m_indxRead],(m_indxWrite-m_indxRead) * sizeof(float));
+    *n = (m_indxWrite - m_indxRead);
   }
+ 
+  if (m_indxWrite < m_indxRead) { 
+    int split = m_len - m_indxRead;
+    memcpy(data,&m_data[m_indxRead], split * sizeof(float));
+    memcpy(&data[split],m_data,m_indxWrite * sizeof(float));
+    *n = m_indxWrite - m_indxRead + m_len;
+  }  
 
-  *n = ntal;
+  m_indxRead = m_indxWrite;
+ 
+  //-jm  int ntal = 0;
+  //-jm while (m_indxRead != m_indxWrite) {
+  //-jm   data[ntal++] = m_data[m_indxRead++];
+  //-jm  if (m_indxRead >= m_len) m_indxRead = 0;
+  //-jm }
+  //-jm 
+  //-jm *n = ntal;
+
   return;
 }
 
@@ -55,10 +72,24 @@ void cyclicBuffer::read(int *n,float *data) {
 
 void cyclicBuffer::write(int n, float *data) {
 
-  for (int i=0;i<n;i++) {
-    m_data[m_indxWrite++] = data[i];
-    if (m_indxWrite >= m_len) m_indxWrite = 0;
+  if ((m_indxWrite + n) <= m_len) {
+
+    memcpy(&m_data[m_indxWrite],data,n * sizeof(float));
+    m_indxWrite += n;
+  
+  } else {
+
+    int split = m_len - m_indxWrite;
+    memcpy(&m_data[m_indxWrite],data, split + sizeof(float));
+    memcpy(m_data,&data[split], (n-split) * sizeof(float));
+    m_indxWrite = n - split;
+  
   }
+
+  //-jm for (int i=0;i<n;i++) {
+  //-jm   m_data[m_indxWrite++] = data[i];
+  //-jm   if (m_indxWrite >= m_len) m_indxWrite = 0;
+  //-jm }
   
   return;
 }

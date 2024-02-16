@@ -63,7 +63,7 @@ mainWindow::mainWindow(int width, int height) {
   setCentralWidget(centralWidget);
 
   m_displays = new physiomon_displays(centralWidget);
-  m_channels = new physiomon_channels(MAX_CHANNELS);
+  m_channels = new physiomon_channels(5);
 
   onConfigure();
 

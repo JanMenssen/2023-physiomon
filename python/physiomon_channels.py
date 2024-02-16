@@ -6,6 +6,7 @@
 #   modifications
 #     18-dec-2023  JM   initial version
 #     11-feb-2024  JM   renamed to <physiomon_channels>
+#     16-feb-2024  JM   fater implementation of cyclic buffer 
 
 TYPE_ANALOG_IN = 1
 
@@ -27,14 +28,26 @@ class buffer() :
   def read(self) :
 
     data = []
-    while self.m_indxRead != self.m_indxWrite :
+    
+    if (self.m_indxWrite > self.m_indxRead) :
+      data = self.m_data[self.m_indxRead:self.m_indxWrite]
 
-      data.append(self.m_data[self.m_indxRead])
-      
-      self.m_indxRead = self.m_indxRead + 1
-      if self.m_indxRead >= self.m_len :
-        self.m_indxRead = 0
-
+    if (self.m_indxWrite < self.m_indxRead) :  
+      data = self.m_data[self.m_indxRead:] + self.m_data[:self.m_indxWrite]
+    
+    self.m_indxRead = self.m_indxWrite
+  
+    #-jm data = []
+    #-jm print(" indices old  : %d %d" % (self.m_indxWrite,self.m_indxRead))
+    #-jm 
+    #-jm while self.m_indxRead != self.m_indxWrite :
+    #-jm 
+    #-jm  data.append(self.m_data[self.m_indxRead])
+    #-jm  
+    #-jm  self.m_indxRead = self.m_indxRead + 1
+    #-jm  if self.m_indxRead >= self.m_len :
+    #-jm    self.m_indxRead = 0
+ 
     return data
   
   # write
@@ -43,12 +56,24 @@ class buffer() :
 
   def write(self,data) :
    
-    for dataSample in data :
+    ntal = len(data)
 
-      self.m_data[self.m_indxWrite] = dataSample   
-      self.m_indxWrite = self.m_indxWrite + 1
-      if self.m_indxWrite >= self.m_len :
-        self.m_indxWrite = 0
+    if self.m_indxWrite + ntal <= self.m_len :
+      self.m_data[self.m_indxWrite:(self.m_indxWrite + ntal)] = data
+      self.m_indxWrite += ntal
+    
+    else :
+      split = self.m_len - self.m_indxWrite
+      self.m_data[self.m_indxWrite:] = data[:split]
+      self.m_data[:(ntal-split)] = data[split:]
+      self.m_indxWrite = ntal - split
+
+    # for dataSample in data :
+    #
+    #  self.m_data[self.m_indxWrite] = dataSample   
+    #  self.m_indxWrite = self.m_indxWrite + 1
+    #  if self.m_indxWrite >= self.m_len :
+    #    self.m_indxWrite = 0
         
     return
   

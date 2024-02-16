@@ -76,7 +76,7 @@ class mainWindow(QMainWindow) :
     #-jm self.m_displays = displays(self.mdi)
 
     self.m_displays = physiomon_displays(centralWidget)
-    self.m_channels = physiomon_channels(MAX_CHANNELS)
+    self.m_channels = physiomon_channels(5)
 
     self.onConfigure()
     
