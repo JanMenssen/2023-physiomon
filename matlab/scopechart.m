@@ -107,9 +107,10 @@ classdef scopechart < basechart
      
       finishUpdate@basechart(obj);
      
-      atX = obj.m_dataBuffer(1).x(obj.m_indx(1));
-      set(obj.m_posLineHandle,xdata = [atX atX], ydata = obj.m_yLimits, color = 'r');
-
+      if (~obj.m_firstScreen)
+        atX = obj.m_dataBuffer(1).x(obj.m_indx(1));
+        set(obj.m_posLineHandle,xdata = [atX atX], ydata = obj.m_yLimits, color = 'r');
+      end
     end
 
   end
