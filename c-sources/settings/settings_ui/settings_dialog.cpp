@@ -160,7 +160,17 @@ void settings_dialog::setDisplayRadioButtons(viewMode kindChart) {
         ui->displayNumeric_rb->setChecked(false);
       
       break;
-  
+      
+      case DISPLAY_MODE_NUMERIC :
+
+        ui->displayStripChart_rb->setChecked(false);
+        ui->displaySweepChart_rb->setChecked(false);
+        ui->displayScopeChart_rb->setChecked(false);
+        ui->displayNumeric_rb->setChecked(true);
+      
+      break;
+
+
     default :
 
         ui->displayStripChart_rb->setChecked(false);
@@ -478,6 +488,6 @@ void settings_dialog::on_displayScopeChart_rb_clicked() {
 void settings_dialog::on_displayNumeric_rb_clicked() {
 
   int curItem = ui->displaySelected->value() - 1;
-  //-jm m_displays[curItem].mode = DIPSPLAY_MODE_SWEEP;
+  m_displays[curItem].mode = DISPLAY_MODE_NUMERIC;
 }
 

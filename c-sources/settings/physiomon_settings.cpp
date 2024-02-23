@@ -139,6 +139,7 @@ void physiomon_settings::readDisplaySettings() {
     if (mode.toLower() == QString("scope")) m_displays[iDisp].mode = DISPLAY_MODE_SCOPE;
     if (mode.toLower() == QString("sweep")) m_displays[iDisp].mode = DISPLAY_MODE_SWEEP;
     if (mode.toLower() == QString("strip")) m_displays[iDisp].mode = DISPLAY_MODE_STRIP;
+    if (mode.toLower() == QString("numeric")) m_displays[iDisp].mode = DISPLAY_MODE_NUMERIC;
 
     m_settings->endGroup();
   }

@@ -40,6 +40,7 @@ set(INSTALL_DIR "/Users/jan/")
     ${ROOT_DIR}/stripchart/stripchart.cpp
     ${ROOT_DIR}/sweepchart/sweepchart.cpp
     ${ROOT_DIR}/scopechart/scopechart.cpp
+    ${ROOT_DIR}/numericchart/numericchart.cpp
     ${ROOT_DIR}/arduinocomm/arduinocomm.cpp 
     ${ROOT_DIR}/measuredevice/measuredevice.cpp
     ${ROOT_DIR}/devphysiodaq/devphysiodaq.cpp
@@ -61,6 +62,7 @@ set(INSTALL_DIR "/Users/jan/")
     ${ROOT_DIR}/sweepchart
     ${ROOT_DIR}/stripchart
     ${ROOT_DIR}/scopechart
+    ${ROOT_DIR}/numericchart
     ${ROOT_DIR}/measuredevice
     ${ROOT_DIR}/devphysiodaq
     ${ROOT_DIR}/devphysiodaq/devphysiodaq_ui

@@ -13,6 +13,7 @@
 #include "stripchart.h"
 #include "sweepchart.h"
 #include "scopechart.h"
+#include "numericchart.h"
 
 // we use a 20x20 grid this means a resolution of 0.05
 
@@ -94,6 +95,10 @@ void physiomon_displays::configure(physiomon_settings *settings, physiomon_chann
         m_chart[idisp] = new scopeChart(nchan,chanlist);
         break;
 
+      case DISPLAY_MODE_NUMERIC :
+        m_chart[idisp] = new numericChart(nchan,chanlist);
+        break;
+
       default :
         m_chart[idisp] = new stripChart(nchan,chanlist);
         break;
@@ -115,8 +120,10 @@ void physiomon_displays::configure(physiomon_settings *settings, physiomon_chann
 
     // and set the graphic
 
-    m_chart[idisp]->setYaxis(curDisplay.ymin, curDisplay.ymax);
-    m_chart[idisp]->setTimeAxis(curDisplay.timescale);
+    if (curDisplay.mode != DISPLAY_MODE_NUMERIC) {
+      m_chart[idisp]->setYaxis(curDisplay.ymin, curDisplay.ymax);
+      m_chart[idisp]->setTimeAxis(curDisplay.timescale);
+    }
 
     //-jm m_dispContents[iDisp].chart->setColors()
     //-jm m_dispContents[iDisp].chart->setLablels();
