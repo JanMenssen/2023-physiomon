@@ -5,14 +5,15 @@
 //    the next point overrides the points on the left 
 //
 //  modifications
-//    26-jan-2025   JM    initial version
+//    26-jan-2024   JM    initial version
+//    23-feb-2024   JM    now derived from <graphchart> due to introduction numeric display
 
 #ifndef _SCOPECHART_H
 #define _SCOPECHART_H
 
-#include "basechart.h"
+#include "graphchart.h"
 
-class scopeChart: public baseChart {
+class scopeChart: public graphChart {
 
   public :
 

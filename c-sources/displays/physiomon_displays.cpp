@@ -159,11 +159,12 @@ void physiomon_displays::plot(physiomon_channels *channels) {
 
     for (int ichan = 0;ichan < nchan; ichan ++) {
       channels->readDisplay(chanlist[ichan],&nSamples,data);
+      //-jm for (int i = 0; i < 60; i++) data[i] = (i/30.0);
+      //-jm nSamples = 60;
       m_chart[idisp]->update(ichan,nSamples,data);
     }  
 
     m_chart[idisp]->finishUpdate();
   }  
-
   return;
 }

@@ -6,6 +6,7 @@
 //
 //  modifications
 //    26-jan-2025   JM    initial version
+//    24-jan-2024   JM    now based on <graphchart> due to introduction numeric display
 
 #include "sweepchart.h"
 
@@ -13,7 +14,7 @@
 // 
 //    allocate memory for the points buffer -> faster
 
-sweepChart::sweepChart(int nchan, int *chanlist) : baseChart(nchan, chanlist) {
+sweepChart::sweepChart(int nchan, int *chanlist) : graphChart(nchan, chanlist) {
 
 }
 
@@ -54,7 +55,7 @@ void sweepChart::update(int ichan, int nsamples, float *data) {
 
 bool sweepChart::initUpdate() {
 
-  bool endReached  = baseChart::initUpdate();
+  bool endReached  = graphChart::initUpdate();
   
   if (endReached) {
     for (int ichan=0;ichan<m_numchan;ichan++) m_dataBuffer[ichan].clear();

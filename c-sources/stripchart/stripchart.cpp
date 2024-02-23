@@ -6,13 +6,14 @@
 //
 // modifications
 //    26-jan-2024  JM   initial version
+//    23-feb-2024  JM   now derived from <graphchart> due to introductin numeric display
 
 #include "stripchart.h"
 #include <QDebug>
 
 // constructor
 
-stripChart::stripChart(int nchan, int *chanlist) : baseChart(nchan, chanlist) {
+stripChart::stripChart(int nchan, int *chanlist) : graphChart(nchan, chanlist) {
 
 }
 
@@ -68,7 +69,7 @@ void stripChart::update(int ichan, int nsamples, float *data) {
   }
 
   // done, update the current positipm 
-  
+
   m_indx[ichan] = indx; 
 }
 

@@ -6,12 +6,13 @@
 //
 // modifications
 //    26-jan-2024  JM   initial version
+//    23-feb-2024  JM   now derived from <graphchart> due to introduction numeric display
 
 #include "scopechart.h"
 
 // constructor
 
-scopeChart::scopeChart(int nchan, int *chanlist) : baseChart(nchan,chanlist) {
+scopeChart::scopeChart(int nchan, int *chanlist) : graphChart(nchan,chanlist) {
  
   // create a red line reference for the current position
 
@@ -43,7 +44,7 @@ scopeChart::~scopeChart() {
 
 void scopeChart::setYaxis(float ymin, float ymax) {
 
-  baseChart::setYaxis(ymin,ymax);
+  graphChart::setYaxis(ymin,ymax);
   
   // and get the limits form the Y-axis (needed when applyNiceNumers is used)
 
@@ -96,7 +97,7 @@ void scopeChart::update(int ichan, int nsamples, float *data) {
 
 void scopeChart::finishUpdate() {
 
-  baseChart::finishUpdate();
+  graphChart::finishUpdate();
   
   if (!m_firstScreen) {
     

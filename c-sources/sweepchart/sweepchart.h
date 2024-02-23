@@ -5,14 +5,15 @@
 //    scteen is cleared and the next pixel is on the levt 
 //
 //  modifications
-//    26-jan-2025   JM    initial version
+//    26-jan-2024   JM    initial version
+//    23-feb-2024   JM    now based on <graphchart> due to introduction numeric displat
 
 #ifndef _SWEEPCHART_H
 #define _SWEEPCHART_H
 
-#include "basechart.h"
+#include "graphchart.h"
 
-class sweepChart: public baseChart {
+class sweepChart: public graphChart {
 
   public :
 

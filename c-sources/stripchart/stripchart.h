@@ -5,17 +5,18 @@
 //    to the left and new points are added to the right
 //
 //  modifications
-//    26-jan-2025   JM    initial version
+//    26-jan-2024   JM    initial version
+//    23-feb-2024   JM    now based on graphchart due to introduction numeric display
 
 #ifndef _STRIPCHART_H
 #define _STRIPCHART_H
 
-#include "basechart.h"
+#include "graphchart.h"
 
 #include <QPointF>
 #include <QList>
 
-class stripChart: public baseChart {
+class stripChart: public graphChart {
 
   public :
 

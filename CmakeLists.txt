@@ -36,6 +36,7 @@ set(INSTALL_DIR "/Users/jan/")
     ${ROOT_DIR}/settings/physiomon_settings.cpp
     ${ROOT_DIR}/settings/settings_ui/settings_dialog.cpp
     ${ROOT_DIR}/basechart/basechart.cpp 
+    ${ROOT_DIR}/graphchart/graphchart.cpp
     ${ROOT_DIR}/stripchart/stripchart.cpp
     ${ROOT_DIR}/sweepchart/sweepchart.cpp
     ${ROOT_DIR}/scopechart/scopechart.cpp
@@ -56,6 +57,7 @@ set(INSTALL_DIR "/Users/jan/")
     ${ROOT_DIR}/displays
     ${ROOT_DIR}/arduinocomm
     ${ROOT_DIR}/basechart
+    ${ROOT_DIR}/graphchart
     ${ROOT_DIR}/sweepchart
     ${ROOT_DIR}/stripchart
     ${ROOT_DIR}/scopechart
