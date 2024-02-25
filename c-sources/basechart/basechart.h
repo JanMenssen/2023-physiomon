@@ -18,6 +18,7 @@
 #include <QValueAxis>
 #include <QVector>
 #include <QPointF>
+#include <QWidget>
 
 #include "physiomon_channels.h"
 
@@ -25,7 +26,7 @@
 
 #define MAX_CHANNELS_IN_DISPLAY 3
 
-class baseChart {
+class baseChart : public QChart {
 
   public :
   
@@ -35,6 +36,7 @@ class baseChart {
     virtual void setYaxis(float ymin, float ymax) = 0;
     virtual void setTimeAxis(float nsec) = 0;
     virtual void initPlot(physiomon_channels *channels) = 0;
+    virtual void setLabels(physiomon_settings *settings) = 0;
     virtual void update(int ichan, int nsamples, float* data) = 0;
     virtual bool initUpdate() = 0;
     virtual void finishUpdate() = 0;
@@ -43,7 +45,7 @@ class baseChart {
     // some members are set to public, so they can be easy accessed by th child classes
 
     int m_channels[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
-    int m_numchan = 0;
+    int m_numchan = 0; 
     
     QChart *m_chart = NULL;  
 };

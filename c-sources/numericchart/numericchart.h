@@ -29,7 +29,9 @@ class numericChart : public baseChart {
     void setTimeAxis(float nsec){};
     
     void initPlot(physiomon_channels *channels);
+    void setLabels(physiomon_settings *settings);
     void update(int ichan, int nsamples, float* data);
+  
     virtual bool initUpdate();
     virtual void finishUpdate();
 
@@ -43,6 +45,7 @@ class numericChart : public baseChart {
 
       QFont m_fontLabels = QFont();
       QFont m_fontValues = QFont();
+      QStringList m_labelTxt;
 
       float m_Value[MAX_CHANNELS_IN_DISPLAY];
       

@@ -66,9 +66,12 @@ class graphChart : public baseChart {
     virtual void setYaxis(float ymin, float ymax);
     void setTimeAxis(float nsec);
     void initPlot(physiomon_channels *channels);
+    void setLabels(physiomon_settings *settings);
     virtual void update(int ichan, int nsamples, float* data) {};
     virtual bool initUpdate();
     virtual void finishUpdate();
+    void MouseMoveEvent(QMouseEvent *event);
+    
 
     // these variables are about updating the screen
 

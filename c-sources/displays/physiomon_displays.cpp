@@ -116,6 +116,7 @@ void physiomon_displays::configure(physiomon_settings *settings, physiomon_chann
     maxcol = (ncol > maxcol ? ncol : maxcol);
 
     QChartView *chartView = new QChartView(m_chart[idisp]->getChart());
+    //-jm chartView->setRenderHint(QPainter::Antialiasing);    
     m_layout->addWidget(chartView,irow,icol,nrow,ncol);
 
     // and set the graphic
@@ -126,7 +127,7 @@ void physiomon_displays::configure(physiomon_settings *settings, physiomon_chann
     }
 
     //-jm m_dispContents[iDisp].chart->setColors()
-    //-jm m_dispContents[iDisp].chart->setLablels();
+    m_chart[idisp]->setLabels(settings);
 
     // and initialise the chart to prepare for plotting
     
@@ -166,8 +167,6 @@ void physiomon_displays::plot(physiomon_channels *channels) {
 
     for (int ichan = 0;ichan < nchan; ichan ++) {
       channels->readDisplay(chanlist[ichan],&nSamples,data);
-      //-jm for (int i = 0; i < 60; i++) data[i] = (i/30.0);
-      //-jm nSamples = 60;
       m_chart[idisp]->update(ichan,nSamples,data);
     }  
 

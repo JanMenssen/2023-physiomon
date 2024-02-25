@@ -129,15 +129,11 @@ graphChart::graphChart(int nchan, int *chanlist) : baseChart(nchan,chanlist) {
 
   // create the graphics
 
-  QChart *chart = getChart();
-  
-  qDebug() << "--> graphChart" << chart->size();
-
   m_axisX = new QValueAxis();
   m_axisY = new QValueAxis();
 
-  chart->addAxis(m_axisX,Qt::AlignBottom);
-  chart->addAxis(m_axisY,Qt::AlignLeft);
+  m_chart->addAxis(m_axisX,Qt::AlignBottom);
+  m_chart->addAxis(m_axisY,Qt::AlignLeft);
 
   m_axisX->setGridLineVisible(false);
   m_axisX->setLabelsColor(Qt::lightGray);
@@ -148,19 +144,19 @@ graphChart::graphChart(int nchan, int *chanlist) : baseChart(nchan,chanlist) {
   // create for every channel a QlineSeries object and add the axis to it. Reserve space 
   // for the samples
   
-  chart->removeAllSeries();
+  m_chart->removeAllSeries();
 
   for (int ichan = 0; ichan < m_numchan; ichan++) {
 
     m_series << new QLineSeries();
 
-    chart->addSeries(m_series[ichan]);
+    m_chart->addSeries(m_series[ichan]);
     m_series[ichan]->attachAxis(m_axisX);
     m_series[ichan]->attachAxis(m_axisY);
+    //-jm m_series[ichan]->setUseOpenGL(true);
 
     m_dataBuffer[ichan].reserve(MAX_POINTS_IN_GRAPH);
   }   
-   qDebug() << "<-- graphChart" << chart->plotArea();
 }
 
 // destructor
@@ -212,6 +208,30 @@ QValueAxis *graphChart::getXaxisRef() {
   return m_axisX; 
 }
 
+// setLabels
+//
+// sets the labels on the channels
+
+void graphChart::setLabels(physiomon_settings *settings) {
+
+  for (int i=0;i<m_numchan;i++) {
+    int curchan = m_channels[i];
+    m_series[i]->setName(settings->m_channels[curchan].name);
+  }
+  m_chart->legend()->show();
+  m_chart->legend()->setLabelBrush(Qt::lightGray);
+  m_chart->legend()->detachFromChart();
+  m_chart->legend()->setBackgroundVisible(false);
+  m_chart->legend()->setBorderColor(Qt::lightGray);
+  m_chart->legend()->setGeometry(500,100,150,40);
+  m_chart->legend()->update();
+  //-jm m_chart->legend()->attachToChart();
+  m_chart->legend()->setInteractive(true);
+    
+  //-jm m_chart->legend()->setGeometry(pos.x(),pos.y(),150,40);
+}
+
+
 // initPlot
 //
 // configures the x-data using time on the x-axis and the sampleRate. To speed up the
@@ -261,6 +281,10 @@ bool graphChart::initUpdate() {
   return endReached;
 }
 
+void graphChart::MouseMoveEvent(QMouseEvent *event) {
+  qDebug() << "mouse moved";
+}
+
 // finishUpdate
 
 void graphChart::finishUpdate() {
@@ -268,7 +292,12 @@ void graphChart::finishUpdate() {
   // move the data in th databuffers to the axis
 
   for (int i = 0; i < m_numchan ; i++) m_series[i]->replace(m_dataBuffer[i]);
+
+  QPointF pos = m_chart->mapToPosition(QPointF(12,4.5));
+  //-jm qDebug() << "finishUpdate " << pos;
+  m_chart->legend()->setGeometry(pos.x(),pos.y(),150,40);
 }
+
 
 
 

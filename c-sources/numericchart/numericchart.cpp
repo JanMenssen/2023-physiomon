@@ -26,6 +26,17 @@ numericChart::numericChart(int nchan, int *chanlist) : baseChart(nchan,chanlist)
 numericChart::~numericChart() {
 }
 
+// setLabels
+
+void numericChart::setLabels(physiomon_settings *settings) {
+
+  for(int i=0;i<m_numchan;i++) {
+    int curchan = m_channels[i];
+    m_labelTxt.append(settings->m_channels[curchan].name);
+  }
+
+}
+
 // initPlot
 //
 //    initialises the plot, channels contains the color and the labels so set up
@@ -33,6 +44,8 @@ numericChart::~numericChart() {
 
 void numericChart::initPlot(physiomon_channels *channels) {
   
+  QSizeF size = m_chart->size();
+  qDebug() << "initPlot" << size;
 }
 
 
@@ -45,13 +58,15 @@ void numericChart::initPlot(physiomon_channels *channels) {
 void numericChart::update(int ichan, int nsamples, float *data) {
 
   // calculate the average value if nsamples > 0 and convert it to a string
+  
+  //-jm qDebug() << "--> update";
 
   if (nsamples > 0) {
     m_Value[ichan] =0.0;
     for (int i=0;i<nsamples;i++) m_Value[ichan] += data[i];
     m_Value[ichan] = m_Value[ichan] / nsamples;
   }
-  m_Value[ichan] = m_Value[ichan] * 100;
+
   QString valueTxt = QString("%1").arg(m_Value[ichan],0,'f',1);
   
   // and place the value on the screen
@@ -72,15 +87,18 @@ bool numericChart::initUpdate() {
 
   // delete the values on the screen
 
+  //-jm qDebug() << "--> initUpdate";
+
   for (int i=0;i<m_numchan;i++) {
     if (m_text[i] != nullptr) delete(m_text[i]);
     if (m_labels[i] != nullptr) delete(m_labels[i]);
   }
-
+    
   // get the size of the display and determine the areas the information should be
   // displayed, depending on area is largest in vertical or horizontal direction
 
   QSizeF size = m_chart->size();
+  //-jm qDebug() << "initUpdate" << size;
   if (size.width() > size.height()) {
 
     // horizontal mode
@@ -114,19 +132,11 @@ bool numericChart::initUpdate() {
     m_posLabel[i] = QPointF(center.x(), center.y() - 0.6 * (pixelSizeValue + pixelSizeLabel));
   }
 
-  // this is tempory code and should be replaced by real code
-
-  QStringList labels;
-
-  labels.append("heart rate");
-  labels.append("blood pressure");
-  labels.append("SaO2");
-
   // place the labels, color is light gray
- 
+
   for (int i=0;i<m_numchan;i++) {
 
-    m_labels[i] = new QGraphicsSimpleTextItem(labels[i],m_chart);
+    m_labels[i] = new QGraphicsSimpleTextItem(m_labelTxt[i],m_chart);
     m_labels[i]->setFont(m_fontLabels);
     m_labels[i]->setBrush(Qt::lightGray);
 
