@@ -62,8 +62,7 @@ class graphChart : public baseChart {
 
     QValueAxis *getYaxisRef();
     QValueAxis *getXaxisRef();
-    QChart *getChart();
-
+  
     virtual void setYaxis(float ymin, float ymax);
     void setTimeAxis(float nsec);
     void initPlot(physiomon_channels *channels);
@@ -78,7 +77,6 @@ class graphChart : public baseChart {
     float m_deltaT[MAX_CHANNELS_IN_DISPLAY] = {0.0,0.0,0.0};
     bool m_firstScreen = true;
     
-    QChart *m_chart = NULL;   
     QVector<QLineSeries *> m_series;
     QVector<QPointF> m_dataBuffer[MAX_CHANNELS_IN_DISPLAY];
     downSampler m_downSampler[MAX_CHANNELS_IN_DISPLAY];

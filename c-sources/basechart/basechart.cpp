@@ -19,13 +19,32 @@ baseChart::baseChart(int n, int *chanlist) {
   
   m_numchan = n;
   for (int i=0;i<m_numchan;i++) m_channels[i] = chanlist[i]; 
+
+  // create the grapchids
+
+  m_chart = new QChart;
+  m_chart->setMargins(QMargins(10,5,5,5));
+
+  m_chart->legend()->hide();
+  m_chart->setBackgroundVisible(false);  
 }
 
 // baseChart destructor
 
 baseChart::~baseChart() {
 
+  if (m_chart != nullptr) delete(m_chart);
+  
 }
+// getChart
+//
+//    returns a reference to the used chart
+ 
+QChart *baseChart::getChart() {
+ 
+   return m_chart;
+}
+
 
 
 

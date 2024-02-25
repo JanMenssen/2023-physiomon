@@ -38,12 +38,14 @@ class baseChart {
     virtual void update(int ichan, int nsamples, float* data) = 0;
     virtual bool initUpdate() = 0;
     virtual void finishUpdate() = 0;
-    virtual QChart *getChart() = 0;
+    virtual QChart *getChart();
 
     // some members are set to public, so they can be easy accessed by th child classes
 
     int m_channels[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
     int m_numchan = 0;
+    
+    QChart *m_chart = NULL;  
 };
 
 #endif

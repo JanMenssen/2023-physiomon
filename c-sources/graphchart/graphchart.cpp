@@ -127,16 +127,17 @@ void downSampler::getData(int *n, float *data) {
 
 graphChart::graphChart(int nchan, int *chanlist) : baseChart(nchan,chanlist) {
 
-  // create the graphics 
+  // create the graphics
 
-  m_chart = new QChart;
-  m_chart->setMargins(QMargins(10,5,5,5));
+  QChart *chart = getChart();
+  
+  qDebug() << "--> graphChart" << chart->size();
 
   m_axisX = new QValueAxis();
   m_axisY = new QValueAxis();
 
-  m_chart->addAxis(m_axisX,Qt::AlignBottom);
-  m_chart->addAxis(m_axisY,Qt::AlignLeft);
+  chart->addAxis(m_axisX,Qt::AlignBottom);
+  chart->addAxis(m_axisY,Qt::AlignLeft);
 
   m_axisX->setGridLineVisible(false);
   m_axisX->setLabelsColor(Qt::lightGray);
@@ -144,24 +145,22 @@ graphChart::graphChart(int nchan, int *chanlist) : baseChart(nchan,chanlist) {
   m_axisY->setGridLineVisible(false);
   m_axisY->setLabelsColor(Qt::lightGray);
 
-  m_chart->legend()->hide();
-  m_chart->setBackgroundVisible(false);
-
   // create for every channel a QlineSeries object and add the axis to it. Reserve space 
   // for the samples
   
-  m_chart->removeAllSeries();
+  chart->removeAllSeries();
 
   for (int ichan = 0; ichan < m_numchan; ichan++) {
 
     m_series << new QLineSeries();
 
-    m_chart->addSeries(m_series[ichan]);
+    chart->addSeries(m_series[ichan]);
     m_series[ichan]->attachAxis(m_axisX);
     m_series[ichan]->attachAxis(m_axisY);
 
     m_dataBuffer[ichan].reserve(MAX_POINTS_IN_GRAPH);
   }   
+   qDebug() << "<-- graphChart" << chart->plotArea();
 }
 
 // destructor
@@ -170,7 +169,6 @@ graphChart::~graphChart() {
 
   if (m_axisY != NULL) delete m_axisY;
   if (m_axisX != NULL) delete m_axisX;
-  if (m_chart != NULL) delete m_chart;
 }
 
 // setYaxis
@@ -195,14 +193,6 @@ void graphChart::setTimeAxis(float nsec) {
   //-jm m_axisX->applyNiceNumbers();
 }
 
-// getChart
-//
-//    returns a reference to the used chart
-
-QChart *graphChart::getChart() {
-
-  return m_chart;
-}
 
 // getYaxisRef
 //
