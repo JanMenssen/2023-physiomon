@@ -32,7 +32,6 @@ void stripChart::update(int ichan, int nsamples, float *data) {
   int indx = m_indx[ichan];
   int maxindx = m_pntsInGraph[ichan];
   float deltaT = m_deltaT[ichan];
-
   QVector<QPointF> *buffer = &m_dataBuffer[ichan];
   
   // downsample the data

@@ -26,7 +26,7 @@
 // define the instances of the classes
 
 hostInterface   myCommander(BAUDRATE);
-adc             myADC(2);
+adc             myADC(1);
 irqTimer        myTimer;
 
 // other variables

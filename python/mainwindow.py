@@ -276,6 +276,7 @@ class mainWindow(QMainWindow) :
     
     self.m_device.read(self.m_channels)
     self.m_displays.plot(self.m_channels) 
+    print("<-- timer : %d" % self.m_timer.remainingTime())
      
     return
    

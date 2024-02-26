@@ -10,6 +10,7 @@
 
 #include "physiomon.h"
 #include "physiomon_displays.h"
+#include "basechart.h"
 #include "stripchart.h"
 #include "sweepchart.h"
 #include "scopechart.h"
@@ -158,12 +159,12 @@ void physiomon_displays::configure(physiomon_settings *settings, physiomon_chann
 
 void physiomon_displays::plot(physiomon_channels *channels) {
 
-  float data[100];                        // max 100 samples can be read
+  float data[1000];                        // max 1000 samples can be read
   int *chanlist = nullptr;
   int nSamples = 0;       
 
   for (int idisp = 0; idisp < m_numDisplays ; idisp++) {
-  
+ 
     m_chart[idisp]->initUpdate();
     chanlist = m_chart[idisp]->m_channels;
     int nchan = m_chart[idisp]->m_numchan;
@@ -177,5 +178,6 @@ void physiomon_displays::plot(physiomon_channels *channels) {
 
     m_chart[idisp]->finishUpdate();
   }  
+
   return;
 }

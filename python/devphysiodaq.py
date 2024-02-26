@@ -30,7 +30,7 @@ class devPhysioDaq(measureDevice) :
 
   def initialise(self) :
     
-    self.m_arduino = arduinoComm(self.m_address,115200)
+    self.m_arduino = arduinoComm(self.m_address,230400)
     return
 
   # isConnected

@@ -93,6 +93,7 @@ class physiomon_displays() :
 
       # display is waveform        
    
+      print(idisp)
       chartView = QChartView(self.m_chart[idisp].m_chart)
       self.m_layout.addWidget(chartView,irow,icol,nrow,ncol)
 

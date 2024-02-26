@@ -33,7 +33,7 @@ devPhysioDaq::~devPhysioDaq() {
 
 void devPhysioDaq::initialise() {
 
-  m_arduino = new arduinoComm(m_address,115200);
+  m_arduino = new arduinoComm(m_address,230400);
   return;
   
 }
@@ -116,9 +116,10 @@ void devPhysioDaq::read(physiomon_channels *channels) {
   char ANALOG_CMD = 65;
   int n=0;
   short data[8];
-
+  
   if (isStarted()) {
 
+    int i = 0;
     bool msgOK = true;
     while (msgOK == true) {
       
@@ -126,8 +127,8 @@ void devPhysioDaq::read(physiomon_channels *channels) {
       if (cmd == ANALOG_CMD) {
         for (int i=0;i<n;i++) writeValueToAllChannels(&m_analogIn[i],channels,data[i]);
       }
+      i++;
     }
-
   }
 
   return;

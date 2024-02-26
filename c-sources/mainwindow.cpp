@@ -70,6 +70,8 @@ mainWindow::mainWindow(int width, int height) {
   // create the timer
 
   m_timer = new QTimer();
+  m_timer->setInterval(TIMER_PERIOD);
+
   connect(m_timer,SIGNAL(timeout()),this,SLOT(onTimeOut()));
 
   // and set ready
@@ -297,9 +299,9 @@ void mainWindow::onStart() {
     m_deviceMenuAction->setDisabled(true);
 
     m_device->setStartStop(true);
-    m_timer->start(TIMER_PERIOD);
+    m_timer->start();
     status->setText("device is started ...",2.5);
-  
+
   } else {
 
     m_startButtonAction->setIcon(QIcon(":/icons/play_13794082.png"));
@@ -353,10 +355,10 @@ void mainWindow::onDeviceInfo() {
 
 void mainWindow::onTimeOut() {
 
-  //-jm qDebug() << "--> onTimer";
-
   m_device->read(m_channels);
   m_displays->plot(m_channels);
+  
+  qDebug() << "<-- timer : " << m_timer->remainingTime();
 
   //-jm statusBarNew *status = (statusBarNew *)statusBar();
   //-jm status->setText("time out",1.0);

@@ -13,7 +13,7 @@
 #define HOSTINTERFACE_H
 
 #define MAX_DATA_SIZE 64
-#define BAUDRATE 115200
+#define BAUDRATE 230400
 //-jm #define BAUDRATE 9600
 //-jm #define BAUDRATE 1200
 #define NR_COMMANDS 26

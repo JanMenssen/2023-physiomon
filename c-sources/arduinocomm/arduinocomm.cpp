@@ -111,28 +111,30 @@ void arduinoComm::sendMsg(char cmd, int n, short *data) {
 //    both <cmd> and <data> are only valid if a message is received
 
 bool arduinoComm::rcvMsg(char *cmd, int *n, short *data) {
-
+  
   static QByteArray rcvBuffer;
   bool msgOK = false;
 
   int nbytes = m_port->bytesAvailable();
   rcvBuffer += m_port->read(nbytes);
 
-  // if there are more than 7 bytes received we know the length of the message, then
-  // we try to find the STX and remove the bytes before
+  // while no STX is found, remove data from buffer
+  // Note : there should be always one byte in the buffer
 
-  if (rcvBuffer.size() >= 7) {
-    
-    while (rcvBuffer.first(1) != STX) rcvBuffer = rcvBuffer.sliced(1);
-
-    int lenMsg = 2 * int(rcvBuffer.at(2)) + 5;
-
-    if (rcvBuffer.size() > lenMsg) {
-      msgOK = decode(rcvBuffer.sliced(0,lenMsg),cmd,n,data);
-      rcvBuffer = rcvBuffer.sliced(lenMsg);
-    }
+  while ((rcvBuffer.first(1) != STX)  && (rcvBuffer.size() > 1)) {
+    rcvBuffer = rcvBuffer.sliced(1);
   }
 
+  // STX found? than decode message
+
+  if ((rcvBuffer.first(1) == STX) && (rcvBuffer.size() > 3)) {
+    
+    int lenMsg = 2 * int(rcvBuffer.at(2)) + 5;
+    if (rcvBuffer.size() >= lenMsg) {
+      msgOK = decode(rcvBuffer.sliced(0,lenMsg),cmd,n,data);
+      rcvBuffer = rcvBuffer.sliced(lenMsg-1);                   
+    }
+  }
   return msgOK;
 }
 
