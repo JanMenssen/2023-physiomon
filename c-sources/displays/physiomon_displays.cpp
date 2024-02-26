@@ -88,21 +88,18 @@ void physiomon_displays::configure(physiomon_settings *settings, physiomon_chann
         m_chart[idisp] = new stripChart(nchan,chanlist);
         m_chart[idisp]->setYaxis(curDisplay.ymin, curDisplay.ymax);
         m_chart[idisp]->setTimeAxis(curDisplay.timescale);
-  
         break;
 
       case DISPLAY_MODE_SWEEP :
-        m_chart[idisp] = new sweepChart(nchan,chanlist);
+        m_chart[idisp] = new sweepChart(nchan,chanlist);  
         m_chart[idisp]->setYaxis(curDisplay.ymin, curDisplay.ymax);
         m_chart[idisp]->setTimeAxis(curDisplay.timescale);
-  
         break;
 
       case DISPLAY_MODE_SCOPE :
         m_chart[idisp] = new scopeChart(nchan,chanlist);
         m_chart[idisp]->setYaxis(curDisplay.ymin, curDisplay.ymax);
         m_chart[idisp]->setTimeAxis(curDisplay.timescale);
-  
         break;
 
       case DISPLAY_MODE_NUMERIC :
@@ -113,7 +110,6 @@ void physiomon_displays::configure(physiomon_settings *settings, physiomon_chann
         m_chart[idisp] = new stripChart(nchan,chanlist);
         m_chart[idisp]->setYaxis(curDisplay.ymin, curDisplay.ymax);
         m_chart[idisp]->setTimeAxis(curDisplay.timescale);
-  
         break;
     }
 
@@ -147,8 +143,12 @@ void physiomon_displays::configure(physiomon_settings *settings, physiomon_chann
   QWidget *tmp = new QWidget();
   if (nrow > 0) m_layout->addWidget(tmp,irow,0,nrow,int(1/RESOLUTION));
   if (ncol > 0) m_layout->addWidget(tmp,0,icol,int(1/RESOLUTION),ncol);
-  
-  // and do some initialisation before the actual begin (downsampler)
+
+}
+
+// initPlot
+
+void physiomon_displays::initPlot(physiomon_channels *channels) {
 
   for (int idisp=0;idisp<m_numDisplays;idisp++) m_chart[idisp]->initPlot(channels);
 }
@@ -165,7 +165,7 @@ void physiomon_displays::plot(physiomon_channels *channels) {
 
   for (int idisp = 0; idisp < m_numDisplays ; idisp++) {
  
-    m_chart[idisp]->initUpdate();
+    m_chart[idisp]->initUpdatePlot();
     chanlist = m_chart[idisp]->m_channels;
     int nchan = m_chart[idisp]->m_numchan;
 
@@ -173,10 +173,10 @@ void physiomon_displays::plot(physiomon_channels *channels) {
 
     for (int ichan = 0;ichan < nchan; ichan ++) {
       channels->readDisplay(chanlist[ichan],&nSamples,data);
-      m_chart[idisp]->update(ichan,nSamples,data);
+      m_chart[idisp]->updatePlot(ichan,nSamples,data);
     }  
 
-    m_chart[idisp]->finishUpdate();
+    m_chart[idisp]->finishUpdatePlot();
   }  
 
   return;

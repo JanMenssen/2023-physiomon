@@ -22,7 +22,7 @@ baseChart::baseChart(int n, int *chanlist) {
 
   // create the grapchids
 
-  setMargins(QMargins(10,5,5,5));
+  //-jm setMargins(QMargins(10,5,5,5));
   legend()->hide();
   setBackgroundVisible(false);  
 }

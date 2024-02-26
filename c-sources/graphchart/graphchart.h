@@ -67,14 +67,12 @@ class graphChart : public baseChart {
     void setTimeAxis(float nsec);
     void setLabels(physiomon_settings *settings);
     void initPlot(physiomon_channels *channels);
-    virtual void update(int ichan, int nsamples, float* data) {};
-    virtual bool initUpdate();
-    virtual void finishUpdate();
+    virtual void updatePlot(int ichan, int nsamples, float* data) {};
+    virtual bool initUpdatePlot();
+    virtual void finishUpdatePlot();
     
     // these variables are about updating the screen
 
-    int m_numchan;
-    int m_channels[MAX_CHANNELS_IN_DISPLAY];
     int m_indx[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
     int m_pntsInGraph[MAX_CHANNELS_IN_DISPLAY] = {MAX_POINTS_IN_GRAPH, MAX_POINTS_IN_GRAPH ,MAX_POINTS_IN_GRAPH};
     float m_deltaT[MAX_CHANNELS_IN_DISPLAY] = {0.0,0.0,0.0};
@@ -87,6 +85,8 @@ class graphChart : public baseChart {
   
   private :
  
+    void setDownSampler(physiomon_channels *channels);
+
     QValueAxis *m_axisX = NULL;
     QValueAxis *m_axisY = NULL;
     

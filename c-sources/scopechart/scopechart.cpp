@@ -57,7 +57,7 @@ void scopeChart::setYaxis(float ymin, float ymax) {
 //
 //    updates the graph with new points from data
 
-void scopeChart::update(int ichan, int nsamples, float *data) {
+void scopeChart::updatePlot(int ichan, int nsamples, float *data) {
 
   // locally variables are faster
   
@@ -91,13 +91,13 @@ void scopeChart::update(int ichan, int nsamples, float *data) {
   m_indx[ichan] = indx + nsamples;
 }
 
-// finishUpdate
+// finishUpdatePlot
 //
 //    draws the red line on the screen after the first screen
 
-void scopeChart::finishUpdate() {
+void scopeChart::finishUpdatePlot() {
 
-  graphChart::finishUpdate();
+  graphChart::finishUpdatePlot();
   
   if (!m_firstScreen) {
     

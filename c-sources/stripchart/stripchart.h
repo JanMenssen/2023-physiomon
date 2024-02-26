@@ -22,7 +22,7 @@ class stripChart: public graphChart {
 
     stripChart(int nchan,int *chanlist);
     ~stripChart();
-    void update(int ichan, int nsamples, float *data); 
+    void updatePlot(int ichan, int nsamples, float *data); 
 };
 
 #endif

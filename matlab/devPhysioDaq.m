@@ -14,7 +14,7 @@ classdef devPhysioDaq < measuredevice
 
   properties (Constant)
 
-    BAUDRATE = 115200;            % baudrate of the serial port
+    BAUDRATE = 230400;            % baudrate of the serial port
   
   end
 

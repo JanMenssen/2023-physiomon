@@ -67,12 +67,18 @@ mainWindow::mainWindow(int width, int height) {
 
   onConfigure();
 
-  // create the timer
+  // create the timer(s)
 
-  m_timer = new QTimer();
-  m_timer->setInterval(TIMER_PERIOD);
+  m_periodic_timer = new QTimer();
+  m_periodic_timer->setInterval(TIMER_PERIOD);
 
-  connect(m_timer,SIGNAL(timeout()),this,SLOT(onTimeOut()));
+  m_oneShot_timer = new QTimer();
+  m_oneShot_timer->setInterval(TIMER_PERIOD);
+  m_oneShot_timer->setSingleShot(true);
+  m_oneShot_timer->start();
+
+  connect(m_periodic_timer,SIGNAL(timeout()),this,SLOT(onTimeOut()));
+  connect(m_oneShot_timer,SIGNAL(timeout()),this,SLOT(onOneShot()));
 
   // and set ready
 
@@ -299,7 +305,7 @@ void mainWindow::onStart() {
     m_deviceMenuAction->setDisabled(true);
 
     m_device->setStartStop(true);
-    m_timer->start();
+    m_periodic_timer->start();
     status->setText("device is started ...",2.5);
 
   } else {
@@ -316,7 +322,7 @@ void mainWindow::onStart() {
     m_deviceMenuAction->setDisabled(false);
 
     m_device->setStartStop(false);
-    m_timer->stop();
+    m_periodic_timer->stop();
     status->setText("device is stopped ...",2.5);
   }
 
@@ -358,10 +364,22 @@ void mainWindow::onTimeOut() {
   m_device->read(m_channels);
   m_displays->plot(m_channels);
   
-  qDebug() << "<-- timer : " << m_timer->remainingTime();
+  qDebug() << "<-- timer : " << m_periodic_timer->remainingTime();
 
   //-jm statusBarNew *status = (statusBarNew *)statusBar();
   //-jm status->setText("time out",1.0);
+}
+
+
+// onOneShot
+//
+//    this is the callback for the one shot timer, this timer is used to initialise
+//    the QCharts which size is not known until the widgets are rendered (see QT forum)
+
+void mainWindow::onOneShot() {
+
+  qDebug() << "--> onOneShot";
+  m_displays->initPlot(m_channels);
 }
 
 // onDeviceSettingsChanged
@@ -385,10 +403,10 @@ void mainWindow::onDeviceSettingsChanged() {
   devphysiodaq_dialog dlgBox(this,n,analogInfo);
   if (dlgBox.exec() == QDialog::Accepted) {
     status->setText("changed settings are saved ...",3.0);
-    onConfigure();
   } else {
     status->setText("changed settings not saved ...",3.0);
   }
+  onConfigure();
 }
 
 // onSettingsChanged
@@ -413,10 +431,10 @@ void mainWindow::onSettingsChanged() {
   settings_dialog dlgBox(this,&numchan,channelInfo,&numdisp,displayInfo,eventInfo,numanalog,analogInfo);
   if (dlgBox.exec() == QDialog::Accepted) {
     status->setText("changed settings are saved ...",3.0);
-    onConfigure();
   } else {
     status->setText("changed settings not saved ...",3.0);
   }
+  onConfigure();
 }
 
 // onEvent 

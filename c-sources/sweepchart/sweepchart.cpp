@@ -26,7 +26,7 @@ sweepChart::~sweepChart() {
 
 // update
 
-void sweepChart::update(int ichan, int nsamples, float *data) {
+void sweepChart::updatePlot(int ichan, int nsamples, float *data) {
 
   // faster to use local variables
 
@@ -53,9 +53,9 @@ void sweepChart::update(int ichan, int nsamples, float *data) {
 //
 //    clear the screen if the plotting is on the end of the screen 
 
-bool sweepChart::initUpdate() {
+bool sweepChart::initUpdatePlot() {
 
-  bool endReached  = graphChart::initUpdate();
+  bool endReached  = graphChart::initUpdatePlot();
   
   if (endReached) {
     for (int ichan=0;ichan<m_numchan;ichan++) m_dataBuffer[ichan].clear();

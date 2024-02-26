@@ -19,8 +19,8 @@ class sweepChart: public graphChart {
 
     sweepChart(int nchan, int *chanlist);
     ~sweepChart(); 
-    bool initUpdate();
-    void update(int ichan, int nsamples, float *data);
+    bool initUpdatePlot();
+    void updatePlot(int ichan, int nsamples, float *data);
 };
 
 #endif

@@ -13,8 +13,8 @@
 #include "physiomon_channels.h"
 #include "physiomon_settings.h"
 
-#include <QRectF>
-#include <QChart>
+#include <QScatterSeries>
+
 
 #define MAX_CHANNELS_IN_DISPLAY 3
 
@@ -25,8 +25,6 @@ class numericChart : public baseChart {
     numericChart(int chan, int *chanlist);
     ~numericChart();
 
-    //-jm QChart *getChart();
-
     // these two methods are stubs, they are not needed in the numerical display
     
     void setYaxis(float ymin, float ymax){};
@@ -34,30 +32,39 @@ class numericChart : public baseChart {
     
     void initPlot(physiomon_channels *channels);
     void setLabels(physiomon_settings *settings);
-    void update(int ichan, int nsamples, float* data);
+    void updatePlot(int ichan, int nsamples, float* data);
   
-    virtual bool initUpdate();
-    virtual void finishUpdate();
+    virtual bool initUpdatePlot();
+    virtual void finishUpdatePlot();
 
     // these variables are about updating the screen
 
     private :
 
-      int m_numchan;
-      int m_channels[MAX_CHANNELS_IN_DISPLAY];
+      void calcValuePositions();
+      void calcLabelPositions();
+      void plotLabel(int n,QString labelTxt);
+      void plotValue(int n,float value);
+    
+      QValueAxis *m_axisX = NULL;
+      QValueAxis *m_axisY = NULL;
+      
+      QScatterSeries *m_series = nullptr;
+      
+      // positions in the graph to place the text
 
-      QRectF m_numArea[MAX_CHANNELS_IN_DISPLAY];
-      QPointF m_posLabel[MAX_CHANNELS_IN_DISPLAY];
-      QPointF m_posValue[MAX_CHANNELS_IN_DISPLAY];
+      QPointF m_valuePos[MAX_CHANNELS_IN_DISPLAY];   
+      QPointF m_labelPos[MAX_CHANNELS_IN_DISPLAY];
 
-      QFont m_fontLabels = QFont();
-      QFont m_fontValues = QFont();
+      //-jm QFont m_fontLabels = QFont();
+      //-jm QFont m_fontValues = QFont();
+      
       QStringList m_labelTxt;
 
-      float m_Value[MAX_CHANNELS_IN_DISPLAY];
+      float m_average[MAX_CHANNELS_IN_DISPLAY];
       
-      QGraphicsSimpleTextItem **m_text = nullptr;
-      QGraphicsSimpleTextItem **m_labels = nullptr;
+      QGraphicsSimpleTextItem **m_value = nullptr;
+      QGraphicsSimpleTextItem **m_label = nullptr;
 
 };
 

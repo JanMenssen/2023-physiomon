@@ -121,20 +121,23 @@ bool arduinoComm::rcvMsg(char *cmd, int *n, short *data) {
   // while no STX is found, remove data from buffer
   // Note : there should be always one byte in the buffer
 
-  while ((rcvBuffer.first(1) != STX)  && (rcvBuffer.size() > 1)) {
-    rcvBuffer = rcvBuffer.sliced(1);
-  }
+  if (rcvBuffer.size() > 1) {
 
-  // STX found? than decode message
-
-  if ((rcvBuffer.first(1) == STX) && (rcvBuffer.size() > 3)) {
-    
-    int lenMsg = 2 * int(rcvBuffer.at(2)) + 5;
-    if (rcvBuffer.size() >= lenMsg) {
-      msgOK = decode(rcvBuffer.sliced(0,lenMsg),cmd,n,data);
-      rcvBuffer = rcvBuffer.sliced(lenMsg-1);                   
+    while ((rcvBuffer.first(1) != STX)  && (rcvBuffer.size() > 1)) {
+      rcvBuffer = rcvBuffer.sliced(1);
     }
-  }
+
+    // STX found? than decode message
+
+    if ((rcvBuffer.first(1) == STX) && (rcvBuffer.size() > 3)) {
+      
+      int lenMsg = 2 * int(rcvBuffer.at(2)) + 5;
+      if (rcvBuffer.size() >= lenMsg) {
+        msgOK = decode(rcvBuffer.sliced(0,lenMsg),cmd,n,data);
+        rcvBuffer = rcvBuffer.sliced(lenMsg-1);                   
+      }
+    }
+  }  
   return msgOK;
 }
 

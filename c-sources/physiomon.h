@@ -11,7 +11,7 @@
 
 // currently only 10 channels and displays are allowed
 
-#define MAX_CHANNELS 10
+#define MAX_CHANNELS 20
 #define MAX_DISPLAYS 10
 #define MAX_EVENTS   10
 

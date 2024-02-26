@@ -20,8 +20,8 @@ class scopeChart: public graphChart {
     scopeChart(int nchan, int *chanlist);
     ~scopeChart();
     void setYaxis(float ymin, float ymax);
-    void update(int ichan, int nsamples, float *data);
-    void finishUpdate();
+    void updatePlot(int ichan, int nsamples, float *data);
+    void finishUpdatePlot();
     
   private :
 

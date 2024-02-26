@@ -14,7 +14,7 @@ classdef physiomon_displays <handle
     PIXELS_TOP = 40;
     PIXELS_LEFT = 50;
     PIXELS_BOTTOM = 80;
-    PIXELS_RIGHT = 40;
+    PIXELS_RIGHT = 50;
 
   end
 
@@ -103,20 +103,24 @@ classdef physiomon_displays <handle
 
         handle = uiaxes(parent = canvasHandle, InnerPosition = [left top width height],Color = canvasHandle.Color);
         switch curDisp.mode
+          
           case obj.defs.DISPLAY_MODE_STRIP
             obj.m_chart{idisp} = stripchart(handle,chanlist);
+            obj.m_chart{idisp}.setYaxis(curDisp.ymin,curDisp.ymax);
+            obj.m_chart{idisp}.setTimeAxis(curDisp.timescale);
+          
           case obj.defs.DISPLAY_MODE_SWEEP
             obj.m_chart{idisp} = sweepchart(handle,chanlist);
+            obj.m_chart{idisp}.setYaxis(curDisp.ymin,curDisp.ymax);
+            obj.m_chart{idisp}.setTimeAxis(curDisp.timescale);
+          
           case obj.defs.DISPLAY_MODE_SCOPE
             obj.m_chart{idisp} = scopechart(handle,chanlist);
+            obj.m_chart{idisp}.setYaxis(curDisp.ymin,curDisp.ymax);
+            obj.m_chart{idisp}.setTimeAxis(curDisp.timescale);
         end
 
-        % and set the Y-axis and time axis for the current chart
-
-        obj.m_chart{idisp}.setYaxis(curDisp.ymin,curDisp.ymax);
-        obj.m_chart{idisp}.setTimeAxis(curDisp.timescale);
-
-        % and initialise the chart to prepare for plotting
+        % and initialise the chart to prepare for plotting, add labels and so on 
 
         obj.m_chart{idisp}.initPlot(channels);
       

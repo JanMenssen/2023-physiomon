@@ -36,6 +36,7 @@ class mainWindow : public QMainWindow {
     void onSave();
     void onDeviceInfo();
     void onTimeOut();
+    void onOneShot();
     void onSettingsChanged();
     void onDeviceSettingsChanged();
     void onEvent();
@@ -81,7 +82,8 @@ class mainWindow : public QMainWindow {
 
   // and the timer
 
-  QTimer *m_timer = nullptr;
+  QTimer *m_periodic_timer = nullptr;
+  QTimer *m_oneShot_timer = nullptr;
 };
 
 #endif

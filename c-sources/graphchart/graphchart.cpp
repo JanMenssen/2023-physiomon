@@ -63,9 +63,6 @@ void downSampler::getData(int *n, float *data) {
 
 graphChart::graphChart(int nchan, int *chanlist) : baseChart(nchan,chanlist) {
 
-  m_numchan = nchan;
-  for (int i=0;i<m_numchan;i++) m_channels[i] = chanlist[i]; 
-  
   // create the graphics
 
   m_axisX = new QValueAxis();
@@ -152,7 +149,7 @@ QValueAxis *graphChart::getXaxisRef() {
 // sets the labels on the channels
 
 void graphChart::setLabels(physiomon_settings *settings) {
-
+/*
   for (int i=0;i<m_numchan;i++) {
     int curchan = m_channels[i];
     m_series[i]->setName(settings->m_channels[curchan].name);
@@ -168,6 +165,7 @@ void graphChart::setLabels(physiomon_settings *settings) {
   this->legend()->setInteractive(true);
     
   //-jm m_chart->legend()->setGeometry(pos.x(),pos.y(),150,40);
+*/
 }
 
 
@@ -178,6 +176,53 @@ void graphChart::setLabels(physiomon_settings *settings) {
 // needed
  
 void graphChart::initPlot(physiomon_channels *channels) {
+
+  // set the downsampler
+
+  setDownSampler(channels);
+
+  // and clear the series
+
+  for (int ichan=0;ichan<m_numchan;ichan++) m_series[ichan]->clear();
+}
+
+// initUpdate
+
+bool graphChart::initUpdatePlot() {
+
+  // check if end is reached for all channels and if this is the case reset the current index, and update the 
+  // points in the graph (in stripchart this check is only needed once)
+  
+  bool endReached = true;    
+  for (int i=0;i<m_numchan;i++) endReached = endReached && (m_indx[i] >= m_pntsInGraph[i]);
+  if (endReached) {
+    for (int i=0;i<m_numchan;i++) m_indx[i] = 0;
+    m_firstScreen = false;
+  }
+
+  return endReached;
+}
+
+
+// finishUpdate
+
+void graphChart::finishUpdatePlot() {
+
+  // move the data in th databuffers to the axis
+
+  for (int i = 0; i < m_numchan ; i++) m_series[i]->replace(m_dataBuffer[i]);
+
+  QPointF pos = this->mapToPosition(QPointF(12,4.5));
+  //-jm qDebug() << "finishUpdate " << pos;
+  this->legend()->setGeometry(pos.x(),pos.y(),150,40);
+}
+
+
+// setDownSampler
+//
+//    this routine initialises the downsampler. It calculate deltaT and tne maximum points in the graph
+
+void graphChart::setDownSampler(physiomon_channels *channels) {
 
   float nsec = m_axisX->max();
   
@@ -196,44 +241,8 @@ void graphChart::initPlot(physiomon_channels *channels) {
     m_downSampler[ichan].setRate(rate);  
   
     m_deltaT[ichan] = float(rate) / sampleRate;
-    
-    // and clear the series
-
-    m_series[ichan]->clear();
-  } 
+  }    
 }
-
-// initUpdate
-
-bool graphChart::initUpdate() {
-
-  // check if end is reached for all channels and if this is the case reset the current index, and update the 
-  // points in the graph (in stripchart this check is only needed once)
-  
-  bool endReached = true;    
-  for (int i=0;i<m_numchan;i++) endReached = endReached && (m_indx[i] >= m_pntsInGraph[i]);
-  if (endReached) {
-    for (int i=0;i<m_numchan;i++) m_indx[i] = 0;
-    m_firstScreen = false;
-  }
-
-  return endReached;
-}
-
-
-// finishUpdate
-
-void graphChart::finishUpdate() {
-
-  // move the data in th databuffers to the axis
-
-  for (int i = 0; i < m_numchan ; i++) m_series[i]->replace(m_dataBuffer[i]);
-
-  QPointF pos = this->mapToPosition(QPointF(12,4.5));
-  //-jm qDebug() << "finishUpdate " << pos;
-  this->legend()->setGeometry(pos.x(),pos.y(),150,40);
-}
-
 
 
 

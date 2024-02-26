@@ -39,9 +39,9 @@ class baseChart : public QChart {
     virtual void setTimeAxis(float nsec) = 0;
     virtual void initPlot(physiomon_channels *channels) = 0;
     virtual void setLabels(physiomon_settings *settings) = 0;
-    virtual void update(int ichan, int nsamples, float* data) = 0;
-    virtual bool initUpdate() = 0;
-    virtual void finishUpdate() = 0;
+    virtual void updatePlot(int ichan, int nsamples, float* data) = 0;
+    virtual bool initUpdatePlot() = 0;
+    virtual void finishUpdatePlot() = 0;
 
     // some members are set to public, so they can be easy accessed by th child classes
 

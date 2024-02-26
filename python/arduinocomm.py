@@ -128,18 +128,20 @@ class arduinoComm :
     # find the STX message, remove data from buffer until found
     # Note : there should be at least one byte in the buffer
     
-    while ((self.rcvBuffer[0] != b'\x02') and (len(self.rcvBuffer) > 1)) :
-      self.rcvBuffer = self.rcvBuffer[1:]
-
-    # STX found, then decode message
+    if (len(self.rcvBuffer) > 0 ) : 
       
-    if ((self.rcvBuffer[0] == b'\x02') and (len(self.rcvBuffer) > 3)) :
+      while ((self.rcvBuffer[0] != b'\x02') and (len(self.rcvBuffer) > 1)) :
+        self.rcvBuffer = self.rcvBuffer[1:]
 
-      lenMsg = 2 * ord(self.rcvBuffer[2].decode()) + 5
-      if (len(self.rcvBuffer) >= lenMsg) :
-      
-        cmd,data,msgOK = decode(self.rcvBuffer[0:lenMsg])
-        if msgOK : self.rcvBuffer = self.rcvBuffer[(lenMsg-1):]
+      # STX found, then decode message
+        
+      if ((self.rcvBuffer[0] == b'\x02') and (len(self.rcvBuffer) > 3)) :
+
+        lenMsg = 2 * ord(self.rcvBuffer[2].decode()) + 5
+        if (len(self.rcvBuffer) >= lenMsg) :
+        
+          cmd,data,msgOK = decode(self.rcvBuffer[0:lenMsg])
+          if msgOK : self.rcvBuffer = self.rcvBuffer[(lenMsg-1):]
 
     return msgOK,cmd,data
 

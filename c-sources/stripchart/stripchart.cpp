@@ -25,7 +25,7 @@ stripChart::~stripChart() {
 
 // update
 
-void stripChart::update(int ichan, int nsamples, float *data) {
+void stripChart::updatePlot(int ichan, int nsamples, float *data) {
 
   // locally variables are faster
 
