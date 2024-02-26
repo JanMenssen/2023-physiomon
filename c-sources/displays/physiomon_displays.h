@@ -12,13 +12,14 @@
 #define _PHYSIOMON_DISPLAYS_H
 
 #include "physiomon.h"
+#include "basechart.h"
 #include "physiomon_settings.h"
 #include "physiomon_channels.h"
-#include "basechart.h"
 
 #include <QWidget>
 #include <QGridLayout>
 #include <QChartView>
+
 
 class physiomon_displays {
 

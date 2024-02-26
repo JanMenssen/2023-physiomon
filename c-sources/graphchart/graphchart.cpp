@@ -17,7 +17,6 @@
 // downSampler constructor
 
 downSampler::downSampler() {
-
 }
 
 // downSapler setRate
@@ -31,69 +30,6 @@ void downSampler::setRate(int rate) {
 
 downSampler::~downSampler() {
 
-}
-
-// downSampler getMeanata
-//
-//    method decimates the data. Date is overwritten by the new downsamples 
-//    data. If m_rate < 1, no downsampling is needed, the number of samples in the
-//    graph is below the MAX_POINTS_IN_GRAPH
-
-void downSampler::getMeanData(int *n, float *data) {
-
-  float sum = 0.0;
-  if ( m_decimateFactor > 1) {
-  
-    // copy the input data to the end of the buffer
-
-    memcpy(&m_buffer[m_posInBuffer],data,*n * sizeof(float));
-    m_posInBuffer += *n;
-
-    // until the number of samples in the buffer is too small  (< m_rate)
-
-    *n = 0;
-    while(m_posInBuffer >= m_decimateFactor) {
-      
-      sum = 0.0;
-      for(int i=0;i<m_decimateFactor;i++) sum += m_buffer[i];
-      data[*n] = sum / m_decimateFactor;
-      
-      memmove(&m_buffer[0],&m_buffer[m_decimateFactor],m_posInBuffer * sizeof(float));
-      m_posInBuffer -= m_decimateFactor;
-      *n = *n + 1;
-    }
-  }
-}
-// downSampler getMaxData
-//
-//    method decimates the data. Date is overwritten by the new downsamples 
-//    data. If m_rate < 1, no downsampling is needed, the number of samples in the
-//    graph is below the MAX_POINTS_IN_GRAPH
-
-void downSampler::getMaxData(int *n, float *data) {
-
-  if ( m_decimateFactor > 1) {
-  
-    // copy the input data to the end of the buffer
-
-    memcpy(&m_buffer[m_posInBuffer],data,*n * sizeof(float));
-    m_posInBuffer += *n;
-
-    // until the number of samples in the buffer is too small  (< m_rate)
-
-    *n = 0;
-    while(m_posInBuffer >= m_decimateFactor) {
-      
-      data[*n] = m_buffer[0];
-      for(int i=1;i<m_decimateFactor;i++) {
-        data[*n] =((m_buffer[i] > data[*n]) ? m_buffer[i] : data[*n]);
-      } 
-      
-      memmove(&m_buffer[0],&m_buffer[m_decimateFactor],m_posInBuffer * sizeof(float));
-      m_posInBuffer -= m_decimateFactor;
-      *n = *n + 1;
-    }
-  }
 }
 
 // downSampler getData
@@ -127,13 +63,16 @@ void downSampler::getData(int *n, float *data) {
 
 graphChart::graphChart(int nchan, int *chanlist) : baseChart(nchan,chanlist) {
 
+  m_numchan = nchan;
+  for (int i=0;i<m_numchan;i++) m_channels[i] = chanlist[i]; 
+  
   // create the graphics
 
   m_axisX = new QValueAxis();
   m_axisY = new QValueAxis();
 
-  m_chart->addAxis(m_axisX,Qt::AlignBottom);
-  m_chart->addAxis(m_axisY,Qt::AlignLeft);
+  addAxis(m_axisX,Qt::AlignBottom);
+  addAxis(m_axisY,Qt::AlignLeft);
 
   m_axisX->setGridLineVisible(false);
   m_axisX->setLabelsColor(Qt::lightGray);
@@ -144,13 +83,13 @@ graphChart::graphChart(int nchan, int *chanlist) : baseChart(nchan,chanlist) {
   // create for every channel a QlineSeries object and add the axis to it. Reserve space 
   // for the samples
   
-  m_chart->removeAllSeries();
+  this->removeAllSeries();
 
   for (int ichan = 0; ichan < m_numchan; ichan++) {
 
     m_series << new QLineSeries();
 
-    m_chart->addSeries(m_series[ichan]);
+    this->addSeries(m_series[ichan]);
     m_series[ichan]->attachAxis(m_axisX);
     m_series[ichan]->attachAxis(m_axisY);
     //-jm m_series[ichan]->setUseOpenGL(true);
@@ -218,15 +157,15 @@ void graphChart::setLabels(physiomon_settings *settings) {
     int curchan = m_channels[i];
     m_series[i]->setName(settings->m_channels[curchan].name);
   }
-  m_chart->legend()->show();
-  m_chart->legend()->setLabelBrush(Qt::lightGray);
-  m_chart->legend()->detachFromChart();
-  m_chart->legend()->setBackgroundVisible(false);
-  m_chart->legend()->setBorderColor(Qt::lightGray);
-  m_chart->legend()->setGeometry(500,100,150,40);
-  m_chart->legend()->update();
+  this->legend()->show();
+  this->legend()->setLabelBrush(Qt::lightGray);
+  this->legend()->detachFromChart();
+  this->legend()->setBackgroundVisible(false);
+  this->legend()->setBorderColor(Qt::lightGray);
+  this->legend()->setGeometry(500,100,150,40);
+  this->legend()->update();
   //-jm m_chart->legend()->attachToChart();
-  m_chart->legend()->setInteractive(true);
+  this->legend()->setInteractive(true);
     
   //-jm m_chart->legend()->setGeometry(pos.x(),pos.y(),150,40);
 }
@@ -281,9 +220,6 @@ bool graphChart::initUpdate() {
   return endReached;
 }
 
-void graphChart::MouseMoveEvent(QMouseEvent *event) {
-  qDebug() << "mouse moved";
-}
 
 // finishUpdate
 
@@ -293,9 +229,9 @@ void graphChart::finishUpdate() {
 
   for (int i = 0; i < m_numchan ; i++) m_series[i]->replace(m_dataBuffer[i]);
 
-  QPointF pos = m_chart->mapToPosition(QPointF(12,4.5));
+  QPointF pos = this->mapToPosition(QPointF(12,4.5));
   //-jm qDebug() << "finishUpdate " << pos;
-  m_chart->legend()->setGeometry(pos.x(),pos.y(),150,40);
+  this->legend()->setGeometry(pos.x(),pos.y(),150,40);
 }
 
 

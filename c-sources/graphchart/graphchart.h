@@ -20,14 +20,16 @@
 #include <QVector>
 #include <QPointF>
 
-#include "physiomon_channels.h"
 #include "basechart.h"
+#include "physiomon_channels.h"
+#include "physiomon_settings.h"
+
+#define MAX_CHANNELS_IN_DISPLAY 3
 
 // to speed up the updating of the graph, some defines are set. These are
 //    - downsampling is performed so the max number of sample points to update the graph
 //      is limited
 //    - a downsample class is created iwht a buffer of a number of samples
-
 
 #define MAX_POINTS_IN_GRAPH 2500
 #define SIZE_DOWNSAMPLE_BUFFER 2500
@@ -41,8 +43,6 @@ class downSampler {
     ~downSampler();
     void setRate(int decimateFactor);
     void getData(int *n, float *data);
-    void getMaxData(int *n, float *data);
-    void getMeanData(int *n, float *data);
 
   private :
     int m_decimateFactor = 0;
@@ -63,18 +63,18 @@ class graphChart : public baseChart {
     QValueAxis *getYaxisRef();
     QValueAxis *getXaxisRef();
   
-    virtual void setYaxis(float ymin, float ymax);
+    void setYaxis(float ymin, float ymax);
     void setTimeAxis(float nsec);
-    void initPlot(physiomon_channels *channels);
     void setLabels(physiomon_settings *settings);
+    void initPlot(physiomon_channels *channels);
     virtual void update(int ichan, int nsamples, float* data) {};
     virtual bool initUpdate();
     virtual void finishUpdate();
-    void MouseMoveEvent(QMouseEvent *event);
     
-
     // these variables are about updating the screen
 
+    int m_numchan;
+    int m_channels[MAX_CHANNELS_IN_DISPLAY];
     int m_indx[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
     int m_pntsInGraph[MAX_CHANNELS_IN_DISPLAY] = {MAX_POINTS_IN_GRAPH, MAX_POINTS_IN_GRAPH ,MAX_POINTS_IN_GRAPH};
     float m_deltaT[MAX_CHANNELS_IN_DISPLAY] = {0.0,0.0,0.0};

@@ -15,6 +15,8 @@
 
 numericChart::numericChart(int nchan, int *chanlist) : baseChart(nchan,chanlist) {
 
+  m_numchan = nchan;
+  for (int i=0;i<m_numchan;i++) m_channels[i] = chanlist[i]; 
   // create pointers to the labels and the values
 
   m_labels = new QGraphicsSimpleTextItem *[m_numchan];
@@ -44,7 +46,7 @@ void numericChart::setLabels(physiomon_settings *settings) {
 
 void numericChart::initPlot(physiomon_channels *channels) {
   
-  QSizeF size = m_chart->size();
+  QSizeF size = this->size();
   qDebug() << "initPlot" << size;
 }
 
@@ -71,7 +73,7 @@ void numericChart::update(int ichan, int nsamples, float *data) {
   
   // and place the value on the screen
 
-  m_text[ichan] = new QGraphicsSimpleTextItem(valueTxt,m_chart);
+  m_text[ichan] = new QGraphicsSimpleTextItem(valueTxt,this);
   m_text[ichan]->setFont(m_fontValues);
   m_text[ichan]->setBrush(Qt::green);
 
@@ -97,7 +99,7 @@ bool numericChart::initUpdate() {
   // get the size of the display and determine the areas the information should be
   // displayed, depending on area is largest in vertical or horizontal direction
 
-  QSizeF size = m_chart->size();
+  QSizeF size = this->size();
   //-jm qDebug() << "initUpdate" << size;
   if (size.width() > size.height()) {
 
@@ -136,7 +138,7 @@ bool numericChart::initUpdate() {
 
   for (int i=0;i<m_numchan;i++) {
 
-    m_labels[i] = new QGraphicsSimpleTextItem(m_labelTxt[i],m_chart);
+    m_labels[i] = new QGraphicsSimpleTextItem(m_labelTxt[i],this);
     m_labels[i]->setFont(m_fontLabels);
     m_labels[i]->setBrush(Qt::lightGray);
 

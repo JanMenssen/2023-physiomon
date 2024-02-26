@@ -9,10 +9,14 @@
 #ifndef _NUMERICCHART_H
 #define _NUMERICCHART_H
 
-#include "physiomon_channels.h"
 #include "basechart.h"
+#include "physiomon_channels.h"
+#include "physiomon_settings.h"
 
 #include <QRectF>
+#include <QChart>
+
+#define MAX_CHANNELS_IN_DISPLAY 3
 
 class numericChart : public baseChart {
 
@@ -38,6 +42,9 @@ class numericChart : public baseChart {
     // these variables are about updating the screen
 
     private :
+
+      int m_numchan;
+      int m_channels[MAX_CHANNELS_IN_DISPLAY];
 
       QRectF m_numArea[MAX_CHANNELS_IN_DISPLAY];
       QPointF m_posLabel[MAX_CHANNELS_IN_DISPLAY];

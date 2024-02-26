@@ -17,7 +17,7 @@ scopeChart::scopeChart(int nchan, int *chanlist) : graphChart(nchan,chanlist) {
   // create a red line reference for the current position
 
   m_scopeLine = new QLineSeries();
-  m_chart->addSeries(m_scopeLine);
+  this->addSeries(m_scopeLine);
   m_scopeLine->attachAxis(getXaxisRef());
   m_scopeLine->attachAxis(getYaxisRef());
 
