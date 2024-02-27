@@ -93,18 +93,19 @@ void physiomon_settings::readGeneral() {
 
 void physiomon_settings::readChannels() {
 
-  char keyName[10];
+  char keyName[11];
 
   for (int iChan = 0; iChan < m_numchan; iChan++) {
 
-    snprintf(keyName,10,"channel %0d",iChan+1);
+    snprintf(keyName,11,"channel %0d",iChan+1);
 
     m_settings->beginGroup(keyName);
     
     m_channels[iChan].name = m_settings->value("name","").toString();
     m_channels[iChan].source = m_settings->value("source",0).toInt();
     m_channels[iChan].display = m_settings->value("display",0).toInt();
-    
+    m_channels[iChan].precision = m_settings->value("precision",1).toInt();
+
     QString tmpType = m_settings->value("type","analog in").toString();
     if (tmpType == QString("analog in")) m_channels[iChan].type = TYPE_ANALOG_IN;
    

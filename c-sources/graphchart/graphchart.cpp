@@ -144,30 +144,25 @@ QValueAxis *graphChart::getXaxisRef() {
   return m_axisX; 
 }
 
+// setPrecision
+//
+//    this is a stub method, used in the numeric chart but not in the graphics chart
+
+void graphChart::setPrecision(channelStruct *channelInfo) {
+
+}
+
 // setLabels
 //
 // sets the labels on the channels
 
-void graphChart::setLabels(physiomon_settings *settings) {
-/*
-  for (int i=0;i<m_numchan;i++) {
-    int curchan = m_channels[i];
-    m_series[i]->setName(settings->m_channels[curchan].name);
-  }
-  this->legend()->show();
-  this->legend()->setLabelBrush(Qt::lightGray);
-  this->legend()->detachFromChart();
-  this->legend()->setBackgroundVisible(false);
-  this->legend()->setBorderColor(Qt::lightGray);
-  this->legend()->setGeometry(500,100,150,40);
-  this->legend()->update();
-  //-jm m_chart->legend()->attachToChart();
-  this->legend()->setInteractive(true);
-    
-  //-jm m_chart->legend()->setGeometry(pos.x(),pos.y(),150,40);
-*/
-}
+void graphChart::setLabels(channelStruct *channelInfo) {
 
+  for (int ichan=0;ichan<m_numchan;ichan++) {
+    int curchan = m_channels[ichan];
+    m_series[ichan]->setName(channelInfo[curchan].name);
+  }
+}
 
 // initPlot
 //
@@ -181,12 +176,15 @@ void graphChart::initPlot(physiomon_channels *channels) {
 
   setDownSampler(channels);
 
-  // and clear the series
+  // calculate the posittion of the labels in graph coordinates (northwest) and
+  // set the labels
 
-  for (int ichan=0;ichan<m_numchan;ichan++) m_series[ichan]->clear();
+  calcLabelPosition();
+  plotLabel();
+
 }
 
-// initUpdate
+// initUpdatePlot
 
 bool graphChart::initUpdatePlot() {
 
@@ -200,21 +198,23 @@ bool graphChart::initUpdatePlot() {
     m_firstScreen = false;
   }
 
+  // done, plot the legend on the screen and return
+
+  plotLabel();
   return endReached;
 }
 
 
-// finishUpdate
+// finishUpdatePlot
+//
+//    routine is called after updating the seperate channels. It takes care of (almost)
+//    simulatenous plotting on the screen
 
 void graphChart::finishUpdatePlot() {
 
   // move the data in th databuffers to the axis
 
   for (int i = 0; i < m_numchan ; i++) m_series[i]->replace(m_dataBuffer[i]);
-
-  QPointF pos = this->mapToPosition(QPointF(12,4.5));
-  //-jm qDebug() << "finishUpdate " << pos;
-  this->legend()->setGeometry(pos.x(),pos.y(),150,40);
 }
 
 
@@ -244,5 +244,32 @@ void graphChart::setDownSampler(physiomon_channels *channels) {
   }    
 }
 
+// calcLabelPosition
+//
+//    given the current axis, this method calculates the position of the label (legend)
+//    in graph coordinates. YThe label is placed northwest, 80% of the x and y posiiton
 
+void graphChart::calcLabelPosition() {
+
+  float yRange = getYaxisRef()->max() - getYaxisRef()->min();
+  float ypos = getYaxisRef()->min() + 1.1 * yRange;
+  float xpos = 0.8 * getXaxisRef()->max();
+  
+  m_labelPos = QPointF(xpos,ypos);
+}
+
+// plotLabel
+//
+//    knowing the position of the label in graph coordinates, a conversion is done to pixels
+//    and the label is plotted on the graph
+
+void graphChart::plotLabel() {
+
+  // convert to pixel coordinates
+
+  QPointF pixelPos = this->mapToPosition(m_labelPos);
+
+  this->legend()->show();
+  this->legend()->setGeometry(pixelPos.x(),pixelPos.y(),120,m_numchan * 30);
+}
 

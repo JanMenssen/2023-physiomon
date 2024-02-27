@@ -1,7 +1,7 @@
 //
 // numericChart.cpp
 //
-//      this is the implementation of the abstract class <graphChart>
+//      this is the implementation of the numerics chart
 //
 //  modifications
 //    26-jan-2024   JM  initial version
@@ -47,6 +47,11 @@ numericChart::numericChart(int nchan, int *chanlist) : baseChart(nchan,chanlist)
 
   m_label = new QGraphicsSimpleTextItem *[m_numchan];
   m_value = new QGraphicsSimpleTextItem *[m_numchan];
+
+  // set the font used to the standard font
+
+  m_usedFont = QFont();
+  m_scaleFactor = 1;  
 }
 
 // destructor
@@ -59,11 +64,25 @@ numericChart::~numericChart() {
 //    this routines copies the channel names from the settings struct so the <plotLabel> routine 
 //    can plot them
 
-void numericChart::setLabels(physiomon_settings *settings) {
+void numericChart::setLabels(channelStruct *channelInfo) {
 
   for(int i=0;i<m_numchan;i++) {
     int curchan = m_channels[i];
-    m_labelTxt.append(settings->m_channels[curchan].name);
+    m_labelTxt.append(channelInfo[curchan].name);
+  }
+}
+
+// setPrecision
+//
+//    reads the precions (number of digits after decimal) for the selected channels
+//    and stores this in an internal member variable that is used in <plotValues>
+
+void numericChart::setPrecision(channelStruct *channelInfo) {
+
+  for (int ichan=0;ichan<m_numchan;ichan++) {
+
+    int curchan = m_channels[ichan];
+    m_precision[ichan] = channelInfo[curchan].precision;
   }
 }
 
@@ -74,20 +93,17 @@ void numericChart::setLabels(physiomon_settings *settings) {
 
 void numericChart::initPlot(physiomon_channels *channels) {
   
-  // determine vertical or horizontal mode
+  // calculate the position of the values and labels in graph coordinates
 
   calcValuePositions();
   calcLabelPositions();
 
-  // and initial set label on the graph
-  
-  //-jm for (int i=0;i<m_numchan;i++) m_series->append(m_valuePos[i]);
-  //-jm for (int i=0;i<m_numchan;i++) m_series->append(m_labelPos[i]);
+  m_scaleFactor = calcScaleFactor();
+
+  // and plot the label
 
   for (int i=0;i<m_numchan;i++) plotLabel(i,m_labelTxt[i]);
-
 }
-
 
 // updatePlot
 //
@@ -116,8 +132,10 @@ void numericChart::updatePlot(int ichan, int nsamples, float *data) {
 
 bool numericChart::initUpdatePlot() {
 
+  m_scaleFactor = calcScaleFactor();
+  
   // plot the label on the screen and return true
-
+  
   for (int i=0;i<m_numchan;i++) plotLabel(i,m_labelTxt[i]);
 
   return true;
@@ -142,7 +160,7 @@ void numericChart::calcValuePositions() {
     // vertical mode, numerics above each other
 
     float y_inc = 1.0 / (m_numchan + 1);
-    for (int i=0;i<m_numchan;i++) m_valuePos[i] = QPointF(0.5,(i+1)*y_inc);
+    for (int i=0;i<m_numchan;i++) m_valuePos[i] = QPointF(0.5,1-(i+1)*y_inc);
 
   } else {
 
@@ -154,7 +172,7 @@ void numericChart::calcValuePositions() {
 }
 
 // calcLabelositions
-//
+//# p
 //    this routine calculates the positions on the chart were the numeric values should be
 //    displayed. These positions are in graph coordinates, these change during a resize
 
@@ -167,7 +185,7 @@ void numericChart::calcLabelPositions() {
     // vertical mode, numerics above each other
 
     float y_inc = 1.0 / (m_numchan + 1);
-    for (int i=0;i<m_numchan;i++) m_labelPos[i] = QPointF(0.5,(i+1)*y_inc+0.2);
+    for (int i=0;i<m_numchan;i++) m_labelPos[i] = QPointF(0.5,1-(i+1)*y_inc+0.11);
 
   } else {
 
@@ -180,7 +198,8 @@ void numericChart::calcLabelPositions() {
 
 // plotLabel
 //
-//    this routine plots the label (the signal name on the screen
+//    this routine plots the label (the signal name) on the screen. This is done by converting
+//    the chart coordinates and place the label centered around the calculaed position
 
 void numericChart::plotLabel(int n, QString labelTxt) {
 
@@ -195,7 +214,7 @@ void numericChart::plotLabel(int n, QString labelTxt) {
   // this should be done in the setLabel routine, however now it is tempory done here
 
   m_label[n] = new QGraphicsSimpleTextItem(labelTxt,this);
-  m_label[n]->setFont(QFont());
+  m_label[n]->setFont(m_usedFont);
   m_label[n]->setBrush(Qt::lightGray);
 
   // and position in the middle of the calculated point
@@ -212,6 +231,8 @@ void numericChart::plotLabel(int n, QString labelTxt) {
 
 void numericChart::plotValue(int n, float value) {
 
+  float scaleFactor = 2.5;
+
   // map to screen coordinates
 
   QPointF pixelPos = this->mapToPosition(m_valuePos[n]);
@@ -222,19 +243,35 @@ void numericChart::plotValue(int n, float value) {
 
   // this should be done in the setLabel routine, however now it is tempory done here
 
-  QString valueTxt = QString("%1").arg(value,0,'f',1);
-  
+  QString valueTxt = QString::number(value,'f',m_precision[n]);
+
   m_value[n] = new QGraphicsSimpleTextItem(valueTxt,this);
-  m_value[n]->setFont(QFont());
+  m_value[n]->setFont(m_usedFont);
+  m_value[n]->setScale(m_scaleFactor);
   m_value[n]->setBrush(Qt::green);
 
   // and position in the middle of the calculated point
 
   QRectF rectangle = m_value[n]->boundingRect();
-  m_value[n]->setPos((pixelPos.x() - rectangle.width()/2), (pixelPos.y() - rectangle.height()/2 ));
+  m_value[n]->setPos((pixelPos.x() - m_scaleFactor * rectangle.width()/2), (pixelPos.y() - m_scaleFactor * rectangle.height()/2 ));
 
   // done
 }
 
+// calcScalefactor
+//
+//    calculates the factor the value are larger than the labels, this is calculated arbitrary and could be
+//    done better
 
+float numericChart::calcScaleFactor() {
 
+float scale = 1.0;
+
+  QPointF labelPosInPixel = this->mapToPosition(m_labelPos[0]);
+  QPointF valuePosInPixel = this->mapToPosition(m_valuePos[0]);
+
+  float diff = abs(labelPosInPixel.y() - valuePosInPixel.y());
+  scale = diff / 12.5;
+
+  return scale;
+}

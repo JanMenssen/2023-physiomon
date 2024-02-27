@@ -53,7 +53,7 @@ void scopeChart::setYaxis(float ymin, float ymax) {
   m_yLimits[1] = yAxis->max();
 }
 
-// update
+// updatePlot
 //
 //    updates the graph with new points from data
 

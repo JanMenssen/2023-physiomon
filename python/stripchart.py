@@ -6,22 +6,23 @@
 #
 # modifications
 #    26-jan-2024  JM   initial version
+#    27-feb-2024  JM   now derived from graphChart
 
-from basechart import baseChart
+from python.graphchart import graphChart
 from PySide6.QtCore import QPointF
 
-class stripChart(baseChart) :
+class stripChart(graphCart) :
 
   # constructor
 
   def __init__(self,chanlist) :
     super().__init__(chanlist)
     
-  # update
+  # updatePlot
   #
-  #   updates the graph with new samples
+  #   updates the graph with new samples for one channel
 
-  def update(self,ichan,data) :
+  def updatePlot(self,ichan,data) :
 
     # to make it faster
 
@@ -31,8 +32,7 @@ class stripChart(baseChart) :
     
     # downSample 
 
-    data = self.m_downSampler[ichan].getData(data)
-      
+    data = self.m_downSampler[ichan].getData(data)   
     nsamples = len(data)    
 
     if (self.m_firstScreen == True) :

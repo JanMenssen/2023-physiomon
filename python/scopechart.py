@@ -6,12 +6,15 @@
 #
 # modifications
 #    26-jan-2024  JM   initial version
+#    27-feb-2024  JM    now derived from graphChart
 
-from basechart import baseChart
+from python.graphchart import graphChart
 from PySide6.QtCore import QPointF
 from PySide6.QtCharts import QLineSeries
 
-class scopeChart(baseChart) :
+MAX_POINTS_IN_GRAPH = 2500
+
+class scopeChart(graphChart) :
 
   # constructor
 
@@ -31,6 +34,11 @@ class scopeChart(baseChart) :
     pen.setWidth(1)
     pen.setColor("red")
     self.m_scopeLine.setPen(pen)
+
+    # clear some values
+
+    super().m_indx = [0] * self.m_numchan
+    for buffer in self.m_dataBuffer : buffer.reserve(MAX_POINTS_IN_GRAPH)
      
   # setYaxis
   #
@@ -42,12 +50,11 @@ class scopeChart(baseChart) :
     super().setYaxis(ymin,ymax)  
     self.m_yLimits = [self.m_axisY.min(), self.m_axisY.max()]
   
-
-  # update
+  # updatePlot
   #
   #   updates the graph with new samples
 
-  def update(self,ichan,data) :
+  def updatePlot(self,ichan,data) :
 
     # to make it faster
 
@@ -58,11 +65,11 @@ class scopeChart(baseChart) :
     # downSample
     
     data = self.m_downSampler[ichan].getData(data)
+    nsamples = len(data)  
 
     # determint the numbef or samples that should be placed in the buffer, important if the
-    # end of the buffer is reached
-
-    nsamples = len(data)  
+    # end of the buffer is reached   
+    
     if (indx + nsamples > maxindx) : nsamples = maxindx - indx
 
     # and place in the buffer, depending on the first screen 
@@ -83,7 +90,7 @@ class scopeChart(baseChart) :
 
     self.m_indx[ichan] = indx
 
-  # finishUpdate
+  # finishUpdatePlot
   #
   #   finishUpdate draws the red vertical line on the screen (not the first screen)
     
@@ -92,6 +99,7 @@ class scopeChart(baseChart) :
     super().finishUpdate()
 
     if self.m_firstScreen == False : 
+      
       pnt_lower = QPointF((self.m_indx[0] * self.m_deltaT[0]), self.m_yLimits[0])
       pnt_upper = QPointF((self.m_indx[0] * self.m_deltaT[0]), self.m_yLimits[1])
 

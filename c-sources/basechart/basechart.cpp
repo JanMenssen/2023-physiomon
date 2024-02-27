@@ -22,9 +22,16 @@ baseChart::baseChart(int n, int *chanlist) {
 
   // create the grapchids
 
-  //-jm setMargins(QMargins(10,5,5,5));
-  legend()->hide();
+  setMargins(QMargins(10,5,5,5));
   setBackgroundVisible(false);  
+
+  // default legend settings 
+  
+  legend()->hide();
+  legend()->setLabelBrush(Qt::lightGray);
+  legend()->detachFromChart();
+  legend()->setBackgroundVisible(false);
+  legend()->setInteractive(true);
 }
 
 // baseChart destructor

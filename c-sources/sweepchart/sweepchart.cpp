@@ -24,7 +24,7 @@ sweepChart::~sweepChart() {
   
 }
 
-// update
+// updatePlot
 
 void sweepChart::updatePlot(int ichan, int nsamples, float *data) {
 

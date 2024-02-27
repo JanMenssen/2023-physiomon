@@ -24,8 +24,6 @@
 #include "physiomon_channels.h"
 #include "physiomon_settings.h"
 
-#define MAX_CHANNELS_IN_DISPLAY 3
-
 // to speed up the updating of the graph, some defines are set. These are
 //    - downsampling is performed so the max number of sample points to update the graph
 //      is limited
@@ -65,7 +63,8 @@ class graphChart : public baseChart {
   
     void setYaxis(float ymin, float ymax);
     void setTimeAxis(float nsec);
-    void setLabels(physiomon_settings *settings);
+    void setLabels(channelStruct *channelInfo);
+    void setPrecision(channelStruct *channelInfo);
     void initPlot(physiomon_channels *channels);
     virtual void updatePlot(int ichan, int nsamples, float* data) {};
     virtual bool initUpdatePlot();
@@ -86,10 +85,13 @@ class graphChart : public baseChart {
   private :
  
     void setDownSampler(physiomon_channels *channels);
+    void calcLabelPosition();
+    void plotLabel();
 
     QValueAxis *m_axisX = NULL;
     QValueAxis *m_axisY = NULL;
-    
+
+    QPointF m_labelPos;                      // position of the legend in graph coordinates
 };
 
 #endif

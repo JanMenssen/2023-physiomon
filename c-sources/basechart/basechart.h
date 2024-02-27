@@ -13,8 +13,6 @@
 #ifndef _BASECHART_H
 #define _BASECHART_H
 
-#define MAX_CHANNELS_IN_DISPLAY 3
-
 #include <QChart>
 #include <QLineSeries>
 #include <QValueAxis>
@@ -23,6 +21,7 @@
 #include <QWidget>
 
 #include "physiomon_channels.h"
+#include "physiomon_settings.h"
 
 // maximum of 3 channels in one display
 
@@ -38,7 +37,8 @@ class baseChart : public QChart {
     virtual void setYaxis(float ymin, float ymax) = 0;
     virtual void setTimeAxis(float nsec) = 0;
     virtual void initPlot(physiomon_channels *channels) = 0;
-    virtual void setLabels(physiomon_settings *settings) = 0;
+    virtual void setLabels(channelStruct *channelInfo) = 0;
+    virtual void setPrecision(channelStruct *channelInfo) = 0;
     virtual void updatePlot(int ichan, int nsamples, float* data) = 0;
     virtual bool initUpdatePlot() = 0;
     virtual void finishUpdatePlot() = 0;

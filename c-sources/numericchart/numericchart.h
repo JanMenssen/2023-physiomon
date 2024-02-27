@@ -15,9 +15,6 @@
 
 #include <QScatterSeries>
 
-
-#define MAX_CHANNELS_IN_DISPLAY 3
-
 class numericChart : public baseChart {
 
   public :
@@ -29,9 +26,11 @@ class numericChart : public baseChart {
     
     void setYaxis(float ymin, float ymax){};
     void setTimeAxis(float nsec){};
-    
+    void setPrecision(channelStruct *channelInfo);
+
+  
     void initPlot(physiomon_channels *channels);
-    void setLabels(physiomon_settings *settings);
+    void setLabels(channelStruct *channelInfo);
     void updatePlot(int ichan, int nsamples, float* data);
   
     virtual bool initUpdatePlot();
@@ -45,6 +44,7 @@ class numericChart : public baseChart {
       void calcLabelPositions();
       void plotLabel(int n,QString labelTxt);
       void plotValue(int n,float value);
+      float calcScaleFactor();
     
       QValueAxis *m_axisX = NULL;
       QValueAxis *m_axisY = NULL;
@@ -62,6 +62,10 @@ class numericChart : public baseChart {
       QStringList m_labelTxt;
 
       float m_average[MAX_CHANNELS_IN_DISPLAY];
+      int m_precision[MAX_CHANNELS_IN_DISPLAY];
+      
+      QFont m_usedFont;
+      float m_scaleFactor;                       // factor the value are larger compared to the labels
       
       QGraphicsSimpleTextItem **m_value = nullptr;
       QGraphicsSimpleTextItem **m_label = nullptr;

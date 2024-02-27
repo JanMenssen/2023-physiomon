@@ -82,8 +82,16 @@ class mainWindow(QMainWindow) :
     
     # set the timer
 
-    self.m_timer = QTimer()
-    self.m_timer.timeout.connect(self.onTimeOut)
+    self.m_periodic_timer = QTimer()
+    self.m_periodic_timer.setInterval(TIMER_PERIOD)
+
+    self.m_oneShot_timer = QTimer()
+    self.m_oneShot_timer.setInterval(TIMER_PERIOD)
+    self.m_oneShot_timer.setSingleShot()
+    self.m_oneShot_timer.start()
+
+    self.m_periodic_timer.timeout.connect(self.onTimeOut)
+    self.m_oneShot_timer.timeout.connect(self.onOneShot)
   
     # and set ready
 
@@ -99,7 +107,7 @@ class mainWindow(QMainWindow) :
 
     self.m_device.configure(self.m_settings)
     self.m_channels.configure(self.m_settings,self.m_device)
-    self.m_displays.configure(self.m_settings,self.m_channels)
+    self.m_displays.configure(self.m_settings)
 
     return
   
@@ -268,6 +276,15 @@ class mainWindow(QMainWindow) :
     
     return
 
+  # onOneShot
+  #
+  #   called to initialise the charts after rendering is done
+
+  def onOneShot(self) :
+
+    self.m_displays.initPlot(self.m_channels)
+    return
+  
   # onTimeOut
   #
   #     is called when a timeout occurs at the timer
@@ -311,7 +328,7 @@ class mainWindow(QMainWindow) :
       self.m_deviceMenuAction.setDisabled(True)
  
       self.m_device.setStartStop(True)
-      self.m_timer.start(TIMER_PERIOD) 
+      self.m_timer.start() 
 
       self.statusBar().setText("device started",5)
 

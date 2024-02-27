@@ -90,7 +90,7 @@ class physiomon_settings() :
 
   def _readChannels(self) :
 
-    channel = {"name" : "", "type" : 0, "source" : 0, "display" : 0}
+    channel = {"name" : "", "type" : 0, "source" : 0, "display" : 0, "precision" : 1}
     self.m_channels = []
 
     for i in range(self.m_numchan) :  
@@ -103,6 +103,7 @@ class physiomon_settings() :
         channel["type"] = TYPE_ANALOG_IN
       channel["source"] = int(self.m_settings.value("source", defaultValue = 0))
       channel["display"] = int(self.m_settings.value("display",defaultValue = 0))
+      channel["precision"] = int(self.m_settings.value("precision",defaultValue = 1))
       self.m_settings.endGroup()
       
       self.m_channels.append(channel.copy())

@@ -277,7 +277,7 @@ void mainWindow::onConfigure() {
   
   m_device->configure(m_settings);
   m_channels->configure(m_settings,m_device);
-  m_displays->configure(m_settings,m_channels);
+  m_displays->configure(m_settings);
 
   return;
 }
@@ -364,12 +364,11 @@ void mainWindow::onTimeOut() {
   m_device->read(m_channels);
   m_displays->plot(m_channels);
   
-  qDebug() << "<-- timer : " << m_periodic_timer->remainingTime();
+  //-jm qDebug() << "<-- timer : " << m_periodic_timer->remainingTime();
 
   //-jm statusBarNew *status = (statusBarNew *)statusBar();
   //-jm status->setText("time out",1.0);
 }
-
 
 // onOneShot
 //

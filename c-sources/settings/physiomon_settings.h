@@ -20,6 +20,7 @@ struct channelStruct {
   typeSignal type;
   int source;
   int display;
+  int precision;
 };
 
 // the display structure is used for the position and the axis limits  of the displays

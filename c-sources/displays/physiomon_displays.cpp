@@ -48,7 +48,7 @@ void physiomon_displays::initialise() {
 }
 // configure
 
-void physiomon_displays::configure(physiomon_settings *settings, physiomon_channels *channels) {
+void physiomon_displays::configure(physiomon_settings *settings) {
   
   int chanlist[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
   int nchan = 0;
@@ -104,6 +104,7 @@ void physiomon_displays::configure(physiomon_settings *settings, physiomon_chann
 
       case DISPLAY_MODE_NUMERIC :
         m_chart[idisp] = new numericChart(nchan,chanlist);
+        m_chart[idisp]->setPrecision(settings->m_channels);
         break;
 
       default :
@@ -130,7 +131,7 @@ void physiomon_displays::configure(physiomon_settings *settings, physiomon_chann
 
     // colors and labels 
 
-    m_chart[idisp]->setLabels(settings);
+    m_chart[idisp]->setLabels(settings->m_channels);
   }
 
   // check there is space left in the grid and fill it up with an empty
