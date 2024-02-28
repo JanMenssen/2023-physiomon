@@ -7,8 +7,9 @@
 %
 % modifications
 %     03-feb-2024   JM    initial version
+%     28-feb-2024   JM    now derived from graphchart
 
-classdef scopechart < basechart
+classdef scopechart < graphchart
 
   properties
     m_posLineHandle = [];
@@ -29,7 +30,7 @@ classdef scopechart < basechart
       % with <axixHandle> a handle to the axis of the chart and <channels> a list of
       % channcels that should be plotted in this chart
 
-      obj@basechart(axisHandle,channels);
+      obj@graphchart(axisHandle,channels);
 
       % create a new position handle to show the current position
 
@@ -47,14 +48,14 @@ classdef scopechart < basechart
       %
       % with <ymin> the lower value adn <ymax> the upper value.
 
-        setYaxis@basechart(obj,ymin,ymax);
+        setYaxis@graphchart(obj,ymin,ymax);
         obj.m_yLimits = [ymin ymax];
 
     end
 
-    %% update
+    %% updatePlot
 
-    function update(obj,ichan,data)
+    function updatePlot(obj,ichan,data)
 
       % <update> updates the graph for channel <ichan> with the data from <data>. New points
       % are added to the right until the end is reached. The following points are overwrite
@@ -95,17 +96,17 @@ classdef scopechart < basechart
       obj.m_indx(ichan) = indx + nsamples; 
     end
   
-    %% finishUpdate
+    %% finishUpdatePlot
 
-    function finishUpdate(obj)
+    function finishUpdatePlot(obj)
 
       %
       %     this method draws a red vertical position line on the screen (after the first
       %     screen is plotted)
       %
-      %         syntax : finishUpdate
+      %         syntax : finishUpdatePlot
      
-      finishUpdate@basechart(obj);
+      finishUpdatePlot@graphchart(obj);
      
       if (~obj.m_firstScreen)
         atX = obj.m_dataBuffer(1).x(obj.m_indx(1));

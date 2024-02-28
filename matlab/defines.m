@@ -24,6 +24,7 @@ classdef defines
     DISPLAY_MODE_STRIP = 1;
     DISPLAY_MODE_SWEEP = 2;
     DISPLAY_MODE_SCOPE = 3;
+    DISPLAY_MODE_NUMERIC = 4;
   
   end
 

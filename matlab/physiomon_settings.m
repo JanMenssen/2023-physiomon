@@ -11,6 +11,7 @@
 % modifications
 %   25-jan-2024   JM    initial version
 %   11-feb-2024   JM    now derivated from a handle class (pointer logic)
+%   28-feb-2024   JM    numeric display added
 
 classdef physiomon_settings < handle
 
@@ -170,7 +171,7 @@ classdef physiomon_settings < handle
       %
       % <m_channels> is an internal private member of the class
 
-      obj.m_channels = repmat(struct('name',[],'type',[],'source',[],'display',[],'sampleRate',[]),numChannels,1);
+      obj.m_channels = repmat(struct('name',[],'type',[],'source',[],'display',[],'precision',[]),numChannels,1);
 
       for iChan = 1:numChannels
 
@@ -185,6 +186,7 @@ classdef physiomon_settings < handle
 
         obj.m_channels(iChan).source = str2double(tmpStruct.(section).source);
         obj.m_channels(iChan).display = str2double(tmpStruct.(section).display);
+        obj.m_channels(iChan).precision = str2double(tmpStruct.(section).precision);
       
       end
     end
@@ -222,6 +224,10 @@ classdef physiomon_settings < handle
             obj.m_displays(iDisplay).mode = obj.defs.DISPLAY_MODE_SWEEP;
           case 'scope'
             obj.m_displays(iDisplay).mode = obj.defs.DISPLAY_MODE_SCOPE;
+          case 'numeric'
+            obj.m_displays(iDisplay).mode = obj.defs.DISPLAY_MODE_NUMERIC;
+          otherwise
+            error('unknown display mode');
         end
 
       end

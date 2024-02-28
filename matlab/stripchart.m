@@ -7,8 +7,9 @@
 %
 % modifications
 %     03-feb-2024   JM    initial version
+%     28-feb-2024   JM    now derived from graphchart
 
-classdef stripchart < basechart
+classdef stripchart < graphchart
 
   methods
 
@@ -24,20 +25,20 @@ classdef stripchart < basechart
       % with <axixHandle> a handle to the axis of the chart and <channels> a list of
       % channels that should be plotted in this chart
 
-      obj = obj@basechart(axisHandle,channels);
+      obj = obj@graphchart(axisHandle,channels);
 
     end
 
 
-    %% update
+    %% updatePlot
 
-    function update(obj,ichan,data)
+    function updatePlot(obj,ichan,data)
 
       % <update> updates the graph for channel <ichan> with the data from <data>. Old
       % points are removed on left the graph is shifted and the new data points are added
       % to the right
       %
-      %     syntax : update(obj,ichan,data)
+      %     syntax : updatePlot(obj,ichan,data)
       %
       % with <ichan> the channel that should be updated and <data> the new data that is
       % added to the graph

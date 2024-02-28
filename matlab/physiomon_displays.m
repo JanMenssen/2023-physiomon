@@ -118,10 +118,16 @@ classdef physiomon_displays <handle
             obj.m_chart{idisp} = scopechart(handle,chanlist);
             obj.m_chart{idisp}.setYaxis(curDisp.ymin,curDisp.ymax);
             obj.m_chart{idisp}.setTimeAxis(curDisp.timescale);
+
+          case obj.defs.DISPLAY_MODE_NUMERIC
+       
+            obj.m_chart{idisp} = numericchart(handle,chanlist);
+            obj.m_chart{idisp}.setPrecision(allChannels);
         end
 
         % and initialise the chart to prepare for plotting, add labels and so on 
 
+        obj.m_chart{idisp}.setLabels(allChannels);
         obj.m_chart{idisp}.initPlot(channels);
       
       end
@@ -145,7 +151,7 @@ classdef physiomon_displays <handle
         % a display could have more channels, so we need the data for all channels in this
         % display
         
-        obj.m_chart{iDisp}.initUpdate();
+        obj.m_chart{iDisp}.initUpdatePlot();
         
         for iChan = 1:length(obj.m_chart{iDisp}.m_channels)
 
@@ -153,11 +159,11 @@ classdef physiomon_displays <handle
 
           curChannel = obj.m_chart{iDisp}.m_channels(iChan);
           data = channels.readDisplay(curChannel);
-          obj.m_chart{iDisp}.update(iChan,data);
+          obj.m_chart{iDisp}.updatePlot(iChan,data);
           
         end
 
-        obj.m_chart{iDisp}.finishUpdate();
+        obj.m_chart{iDisp}.finishUpdatePlot();
 
       end
 

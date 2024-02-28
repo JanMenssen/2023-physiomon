@@ -7,8 +7,9 @@
 
 % modifications
 %     03-feb-2024   JM    initial version
+%     28-feb-2024   JM    now derived from graphchart
 
-classdef sweepchart < basechart
+classdef sweepchart < graphchart
 
   methods
 
@@ -24,19 +25,19 @@ classdef sweepchart < basechart
       % with <axixHandle> a handle to the axis of the chart and <channels> a list of
       % channcels that should be plotted in this chart
 
-      obj@basechart(axisHandle,channels);
+      obj@graphchart(axisHandle,channels);
 
     end
 
     %% update
 
-    function update(obj,ichan,data)
+    function updatePlot(obj,ichan,data)
 
       % <update> updates the graph for channel <ichan> with the data from <data>. Point are 
       % added to the graph until the then of the screen is reached on the right. Then the
       % screen is cleared an new points are plotted and added to the left
       %
-      %     syntax : update(ichan,data)
+      %     syntax : updatePlot(ichan,data)
       %
       % with <ichan> the channel that should be updated and <data> the new data that is
       % added to the graph
@@ -61,17 +62,17 @@ classdef sweepchart < basechart
 
     end
 
-    %% initUpdate
+    %% initUpdatePlot
 
-    function endReached = initUpdate(obj)
+    function endReached = initUpdatePlot(obj)
 
       % clears the screen at the beginning of a new screen
       %
-      %     syntax : endReached = initUpdate
+      %     syntax : endReached = initUpdatePlot
       %
       % with <endReached> is true if the end of the screen is reached, else false
 
-      endReached = initUpdate@basechart(obj);
+      endReached = initUpdatePlot@graphchart(obj);
       
       if (endReached)
         for i = 1:obj.m_numchan 
