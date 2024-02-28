@@ -82,7 +82,7 @@ mainWindow::mainWindow(int width, int height) {
 
   // and set ready
 
-  setWindowTitle("PhysioMon v3.01");
+  setWindowTitle("PhysioMon v3.01 - C++ version");
   status->setText("ready ...",3.0);
 }
  

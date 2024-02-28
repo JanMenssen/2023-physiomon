@@ -8,7 +8,7 @@
 #   26-jan-2024   JM    initial version
 #   27-feb-2024   JM    now derived from graphChart
 
-from python.graphchart import graphChart
+from graphchart import graphChart
 from PySide6.QtCore import QPointF
 
 class sweepChart(graphChart) :  
@@ -56,7 +56,7 @@ class sweepChart(graphChart) :
 
   def initUpdatePlot(self) :
 
-    endReached = super().initUpdate()
+    endReached = super().initUpdatePlot()
     if (endReached == True) : [buffer.clear() for buffer in self.m_dataBuffer]
 
     return endReached

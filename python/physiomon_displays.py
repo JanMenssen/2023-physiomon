@@ -91,7 +91,7 @@ class physiomon_displays() :
       
       if (curDisplay["mode"].lower() == 'numeric') :
         self.m_chart.append(numericChart(chanlist))
-        self.m_chart[-1].setPrecision(curDisplay["precision"])
+        self.m_chart[-1].setPrecision(settings.m_channels)
        
       # set the widget at the position, we assume to have a grid layout of 20 x 20, this means each
       # relative position should divided by 0.05

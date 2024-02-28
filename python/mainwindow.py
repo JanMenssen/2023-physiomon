@@ -87,7 +87,7 @@ class mainWindow(QMainWindow) :
 
     self.m_oneShot_timer = QTimer()
     self.m_oneShot_timer.setInterval(TIMER_PERIOD)
-    self.m_oneShot_timer.setSingleShot()
+    self.m_oneShot_timer.setSingleShot(True)
     self.m_oneShot_timer.start()
 
     self.m_periodic_timer.timeout.connect(self.onTimeOut)
@@ -95,7 +95,7 @@ class mainWindow(QMainWindow) :
   
     # and set ready
 
-    self.setWindowTitle("PhysioMon v3.01")
+    self.setWindowTitle("PhysioMon v3.01 - python version")
     self.statusBar().setText("ready ...",3.0)
 
   # onConfigure
@@ -293,7 +293,7 @@ class mainWindow(QMainWindow) :
     
     self.m_device.read(self.m_channels)
     self.m_displays.plot(self.m_channels) 
-    print("<-- timer : %d" % self.m_timer.remainingTime())
+    #-jm print("<-- timer : %d" % self.m_periodic_timer.remainingTime())
      
     return
    
@@ -328,7 +328,7 @@ class mainWindow(QMainWindow) :
       self.m_deviceMenuAction.setDisabled(True)
  
       self.m_device.setStartStop(True)
-      self.m_timer.start() 
+      self.m_periodic_timer.start() 
 
       self.statusBar().setText("device started",5)
 
@@ -346,7 +346,7 @@ class mainWindow(QMainWindow) :
       self.m_deviceMenuAction.setDisabled(False)
 
       self.m_device.setStartStop(False)
-      self.m_timer.stop()
+      self.m_periodic_timer.stop()
 
       self.statusBar().setText("device stopped",5)
    

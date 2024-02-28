@@ -10,13 +10,14 @@ from basechart import baseChart
 from PySide6.QtCharts import QValueAxis,QScatterSeries
 from PySide6.QtCore import Qt,QPointF
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QGraphicsSimpleTextItem
+from PySide6.QtWidgets import QGraphicsSimpleTextItem,QGraphicsScene
 
 class numericChart (baseChart) :
 
   # constructor
 
-  def __init__(self) :
+  def __init__(self,chanlist) :
+    super().__init__(chanlist)
     
     # this class makes also use of axis, to position some elements, however these axis are
     # hidden
@@ -24,8 +25,8 @@ class numericChart (baseChart) :
     self.m_axisX = QValueAxis()
     self.m_axisY = QValueAxis()
 
-    super().addAxis(self.m_axisX,Qt.AlignmentFlag.AlignBottom)
-    super().addAxis(self.m_axisY,Qt.AlignmentFlag.AlignLeft)
+    self.addAxis(self.m_axisX,Qt.AlignmentFlag.AlignBottom)
+    self.addAxis(self.m_axisY,Qt.AlignmentFlag.AlignLeft)
 
     self.m_axisX.setGridLineVisible(False)
     self.m_axisX.setLabelsColor(Qt.lightGray)
@@ -38,10 +39,10 @@ class numericChart (baseChart) :
 
     # create a scatter series to determine the axis coordinate system (0-1)
 
-    self.m_chart.removeAllSeries()
+    self.removeAllSeries()
   
     self.m_series = QScatterSeries()
-    self.m_chart.addSeries(self.m_series) 
+    self.addSeries(self.m_series) 
     self.m_series.attachAxis(self.m_axisX)
     self.m_series.attachAxis(self.m_axisY)
 
@@ -50,28 +51,36 @@ class numericChart (baseChart) :
     self.m_usedFont = QFont()
     self.m_scaleFactor = 1
 
-    self.m_label = [[]]
-    self.m_value = [[]]
+    self.m_labelTxt = []
+    self.m_precision = []
+
+    self.m_label = [QGraphicsSimpleTextItem()] * self.m_numchan
+    self.m_value = [QGraphicsSimpleTextItem()] * self.m_numchan
+      
+    self.m_valuePos = [QPointF()] * self.m_numchan
+    self.m_labelPos = [QPointF()] * self.m_numchan
+
+    self.m_average = [0] * self.m_numchan
 
   # setLabels
   #
   #     this routine copies the names from the channel structure toa QString list that can be
   #     used to show on the screen (see plotlabels)
 
-  def setLabels(self,channels) :
+  def setLabels(self,channelInfo) :
 
-    self.m_labelText = []
-    for ichan in super().m_channels : self.m_labelTxt.append(channels[ichan]["name"])
+    self.m_labelTxt = []
+    for ichan in self.m_channels : self.m_labelTxt.append(channelInfo[ichan]["name"])
 
   # setPrecision
   #
   #     this routine reads the precision from the channel struct for the selected channel and uses
   #     it on the screen
     
-  def setPrecision(self,channels) :
+  def setPrecision(self,channelInfo) :
 
     self.m_precision = []
-    for ichan in super().m_channels : self.m_precision.append(channels[ichan]["precision"])
+    for ichan in self.m_channels : self.m_precision.append(channelInfo[ichan]["precision"])
 
   # initPlot
   #
@@ -83,13 +92,15 @@ class numericChart (baseChart) :
 
     # calculate the position of the labels and the values in chart coordinates
 
-    self.calcValuePosition(self)
-    self.calcLabelPosition(self)
+    self.calcValuePositions()
+    self.calcLabelPositions()
+
+    self.m_scaleFactor = self.calcScaleFactor()
 
     # and place the label on the screen
-
-    for label,i in zip(self.m_labelTxt,range(super().m_numchan)) : self.plotLabel(i,label)
-
+  
+    for i in range(self.m_numchan) : self.plotLabel(i,self.m_labelTxt[i])
+  
   # updatePlot
   #
   #   this routine plots the average value of the data in a numeric on the screen for the
@@ -107,8 +118,9 @@ class numericChart (baseChart) :
   #   this routine is called before the seperate channels are updated, the labels are plotted
     
   def initUpdatePlot(self) :
- 
-    for label,i in zip(self.m_labelTxt,range(super().m_numchan)) : self.plotLabel(i,label)
+           
+    self.m_scaleFactor = self.calcScaleFactor()    
+    for i in range(self.m_numchan) : self.plotLabel(i,self.m_labelTxt[i])
 
   # finishUpdatePlot
   #
@@ -125,45 +137,41 @@ class numericChart (baseChart) :
   def calcValuePositions(self) :
 
     area = self.plotArea()
-    self.m_valuePos = []
-
-    if (area.height() >= area.width) :
+    if (area.height() >= area.width()) :
 
       # vertical mode
 
-      y_inc = 1.0 / super().m_numchan
-      for i in range(super().m_numchan) : self.m_ValuePos.append(QPointF(0.5,1-(i+1)*y_inc))
+      y_inc = 1.0 / (self.m_numchan + 1)
+      for i in range(self.m_numchan) : self.m_valuePos[i] = QPointF(0.5,1-(i+1)*y_inc)
 
     else :
       
       # horizontal mode
       
-      x_inc = 1.0 / super().m_numchan
-      for i in range(super().m_numchan) : self.m_ValuePos.append(QPointF(i+1)*x_inc,0.5)
+      x_inc = 1.0 / (self.m_numchan + 1)
+      for i in range(self.m_numchan) : self.m_valuePos[i] = QPointF((i+1)*x_inc,0.5)
 
   # calcLabelPositions
   #
   #     this routine calculates the positions where to display the labels on the screen. This is
   #     in the chart coordinate systen
 
-  def calcLabelPosition(self) :
+  def calcLabelPositions(self) :
 
     area = self.plotArea()
-    self.m_labelPos = []
-
-    if (area.height() >= area.width) :
+    if (area.height() >= area.width()) :
 
       # vertical mode
 
-      y_inc = 1.0 / super().m_numchan
-      for i in range(super().m_numchan) : self.m_labelPos.append(QPointF(0.5,1-(i+1)*y_inc))
+      y_inc = 1.0 / (self.m_numchan + 1)
+      for i in range(self.m_numchan) : self.m_labelPos[i] = QPointF(0.5,1-(i+1)*y_inc + 0.11)
 
     else :
       
       # horizontal mode
       
-      x_inc = 1.0 / super().m_numchan
-      for i in range(super().m_numchan) : self.m_labelPos.append(QPointF(i+1)*x_inc,0.5)
+      x_inc = 1.0 / (self.m_numchan + 1)
+      for i in range(self.m_numchan) : self.m_labelPos[i] = QPointF((i+1)*x_inc,0.5)
 
   # plotLabel
   #
@@ -172,9 +180,13 @@ class numericChart (baseChart) :
   
   def plotLabel(self,n,labelTxt) :
 
-    pixelPos = self.mapToPosition(self.m_labelPos[n])
-    del self.m_label[n]
+    # remove the item, Note, this should be done better in the future using signal and slots 
 
+    scene = self.m_label[n].scene()
+    if (scene) : scene.removeItem(self.m_label[n])
+
+    pixelPos = self.mapToPosition(self.m_labelPos[n])
+    
     self.m_label[n] = QGraphicsSimpleTextItem(labelTxt,self)
     self.m_label[n].setFont(self.m_usedFont)
     self.m_label[n].setBrush(Qt.lightGray)
@@ -183,8 +195,7 @@ class numericChart (baseChart) :
 
     rectangle = self.m_label[n].boundingRect()
     self.m_label[n].setPos((pixelPos.x() - rectangle.width()/2), (pixelPos.y() - rectangle.height()/2))
-
-
+    
   # plotValue
   #
   #    this routine sets the value on the screen. This is done by converting the chart coorindates
@@ -193,19 +204,21 @@ class numericChart (baseChart) :
   
   def plotValue(self,n,value) :
 
-    pixelPos = self.mapToPosition(self.m_labelPos[n])
-    del self.m_value[n]
+    scene = self.m_value[n].scene()
+    if (scene) : scene.removeItem(self.m_value[n])
 
-    valueTxt = QString::number(value,'f',self.m_precision[n])
-
+    pixelPos = self.mapToPosition(self.m_valuePos[n])
+    valueTxt= "{:.{}f}".format(value, self.m_precision[n])
+    
     self.m_value[n] = QGraphicsSimpleTextItem(valueTxt,self)
     self.m_value[n].setFont(self.m_usedFont)
-    self.m_value[n].setBrush(Qt.lightGray)
+    self.m_value[n].setScale(self.m_scaleFactor)
+    self.m_value[n].setBrush(Qt.green)
 
     # and positio to the middle
 
-    rectangle = self.m_label[n].boundingRect()
-    self.m_value[n].setPos((pixelPos.x() - rectangle.width()/2), (pixelPos.y() - rectangle.height()/2))
+    rectangle = self.m_value[n].boundingRect()
+    self.m_value[n].setPos((pixelPos.x() - self.m_scaleFactor * rectangle.width()/2), (pixelPos.y() - self.m_scaleFactor * rectangle.height()/2))
 
   # calcScalefactor
   #

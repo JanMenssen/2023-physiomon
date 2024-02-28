@@ -15,23 +15,25 @@ class baseChart(QChart) :
   # constructor
 
   def __init__(self,chanlist) :
+    super().__init__()
 
     # set the channels that are in the display
 
     self.m_channels = chanlist
+    self.m_numchan = len(chanlist)
 
     # create the graphics 
 
-    super().setMargins(QMargins(10,5,5,5))
-    super().setBackgoundVisible(False)
+    self.setMargins(QMargins(10,5,5,5))
+    self.setBackgroundVisible(False)
 
     # default legend settings
 
-    super().legend().hide
-    super().legend().setLabelBrush(Qt.lightGray)
-    super().legend().detachFromChart()
-    super().legend().setBackgroundVisible(False)
-    super().legend().setInteractive(True)
+    self.legend().hide()
+    self.legend().setLabelBrush(Qt.lightGray)
+    self.legend().detachFromChart()
+    self.legend().setBackgroundVisible(False)
+    self.legend().setInteractive(True)
     
         
 

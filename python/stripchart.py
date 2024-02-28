@@ -8,10 +8,10 @@
 #    26-jan-2024  JM   initial version
 #    27-feb-2024  JM   now derived from graphChart
 
-from python.graphchart import graphChart
+from graphchart import graphChart
 from PySide6.QtCore import QPointF
 
-class stripChart(graphCart) :
+class stripChart(graphChart) :
 
   # constructor
 

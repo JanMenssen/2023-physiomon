@@ -56,7 +56,7 @@ class graphChart (baseChart) :
 
   def __init__(self,chanlist) :
 
-    super().__init__(self,chanlist)
+    super().__init__(chanlist)
 
     # create members
 
@@ -82,7 +82,7 @@ class graphChart (baseChart) :
 
     # create for every channe a QLineSeries object and attach the series to the axis
 
-    self.m_chart.removeAllSeries()
+    self.removeAllSeries()
   
     self.m_series = []
     self.m_dataBuffer = [[]]
@@ -92,7 +92,7 @@ class graphChart (baseChart) :
       self.m_dataBuffer.append([])
       self.m_series.append(QLineSeries())
 
-      self.m_chart.addSeries(self.m_series[i]) 
+      self.addSeries(self.m_series[i]) 
       self.m_series[i].attachAxis(self.m_axisX)
       self.m_series[i].attachAxis(self.m_axisY)
 
@@ -148,12 +148,21 @@ class graphChart (baseChart) :
   
   def calcLabelPosition(self) :
 
-    yRange = self.getYaxisRef.max() - self.getYaxisRef.min()
-    ypos = self.getYaxisRef.min + 1.1 * yRange
-    xpos = 0.8 * self.getXaxisRef().max
+    yRange = self.getYaxisRef().max() - self.getYaxisRef().min()
+    ypos = self.getYaxisRef().min() + 1.1 * yRange
+    xpos = 0.8 * self.getXaxisRef().max()
 
     self.m_labelPos = QPointF(xpos,ypos)
 
+  # setLabels
+  #
+  #   copies the names of the channels to the series so it can be used to display it (plotLabel)
+    
+  def setLabels(self,channelInfo) :
+
+    for channel,ichan in zip(self.m_channels,range(self.m_numchan)) :
+      self.m_series[ichan].setName(channelInfo[channel]["name"])
+    
   # plotLabel
   #
   #   knowing the position of the label in graph coordinates, a conversion is done to pixels
@@ -163,10 +172,10 @@ class graphChart (baseChart) :
 
     # first convert the graph coordinate system to pixels 
 
-    pixelPos = super().mapToPosition(self.m_labelPos)
+    pixelPos = self.mapToPosition(self.m_labelPos)
 
-    super().legend().show()
-    super().legend().setGeometry(pixelPos.x(),pixelPos.y(),120,len(self.m_numchan) * 30)
+    self.legend().show()
+    self.legend().setGeometry(pixelPos.x(),pixelPos.y(),120,self.m_numchan * 30)
      
   # setYaxis
   #
