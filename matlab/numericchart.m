@@ -86,7 +86,7 @@ classdef numericchart < basechart
 
     %% initUpdatePlot
 
-    function endReached = initUpdatePlot(~)
+    function endReached = initUpdatePlot(obj)
     
       % the method <initUpdate> is called every update sequence for all channels in the
       % plot. It is used for repositioning of labels and values 
@@ -97,6 +97,7 @@ classdef numericchart < basechart
       % charts. It is always false
 
       endReached = false;
+      obj.m_scaleFactor = obj.calcScaleFactor();
       
     end
 
@@ -261,7 +262,7 @@ classdef numericchart < basechart
 
     %% calcScaleFactor
 
-    function scale = calcScaleFactor(~)
+    function scale = calcScaleFactor(obj)
     
       % the function <calcScaleFactor> calculates the ratio between the fontsize of the
       % values and the labels
@@ -270,7 +271,12 @@ classdef numericchart < basechart
       %
       % with <scale> the ratio
 
-      scale = 2.5;
+      position = get(obj.m_axisHandle,'InnerPosition');
+      
+      labelPosInPixel = obj.m_labelPos(1).y * position(4);
+      valuePosInPixel = obj.m_valuePos(1).y * position(4);
+
+      scale = abs(labelPosInPixel - valuePosInPixel) / 12.5;
 
     end
 
