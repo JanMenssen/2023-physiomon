@@ -402,10 +402,12 @@ class mainWindow(QMainWindow) :
     if dlgBox.exec() :
       self.m_device.m_channels,self.m_settings.m_displays,self.m_settings.m_events = dlgBox.getModifiedValues()
       self.statusBar().setText("changed ettings are saved ...",3)
-      self.onConfigure()
     else : 
       self.statusBar().setText("changed settings not saved ...",3)
-   
+    
+    self.onConfigure()
+    self.m_oneShot_timer.start()
+    
   # onEvent
   #
   #     function is called when an event key is pressed

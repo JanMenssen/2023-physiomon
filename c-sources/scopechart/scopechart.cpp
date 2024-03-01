@@ -20,6 +20,10 @@ scopeChart::scopeChart(int nchan, int *chanlist) : graphChart(nchan,chanlist) {
   this->addSeries(m_scopeLine);
   m_scopeLine->attachAxis(getXaxisRef());
   m_scopeLine->attachAxis(getYaxisRef());
+  
+  // the legend show a red line name "current pos."
+  
+  m_scopeLine->setName("current pos.");
 
   QPen pen = m_scopeLine->pen();
   pen.setWidth(1);
@@ -109,3 +113,4 @@ void scopeChart::finishUpdatePlot() {
     m_scopeLine->replace(posline);
   }
 }
+

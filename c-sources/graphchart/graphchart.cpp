@@ -270,6 +270,6 @@ void graphChart::plotLabel() {
   QPointF pixelPos = this->mapToPosition(m_labelPos);
 
   this->legend()->show();
-  this->legend()->setGeometry(pixelPos.x(),pixelPos.y(),120,m_numchan * 30);
+  this->legend()->setGeometry(pixelPos.x(),pixelPos.y(),120,m_numchan * 30 + 30);
 }
 

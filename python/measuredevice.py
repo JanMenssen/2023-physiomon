@@ -91,6 +91,12 @@ class measureDevice() :
 
   def configure(self,settings) :
     
+    # first clear the channels
+
+    for analog in self.m_analogIn : analog["channels"] = []
+
+    # and then build up a new list
+    
     numchan = settings.m_numchan
     for i in range(numchan) :
 

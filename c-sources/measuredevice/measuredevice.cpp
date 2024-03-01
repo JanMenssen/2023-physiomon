@@ -115,7 +115,12 @@ void measureDevice::getAnalogInfo(int *n, analogInStruct *analogInfo) {
 
 void measureDevice::configure(physiomon_settings *settings) {
 
+  // first clear the current settings
 
+  for (int i=0;i<m_nrAnalogIn;i++) m_analogIn[i].nchan = 0; 
+
+  // and find the channels belonging the device
+  
   int numchan = settings->m_numchan;
   for (int ichan = 0; ichan < numchan; ichan++) {
 

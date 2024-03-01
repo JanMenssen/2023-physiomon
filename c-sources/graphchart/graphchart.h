@@ -70,6 +70,7 @@ class graphChart : public baseChart {
     virtual bool initUpdatePlot();
     virtual void finishUpdatePlot();
     
+  
     // these variables are about updating the screen
 
     int m_indx[MAX_CHANNELS_IN_DISPLAY] = {0,0,0};
@@ -81,17 +82,17 @@ class graphChart : public baseChart {
     QVector<QPointF> m_dataBuffer[MAX_CHANNELS_IN_DISPLAY];
     downSampler m_downSampler[MAX_CHANNELS_IN_DISPLAY];
     
-  
   private :
  
     void setDownSampler(physiomon_channels *channels);
     void calcLabelPosition();
     void plotLabel();
 
+    QPointF m_labelPos;                      // position of the legend in graph coordinates
     QValueAxis *m_axisX = NULL;
     QValueAxis *m_axisY = NULL;
 
-    QPointF m_labelPos;                      // position of the legend in graph coordinates
+   
 };
 
 #endif

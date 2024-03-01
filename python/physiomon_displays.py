@@ -51,8 +51,10 @@ class physiomon_displays() :
     # clear the current settings
 
     nWidgets = self.m_layout.count()
-    for item in range(nWidgets) :
-      self.m_layout.removeItem(item)
+    for item in range(nWidgets) : 
+      tmpLayoutItem = self.m_layout.takeAt(0)
+      tmpLayoutItem.child = []
+      tmpLayoutItem = []
 
     self.m_numDisplay = settings.m_numdisp
     numchan  = settings.m_numchan

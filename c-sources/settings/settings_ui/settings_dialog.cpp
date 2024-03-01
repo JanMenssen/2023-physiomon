@@ -200,12 +200,12 @@ void settings_dialog::on_okButton_clicked() {
 
   // channels info
 
-  m_nChanPtr = &m_numchan;
+  *m_nChanPtr = m_numchan;
   memcpy(m_channelPtr,m_channels,m_numchan * sizeof(channelStruct));
   
   // display info
   
-  m_nDispPtr = &m_numdisp;
+  *m_nDispPtr = m_numdisp;
   memcpy(m_displayPtr,m_displays,m_numdisp * sizeof(displayStruct));
 
   // events, data is obtained from the event text boxes
@@ -411,7 +411,7 @@ void settings_dialog::on_displayHeight_editingFinished() {
 void settings_dialog::on_displayWidth_editingFinished() {
 
   int curItem = ui->displaySelected->value() - 1;
-  m_displays[curItem].height = ui->displayHeight->text().toDouble();
+  m_displays[curItem].width = ui->displayWidth->text().toDouble();
 }
 
 // on_displayYmin_editingFinished
@@ -477,7 +477,7 @@ void settings_dialog::on_displaySweepChart_rb_clicked() {
 void settings_dialog::on_displayScopeChart_rb_clicked() {
 
   int curItem = ui->displaySelected->value() - 1;
-  m_displays[curItem].mode = DISPLAY_MODE_SWEEP;
+  m_displays[curItem].mode = DISPLAY_MODE_SCOPE;
 }
 
 // on_displayNumeric_rb_clicked

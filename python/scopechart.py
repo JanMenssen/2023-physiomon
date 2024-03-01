@@ -26,9 +26,11 @@ class scopeChart(graphChart) :
     # that could be plotted on the screen
 
     self.m_scopeLine = QLineSeries()
-    self.m_chart.addSeries(self.m_scopeLine)
+    self.addSeries(self.m_scopeLine)
     self.m_scopeLine.attachAxis(self.m_axisX)
     self.m_scopeLine.attachAxis(self.m_axisY)
+    
+    self.m_scopeLine.setName("current pos.")
 
     pen = self.m_scopeLine.pen()
     pen.setWidth(1)
@@ -37,8 +39,8 @@ class scopeChart(graphChart) :
 
     # clear some values
 
-    super().m_indx = [0] * self.m_numchan
-    for buffer in self.m_dataBuffer : buffer.reserve(MAX_POINTS_IN_GRAPH)
+    self.m_indx = [0] * self.m_numchan
+    #-jm for buffer in self.m_dataBuffer : buffer.reserve(MAX_POINTS_IN_GRAPH)
      
   # setYaxis
   #

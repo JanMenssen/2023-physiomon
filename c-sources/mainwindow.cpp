@@ -414,10 +414,6 @@ void mainWindow::onDeviceSettingsChanged() {
 //    program is not started
 
 void mainWindow::onSettingsChanged() {
-  
-  int numdisp = m_settings->m_numdisp;
-  int numchan = m_settings->m_numchan;
-  int numanalog = m_device->m_nrAnalogIn;
 
   channelStruct *channelInfo = m_settings->m_channels;
   displayStruct *displayInfo = m_settings->m_displays;
@@ -427,13 +423,17 @@ void mainWindow::onSettingsChanged() {
   statusBarNew *status = (statusBarNew *)statusBar();
   status->setText("edit general settings ...",3.0);
 
-  settings_dialog dlgBox(this,&numchan,channelInfo,&numdisp,displayInfo,eventInfo,numanalog,analogInfo);
+  settings_dialog dlgBox(this,&m_settings->m_numchan,channelInfo,&m_settings->m_numdisp,displayInfo,eventInfo,m_device->m_nrAnalogIn,analogInfo);
   if (dlgBox.exec() == QDialog::Accepted) {
     status->setText("changed settings are saved ...",3.0);
   } else {
     status->setText("changed settings not saved ...",3.0);
   }
+  
+  // configure and start the one shot timer to wait 100 ms to update the graph
+
   onConfigure();
+  m_oneShot_timer->start();
 }
 
 // onEvent 

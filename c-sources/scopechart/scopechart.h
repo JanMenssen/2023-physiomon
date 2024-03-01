@@ -22,13 +22,14 @@ class scopeChart: public graphChart {
     void setYaxis(float ymin, float ymax);
     void updatePlot(int ichan, int nsamples, float *data);
     void finishUpdatePlot();
-    
+  
   private :
-
+ 
     // needed for the vertical line red line on the screen
 
     float m_yLimits[2] = {0.0 , 0.0};                                      
     QLineSeries *m_scopeLine = NULL;
+    
 };
 
 #endif

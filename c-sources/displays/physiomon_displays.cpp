@@ -56,12 +56,16 @@ void physiomon_displays::configure(physiomon_settings *settings) {
   // these parameters are needed to calculate the position in the grid
 
   int irow = 0, nrow = 0, maxrow = 0;         
-  int icol = 0, ncol = 9, maxcol = 0;         
+  int icol = 0, ncol = 0, maxcol = 0;         
 
   // first remove the current layout
 
-  int count = m_layout->count();
-  for (int i = 0 ; i < count ; i++) m_layout->removeItem(m_layout->itemAt(i));
+  QLayoutItem *child;
+  while ((child = m_layout->takeAt(0)) != nullptr) {
+    delete child->widget();               
+    delete child;     
+  }
+
   if (m_chart != nullptr) delete m_chart;
 
   // now make an array of pointers to a baseChart object
@@ -122,8 +126,8 @@ void physiomon_displays::configure(physiomon_settings *settings) {
     nrow = round(curDisplay.height / RESOLUTION);
     ncol = round(curDisplay.width / RESOLUTION);
 
-    maxrow = (nrow > maxrow ? nrow : maxrow);
-    maxcol = (ncol > maxcol ? ncol : maxcol);
+    maxrow = ((irow + nrow) > maxrow ? (irow + nrow) : maxrow);
+    maxcol = ((icol + ncol) > maxcol ? (icol + ncol) : maxcol);
 
     QChartView *chartView = new QChartView(m_chart[idisp]);
     //-jm chartView->setRenderHint(QPainter::Antialiasing);    
