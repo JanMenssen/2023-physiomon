@@ -400,7 +400,7 @@ class mainWindow(QMainWindow) :
 
     dlgBox = settings_dialog(channels,displays,events,analog)
     if dlgBox.exec() :
-      self.m_device.m_channels,self.m_settings.m_displays,self.m_settings.m_events = dlgBox.getModifiedValues()
+      self.m_settings.m_channels,self.m_settings.m_displays,self.m_settings.m_events = dlgBox.getModifiedValues()
       self.statusBar().setText("changed ettings are saved ...",3)
     else : 
       self.statusBar().setText("changed settings not saved ...",3)

@@ -170,12 +170,13 @@ class graphChart (baseChart) :
     
   def plotLabel(self) :
 
-    # first convert the graph coordinate system to pixels 
+    # first convert the graph coordinate system to pixels, extra 30 pixels is for legend
+    # scope chart
 
     pixelPos = self.mapToPosition(self.m_labelPos)
 
     self.legend().show()
-    self.legend().setGeometry(pixelPos.x(),pixelPos.y(),120,self.m_numchan * 30)
+    self.legend().setGeometry(pixelPos.x(),pixelPos.y(),120,self.m_numchan * 30 + 30)
      
   # setYaxis
   #

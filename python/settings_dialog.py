@@ -160,7 +160,7 @@ class settings_dialog(QDialog) :
     self.m_numchan = newNumChan
     self.ui.channelSelected.setRange(1,self.m_numchan)
 
-  # onNuMDisplayChanged
+  # onNumDisplayChanged
   #
   #   the number of displays is changed. Add or remove displays to or from <m_displays> and update
   #   the spinner box in the display tab and the display spinner box in the channels tab

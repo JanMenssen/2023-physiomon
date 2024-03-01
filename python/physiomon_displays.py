@@ -49,15 +49,16 @@ class physiomon_displays() :
   def configure(self,settings) :
   
     # clear the current settings
+    child = self.m_layout.takeAt(0)
+    while (child) :
+      childWidget = child.widget()
+      childWidget.deleteLater()
+      child = self.m_layout.takeAt(0)
 
-    nWidgets = self.m_layout.count()
-    for item in range(nWidgets) : 
-      tmpLayoutItem = self.m_layout.takeAt(0)
-      tmpLayoutItem.child = []
-      tmpLayoutItem = []
+    self.m_chart = []
 
-    self.m_numDisplay = settings.m_numdisp
-    numchan  = settings.m_numchan
+    self.m_numDisplay = len(settings.m_displays)
+    numchan  = len(settings.m_channels)
 
     maxcol = 0
     maxrow = 0

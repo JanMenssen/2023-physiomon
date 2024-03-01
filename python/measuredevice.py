@@ -97,7 +97,7 @@ class measureDevice() :
 
     # and then build up a new list
     
-    numchan = settings.m_numchan
+    numchan = len(settings.m_channels)
     for i in range(numchan) :
 
       source = settings.m_channels[i]["source"]

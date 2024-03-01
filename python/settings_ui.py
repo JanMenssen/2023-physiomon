@@ -306,7 +306,6 @@ class Ui_settings_dialog(object):
         self.displayScopeChart_rb.setGeometry(QRect(40, 90, 99, 20))
         self.displayNumeric_rb = QRadioButton(self.groupBox_4)
         self.displayNumeric_rb.setObjectName(u"displayNumeric_rb")
-        self.displayNumeric_rb.setEnabled(False)
         self.displayNumeric_rb.setGeometry(QRect(40, 120, 99, 20))
         self.layoutWidget7 = QWidget(self.displays)
         self.layoutWidget7.setObjectName(u"layoutWidget7")

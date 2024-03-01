@@ -97,9 +97,8 @@ class physiomon_channels() :
   def configure(self,settings,device) :
 
     # for every channel
-
-    numchan = settings.m_numchan
-    for i in range(numchan) :
+    
+    for i in range(len(settings.m_channels)) :
 
       tmpBuffer = {"display" : [], "store" : [], "sampleRate" : 0}  
       
