@@ -24,9 +24,9 @@ settings_dialog::settings_dialog(QWidget *parent, int *numchan, channelStruct *c
   m_displayPtr = displays;
 
   m_eventPtr = events;
-  
-  if (m_channelPtr != nullptr) memcpy(m_channels,m_channelPtr,MAX_CHANNELS * sizeof(channelStruct));
-  if (m_displayPtr != nullptr) memcpy(m_displays,m_displayPtr,MAX_DISPLAYS * sizeof(displayStruct));
+
+  for (int i=0;i<MAX_CHANNELS;i++) m_channels[i] = channels[i]; 
+  for (int i=0;i<MAX_DISPLAYS;i++) m_displays[i] = displays[i];
 
   // for a number of edit boxes, only numerics are allowed
 
@@ -88,11 +88,13 @@ settings_dialog::settings_dialog(QWidget *parent, int *numchan, channelStruct *c
   ui->event08->setText(m_eventPtr[7]);
   ui->event09->setText(m_eventPtr[8]);
   ui->event10->setText(m_eventPtr[9]);
+
 }
 
 // destructor
 
 settings_dialog::~settings_dialog() {
+  
   delete ui;
 }
 
@@ -107,7 +109,7 @@ void settings_dialog::setChannelRadioButtons(typeSignal kindSignal) {
     case TYPE_ANALOG_IN :
 
       ui->channelAnalog_rb->setChecked(true);
-        ui->channelNumeric_rb->setChecked(false);
+      ui->channelNumeric_rb->setChecked(false);
       ui->channelWaveform_rb->setChecked(false);
 
       break;
@@ -179,7 +181,6 @@ void settings_dialog::setDisplayRadioButtons(viewMode kindChart) {
         ui->displayNumeric_rb->setChecked(false);
       
       break;
-
   }
 }
 
@@ -201,12 +202,12 @@ void settings_dialog::on_okButton_clicked() {
   // channels info
 
   *m_nChanPtr = m_numchan;
-  memcpy(m_channelPtr,m_channels,m_numchan * sizeof(channelStruct));
-  
+  for (int i=0;i<MAX_CHANNELS;i++) m_channelPtr[i] = m_channels[i];
+
   // display info
   
   *m_nDispPtr = m_numdisp;
-  memcpy(m_displayPtr,m_displays,m_numdisp * sizeof(displayStruct));
+  for (int i=0;i<MAX_DISPLAYS;i++) m_displayPtr[i] = m_displays[i];
 
   // events, data is obtained from the event text boxes
 
@@ -237,6 +238,7 @@ void settings_dialog::on_numchan_editingFinished() {
 
   m_numchan = ui->numchan->text().toInt();
   ui->channelSelected->setRange(1,m_numchan);
+
 }
 
 // on_numdisp_editingFinished
@@ -251,6 +253,7 @@ void settings_dialog::on_numdisp_editingFinished() {
 
   ui->channelDisplaySelected->setRange(1, m_numdisp);
   ui->displaySelected->setRange(1, m_numdisp);
+
 }
 
 // on_channelName_editingFinished
@@ -262,6 +265,7 @@ void settings_dialog::on_channelName_editingFinished() {
 
   int curItem = ui->channelSelected->value() - 1;
   m_channels[curItem].name = ui->channelName->text();
+
 }
 
 // on_channelUnit_editingFinished
@@ -289,8 +293,9 @@ void settings_dialog::on_channelColor_editingFinished() {
 
 void settings_dialog::on_channelDisplaySelected_valueChanged(int value) {
 
-  int curItem = ui->channelSelected->value();
+  int curItem = ui->channelSelected->value() - 1;
   m_channels[curItem].display = value;
+
 }
 
 // on_channelAnalog_rb_clicked
@@ -301,6 +306,7 @@ void settings_dialog::on_channelAnalog_rb_clicked() {
 
   int curItem = ui->channelSelected->value() - 1;
   m_channels[curItem].type = TYPE_ANALOG_IN;
+
 }
 
 // on_channelWaveform_rb_clicked
@@ -311,6 +317,7 @@ void settings_dialog::on_channelWaveform_rb_clicked() {
 
   int curItem = ui->channelSelected->value() - 1;
   //-jm m_channels[curItem].type = TYPE_WAVEFORM_IN;
+
 }
 
 // on_channelNumeric_rb_clicked
@@ -320,7 +327,8 @@ void settings_dialog::on_channelWaveform_rb_clicked() {
 void settings_dialog::on_channelNumeric_rb_clicked() {
   
   int curItem = ui->channelSelected->value() - 1;
-  m_channels[curItem].type = TYPE_NUMERIC_IN;
+  //-jm m_channels[curItem].type = TYPE_NUMERIC_IN;
+
 }
 
 // on_channelSignalSelect_currentIndexChanged
@@ -330,8 +338,9 @@ void settings_dialog::on_channelNumeric_rb_clicked() {
 
 void settings_dialog::on_channelSignalSelect_currentIndexChanged(int index) {
 
-  int curItem = ui->channelSelected->value();
-  m_channels[curItem].display = index;
+  int curItem = ui->channelSelected->value() - 1;
+  m_channels[curItem].source = index;
+
 }
 
 // on_displaySelected_valueChanged
@@ -353,6 +362,7 @@ void settings_dialog::on_displaySelected_valueChanged(int value) {
   ui->displayXaxis->setText(QString::number(m_displays[curItem].timescale,'f',0));
 
   setDisplayRadioButtons(m_displays[curItem].mode);
+
 }
 
 // on_channelSelected_valueChanged
@@ -369,6 +379,7 @@ void settings_dialog::on_channelSelected_valueChanged(int value) {
   ui->channelSignalSelect->setCurrentIndex(m_channels[curItem].source);
 
   setChannelRadioButtons(m_channels[curItem].type);
+
 }
 
 // on_displayTop_editingFinished
@@ -377,8 +388,10 @@ void settings_dialog::on_channelSelected_valueChanged(int value) {
 //    so it can be affected 
 
 void settings_dialog::on_displayTop_editingFinished() {
+  
   int curItem = ui->displaySelected->value() - 1;
   m_displays[curItem].top = ui->displayTop->text().toDouble();
+
 }
 
 // on_displayLeft_editingFinished
@@ -390,6 +403,7 @@ void settings_dialog::on_displayLeft_editingFinished() {
 
   int curItem = ui->displaySelected->value() - 1;
   m_displays[curItem].left = ui->displayLeft->text().toDouble();
+
 }
 
 // on_displayHeight_editingFinished
@@ -401,6 +415,7 @@ void settings_dialog::on_displayHeight_editingFinished() {
 
   int curItem = ui->displaySelected->value() - 1;
   m_displays[curItem].height = ui->displayHeight->text().toDouble();
+
 }
 
 // on_displayHeight_editingFinished
@@ -412,6 +427,7 @@ void settings_dialog::on_displayWidth_editingFinished() {
 
   int curItem = ui->displaySelected->value() - 1;
   m_displays[curItem].width = ui->displayWidth->text().toDouble();
+
 }
 
 // on_displayYmin_editingFinished
@@ -423,6 +439,7 @@ void settings_dialog::on_displayYmin_editingFinished() {
 
   int curItem = ui->displaySelected->value() - 1;
   m_displays[curItem].ymin = ui->displayYmin->text().toDouble();
+
 }
 
 // on_displayYmax_editingFinished
@@ -434,6 +451,7 @@ void settings_dialog::on_displayYmax_editingFinished() {
 
   int curItem = ui->displaySelected->value() - 1;
   m_displays[curItem].ymax = ui->displayYmax->text().toDouble();
+
 }
 
 // on_displayXaxis_editingFinished
@@ -445,6 +463,7 @@ void settings_dialog::on_displayXaxis_editingFinished() {
 
   int curItem = ui->displaySelected->value() - 1;
   m_displays[curItem].timescale = ui->displayXaxis->text().toDouble();
+
 }
 
 // on_displayStripChart_rb_clicked
@@ -456,6 +475,7 @@ void settings_dialog::on_displayStripChart_rb_clicked() {
 
   int curItem = ui->displaySelected->value() - 1;
   m_displays[curItem].mode = DISPLAY_MODE_STRIP;
+
 }
 
 // on_displaySweepChart_rb_clicked
@@ -467,6 +487,7 @@ void settings_dialog::on_displaySweepChart_rb_clicked() {
 
   int curItem = ui->displaySelected->value() - 1;
   m_displays[curItem].mode = DISPLAY_MODE_SWEEP;
+
 }
 
 // on_displayScopeChart_rb_clicked
@@ -478,6 +499,7 @@ void settings_dialog::on_displayScopeChart_rb_clicked() {
 
   int curItem = ui->displaySelected->value() - 1;
   m_displays[curItem].mode = DISPLAY_MODE_SCOPE;
+
 }
 
 // on_displayNumeric_rb_clicked
@@ -489,5 +511,6 @@ void settings_dialog::on_displayNumeric_rb_clicked() {
 
   int curItem = ui->displaySelected->value() - 1;
   m_displays[curItem].mode = DISPLAY_MODE_NUMERIC;
+
 }
 

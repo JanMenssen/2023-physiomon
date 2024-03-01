@@ -377,7 +377,6 @@ void mainWindow::onTimeOut() {
 
 void mainWindow::onOneShot() {
 
-  qDebug() << "--> onOneShot";
   m_displays->initPlot(m_channels);
 }
 
@@ -405,7 +404,11 @@ void mainWindow::onDeviceSettingsChanged() {
   } else {
     status->setText("changed settings not saved ...",3.0);
   }
+
+  // configure and start the one shot timer to wait 100 ms to update the graph
+
   onConfigure();
+  m_oneShot_timer->start();
 }
 
 // onSettingsChanged

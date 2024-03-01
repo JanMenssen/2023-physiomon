@@ -23,6 +23,34 @@ physiomon_settings::physiomon_settings() {
   m_numchan = 0;
   m_numdisp = 0;
 
+  // In C a maximum of MAX_CHANNELS are allowed, to avoid problems we set defaults values
+
+  char keyName[11];
+  for (int i=0;i<MAX_CHANNELS;i++) {
+
+    snprintf(keyName,11,"channel %0d",i+1);
+
+    m_channels[i].name = keyName;
+    m_channels[i].display = 1;
+    m_channels[i].source = 0;
+    m_channels[i].type = TYPE_ANALOG_IN;
+    m_channels[i].precision = 1;
+  }
+
+  // and the same for the displays
+
+  for (int i=0;i<MAX_DISPLAYS;i++) {
+    
+    m_displays[i].top = 0.0;
+    m_displays[i].left = 0.0;
+    m_displays[i].width = 0.1;
+    m_displays[i].height = 0.1;
+    m_displays[i].ymin = 0.0;
+    m_displays[i].ymax = 1.0;
+    m_displays[i].timescale = 10;
+    m_displays[i].mode = DISPLAY_MODE_SCOPE;
+  }
+
   return;
 }
 

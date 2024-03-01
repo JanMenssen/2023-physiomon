@@ -62,7 +62,7 @@ void physiomon_displays::configure(physiomon_settings *settings) {
 
   QLayoutItem *child;
   while ((child = m_layout->takeAt(0)) != nullptr) {
-    delete child->widget();               
+    child->widget()->deleteLater();               
     delete child;     
   }
 
