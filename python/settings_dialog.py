@@ -150,7 +150,7 @@ class settings_dialog(QDialog) :
     
     if (newNumChan > self.m_numchan) :
 
-      newChannels = [ {"name" : "", "type" : 0, "source" : 0, "display" : 0} for k in range(newNumChan-self.m_numchan)]
+      newChannels = [ {"name" : "", "type" : 1, "source" : 0, "display" : 0} for k in range(newNumChan-self.m_numchan)]
       self.m_channels.extend(newChannels)
 
     if (newNumChan < self.m_numchan) :
@@ -171,8 +171,8 @@ class settings_dialog(QDialog) :
 
     if newNumDisp > self.m_numdisp :
 
-      newDisplays = [{"top" : 0, "left" : 0, "width" : 0, "height" : 0, "ymin" : 0, "ymax" : 0, "timescale" : 10, "mode" : ""} for k in range(newNumDisp-self.m_numdisp)]
-      self.m_channels.extend(newDisplays)
+      newDisplays = [{"top" : 0.0, "left" : 0.0, "width" : 0.1, "height" : 0.1, "ymin" : -1, "ymax" : 1, "timescale" : 10, "mode" : "sweep"} for k in range(newNumDisp-self.m_numdisp)]
+      self.m_displays.extend(newDisplays)
 
     if newNumDisp < self.m_numdisp :
 
@@ -226,7 +226,7 @@ class settings_dialog(QDialog) :
     
     self.m_displays[curDisplay]["ymin"] = float(self.ui.displayYmin.text())
     self.m_displays[curDisplay]["ymax"] = float(self.ui.displayYmax.text())
-    self.m_displays[curDisplay]["timecale"] = float(self.ui.displayXaxis.text())
+    self.m_displays[curDisplay]["timescale"] = float(self.ui.displayXaxis.text())
  
   # onDisplayModeChanged
   #
@@ -292,7 +292,7 @@ class settings_dialog(QDialog) :
     
   def onChannelTypeChanged(self) :
     
-    curChannel = self.ui.channelSelected.value()
+    curChannel = self.ui.channelSelected.value() - 1
 
     if self.ui.channelAnalog_rb.isChecked() :
       self.m_channels[curChannel]["type"] = 1
@@ -332,7 +332,7 @@ class settings_dialog(QDialog) :
       self.ui.channelWaveform_rb.setChecked(False)
       self.ui.channelNumeric_rb.setChecked(False)
     
-    if (type == 1) :
+    if (type == 2) :
       self.ui.channelAnalog_rb.setChecked(False)
       self.ui.channelWaveform_rb.setChecked(True)
       self.ui.channelNumeric_rb.setChecked(False)

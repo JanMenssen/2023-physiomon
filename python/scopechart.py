@@ -96,9 +96,9 @@ class scopeChart(graphChart) :
   #
   #   finishUpdate draws the red vertical line on the screen (not the first screen)
     
-  def finishUpdate(self) :
+  def finishUpdatePlot(self) :
 
-    super().finishUpdate()
+    super().finishUpdatePlot()
 
     if self.m_firstScreen == False : 
       

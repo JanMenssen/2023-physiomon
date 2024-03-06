@@ -171,7 +171,7 @@ void numericChart::calcValuePositions() {
   }
 }
 
-// calcLabelositions
+// calcLabelPositions
 //
 //    this routine calculates the positions on the chart were the numeric values should be
 //    displayed. These positions are in graph coordinates, these change during a resize

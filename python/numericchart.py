@@ -171,7 +171,7 @@ class numericChart (baseChart) :
       # horizontal mode
       
       x_inc = 1.0 / (self.m_numchan + 1)
-      for i in range(self.m_numchan) : self.m_labelPos[i] = QPointF((i+1)*x_inc,0.5)
+      for i in range(self.m_numchan) : self.m_labelPos[i] = QPointF((i+1)*x_inc,0.8)
 
   # plotLabel
   #

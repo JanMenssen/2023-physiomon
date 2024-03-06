@@ -335,7 +335,7 @@ class mainWindow(QMainWindow) :
     else :
       
       self.m_startButtonAction.setIcon(QIcon(":/icons/play_13794082.png"))
-      self.m_startButtonAction.setText("tart")
+      self.m_startButtonAction.setText("start")
       self.m_startMenuAction.setText("Start")
 
       self.m_generalButtonAction.setDisabled(False)
