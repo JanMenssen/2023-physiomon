@@ -117,6 +117,7 @@ class physiomon_displays() :
       # add label and colors
 
       self.m_chart[idisp].setLabels(settings.m_channels)
+      self.m_chart[idisp].setColors(settings.m_channewls)
 
     # add items if necessary, to get a grid of 1/RESOLUTION x 1/RSOLUTION 
         

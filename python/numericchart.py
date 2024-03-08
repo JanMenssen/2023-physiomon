@@ -9,8 +9,17 @@
 from basechart import baseChart
 from PySide6.QtCharts import QValueAxis,QScatterSeries
 from PySide6.QtCore import Qt,QPointF
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont,QColor
 from PySide6.QtWidgets import QGraphicsSimpleTextItem,QGraphicsScene
+
+COLOR_RED = 0
+COLOR_GREEN = 1
+COLOR_BLUE = 2
+COLOR_CYAN = 3
+COLOR_MAGENTA = 4
+COLOR_YELLOW = 5
+COLOR_BLACK = 6
+COLOR_WHITE = 7
 
 class numericChart (baseChart) :
 
@@ -72,6 +81,25 @@ class numericChart (baseChart) :
     self.m_labelTxt = []
     for ichan in self.m_channels : self.m_labelTxt.append(channelInfo[ichan]["name"])
 
+  # setColors
+  #
+  #     this routine copies the colors frok the channel struct to a color list that is used to
+  #     show the value with the selected color
+  
+  def setColors(self,channelInfo) :
+
+    self.m_valueColor = []
+    for ichan in self.m_channels : 
+
+      if channelInfo[ichan]["color"] == COLOR_RED : self.m_valueColor.append(QColor(255,0,0,alpha))
+      if channelInfo[ichan]["color"] == COLOR_GREEN : self.m_valueColor.append(QColor(0,255,0,alpha))
+      if channelInfo[ichan]["color"] == COLOR_BLUE : self.m_valueColor.append(QColor(0,0,255,alpha))
+      if channelInfo[ichan]["color"] == COLOR_CYAN : self.m_valueColor.append(QColor(0,255,255,alpha))
+      if channelInfo[ichan]["color"] == COLOR_MAGENTA : self.m_valueColor.append(QColor(255,0,255,alpha))
+      if channelInfo[ichan]["color"] == COLOR_YELLOW : self.m_valueColor.append(QColor(0,255,255,alpha))
+      if channelInfo[ichan]["color"] == COLOR_BLACK : self.m_valueColor.append(QColor(0,0,0,alpha))
+      if channelInfo[ichan]["color"] == COLOR_WHITE : self.m_valueColor.append(QColor(255,255,255,alpha))
+    
   # setPrecision
   #
   #     this routine reads the precision from the channel struct for the selected channel and uses
@@ -213,7 +241,7 @@ class numericChart (baseChart) :
     self.m_value[n] = QGraphicsSimpleTextItem(valueTxt,self)
     self.m_value[n].setFont(self.m_usedFont)
     self.m_value[n].setScale(self.m_scaleFactor)
-    self.m_value[n].setBrush(Qt.green)
+    self.m_value[n].setBrush(self.m_valueColor[n])
 
     # and positio to the middle
 

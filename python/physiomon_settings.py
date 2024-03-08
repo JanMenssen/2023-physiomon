@@ -9,6 +9,15 @@
 
 TYPE_ANALOG_IN = 1
 
+COLOR_RED = 0
+COLOR_GREEN = 1
+COLOR_BLUE = 2
+COLOR_CYAN = 3
+COLOR_MAGENTA = 4
+COLOR_YELLOW = 5
+COLOR_BLACK = 6
+COLOR_WHITE = 7
+
 from PySide6.QtCore import QSettings
 
 class physiomon_settings() :
@@ -90,7 +99,7 @@ class physiomon_settings() :
 
   def _readChannels(self) :
 
-    channel = {"name" : "", "type" : 0, "source" : 0, "display" : 0, "precision" : 1}
+    channel = {"name" : "", "type" : 0, "source" : 0, "display" : 0, "precision" : 1, "color" : COLOR_GREEN}
     self.m_channels = []
 
     for i in range(self.m_numchan) :  
@@ -98,12 +107,23 @@ class physiomon_settings() :
       
       self.m_settings.beginGroup(keyName)
       channel["name"] = self.m_settings.value("name",1)
-      typeSignal = self.m_settings.value("type",defaultValue = "analog in")
-      if (typeSignal == 'analog in') :
-        channel["type"] = TYPE_ANALOG_IN
       channel["source"] = int(self.m_settings.value("source", defaultValue = 0))
       channel["display"] = int(self.m_settings.value("display",defaultValue = 0))
       channel["precision"] = int(self.m_settings.value("precision",defaultValue = 1))
+      
+      typeSignal = self.m_settings.value("type",defaultValue = "analog in")
+      if (typeSignal == 'analog in') : channel["type"] = TYPE_ANALOG_IN
+   
+      color = self.m_settings.vbalue("color", defaultValue = "green")
+      if (color.lower() == "red") : channel["color"] = COLOR_RED
+      if (color.lower() == "green") : channel["color"] = COLOR_GREEN
+      if (color.lower() == "blue") : channel["color"] = COLOR_BLUE
+      if (color.lower() == "cyan") : channel["color"] = COLOR_CYAN
+      if (color.lower() == "magenta") : channel["color"] = COLOR_MAGENTA
+      if (color.lower() == "yellow") : channel["color"] = COLOR_YELLOW
+      if (color.lower() == "black") : channel["color"] = COLOR_BLACK
+      if (color.lower() == "white") : channel["color"] = COLOR_WHITE
+      
       self.m_settings.endGroup()
       
       self.m_channels.append(channel.copy())

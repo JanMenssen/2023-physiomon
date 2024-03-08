@@ -9,11 +9,21 @@
 
 from PySide6.QtCharts import QLineSeries,QValueAxis
 from PySide6.QtCore import Qt,QPointF
+from PySide6.QtGui import QColor
 from basechart import baseChart
 
 # some settings to speed up the software
 
 MAX_POINTS_IN_GRAPH = 2500
+
+COLOR_RED = 0
+COLOR_GREEN = 1
+COLOR_BLUE = 2
+COLOR_CYAN = 3
+COLOR_MAGENTA = 4
+COLOR_YELLOW = 5
+COLOR_BLACK = 6
+COLOR_WHITE = 7
 
 # ----------------------------------------------------------------------
 #   downSampler
@@ -163,6 +173,24 @@ class graphChart (baseChart) :
     for channel,ichan in zip(self.m_channels,range(self.m_numchan)) :
       self.m_series[ichan].setName(channelInfo[channel]["name"])
     
+  # setColors
+  #
+  #   sets the colors to the series
+      
+  def setColors(self,channelInfo) :
+
+    alpha = 255
+    for channel,ichan in zip(self.m_channels,range(self.m_numchan)) :
+    
+      if channelInfo[channel]["color"] == COLOR_RED : self.m_series[ichan].setColor(QColor(255,0,0,alpha))
+      if channelInfo[channel]["color"] == COLOR_GREEN : self.m_series[ichan].setColor(QColor(0,255,0,alpha))
+      if channelInfo[channel]["color"] == COLOR_BLUE : self.m_series[ichan].setColor(QColor(0,0,255,alpha))
+      if channelInfo[channel]["color"] == COLOR_CYAN : self.m_series[ichan].setColor(QColor(0,255,255,alpha))
+      if channelInfo[channel]["color"] == COLOR_MAGENTA : self.m_series[ichan].setColor(QColor(255,0,255,alpha))
+      if channelInfo[channel]["color"] == COLOR_YELLOW : self.m_series[ichan].setColor(QColor(0,255,255,alpha))
+      if channelInfo[channel]["color"] == COLOR_BLACK : self.m_series[ichan].setColor(QColor(0,0,0,alpha))
+      if channelInfo[channel]["color"] == COLOR_WHITE : self.m_series[ichan].setColor(QColor(255,255,255,alpha))
+      
   # plotLabel
   #
   #   knowing the position of the label in graph coordinates, a conversion is done to pixels
