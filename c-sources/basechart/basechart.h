@@ -38,6 +38,7 @@ class baseChart : public QChart {
     virtual void setTimeAxis(float nsec) = 0;
     virtual void initPlot(physiomon_channels *channels) = 0;
     virtual void setLabels(channelStruct *channelInfo) = 0;
+    virtual void setColors(channelStruct *channleInfo) = 0;
     virtual void setPrecision(channelStruct *channelInfo) = 0;
     virtual void updatePlot(int ichan, int nsamples, float* data) = 0;
     virtual bool initUpdatePlot() = 0;

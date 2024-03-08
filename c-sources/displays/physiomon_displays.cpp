@@ -136,6 +136,8 @@ void physiomon_displays::configure(physiomon_settings *settings) {
     // colors and labels 
 
     m_chart[idisp]->setLabels(settings->m_channels);
+    m_chart[idisp]->setColors(settings->m_channels);
+    
   }
 
   // check there is space left in the grid and fill it up with an empty

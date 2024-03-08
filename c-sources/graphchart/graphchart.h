@@ -64,6 +64,7 @@ class graphChart : public baseChart {
     void setYaxis(float ymin, float ymax);
     void setTimeAxis(float nsec);
     void setLabels(channelStruct *channelInfo);
+    void setColors(channelStruct *channelInfo);
     void setPrecision(channelStruct *channelInfo);
     void initPlot(physiomon_channels *channels);
     virtual void updatePlot(int ichan, int nsamples, float* data) {};

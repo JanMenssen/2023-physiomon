@@ -72,6 +72,58 @@ void numericChart::setLabels(channelStruct *channelInfo) {
   }
 }
 
+// setColors
+//
+//    sets the colors for the labels
+
+void numericChart::setColors(channelStruct *channelInfo) {
+  
+  int alpha = 255;
+
+  for (int ichan=0;ichan<m_numchan;ichan++) {
+
+    int curchan = m_channels[ichan];
+    switch (channelInfo[curchan].color) {
+
+      case COLOR_RED :
+        m_valueColor[ichan] = QColor(255,0,0,alpha);
+        break;
+
+      case COLOR_GREEN :
+        m_valueColor[ichan] = QColor(0,255,0,alpha);
+        break;
+
+      case COLOR_BLUE :
+        m_valueColor[ichan] = QColor(0,0,255,alpha);
+        break;
+
+      case COLOR_CYAN :
+        m_valueColor[ichan] = QColor(0,255,255,alpha);
+        break;
+
+      case COLOR_MAGENTA :
+        m_valueColor[ichan] = QColor(255,0,255,alpha);
+        break;
+      
+      case COLOR_YELLOW:
+        m_valueColor[ichan] = QColor(255,255,0,alpha);
+        break;
+      
+      case COLOR_BLACK :
+        m_valueColor[ichan] = QColor(0,0,0,alpha);
+         break;
+      
+      case COLOR_WHITE :
+        m_valueColor[ichan] = QColor(255,255,255,alpha);
+        break;
+
+      default :
+        m_valueColor[ichan] = QColor(0,255,0,alpha);
+
+    }
+  }
+}
+
 // setPrecision
 //
 //    reads the precions (number of digits after decimal) for the selected channels
@@ -248,7 +300,7 @@ void numericChart::plotValue(int n, float value) {
   m_value[n] = new QGraphicsSimpleTextItem(valueTxt,this);
   m_value[n]->setFont(m_usedFont);
   m_value[n]->setScale(m_scaleFactor);
-  m_value[n]->setBrush(Qt::green);
+  m_value[n]->setBrush(m_valueColor[n]);
 
   // and position in the middle of the calculated point
 

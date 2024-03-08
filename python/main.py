@@ -17,9 +17,14 @@ if __name__ == '__main__' :
 
   app = QApplication(sys.argv)
 
-  # create the graphical structure and show
+  # create the splash screen
+  
+  # create the graphical structure
 
   myWindow = mainWindow(1300,750)
+
+  # show splahscreen for a certain time and after closing, show main window
+  
   myWindow.show()
 
   # and return until exit

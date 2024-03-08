@@ -137,6 +137,16 @@ void physiomon_settings::readChannels() {
     QString tmpType = m_settings->value("type","analog in").toString();
     if (tmpType == QString("analog in")) m_channels[iChan].type = TYPE_ANALOG_IN;
    
+    QString tmpColor = m_settings->value("color","green").toString();
+    if (tmpColor.toLower() == "red") m_channels[iChan].color = COLOR_RED;
+    if (tmpColor.toLower() == "green") m_channels[iChan].color = COLOR_GREEN;
+    if (tmpColor.toLower() == "blue") m_channels[iChan].color = COLOR_BLUE;
+    if (tmpColor.toLower() == "cyan") m_channels[iChan].color = COLOR_CYAN;
+    if (tmpColor.toLower() == "magenta") m_channels[iChan].color = COLOR_MAGENTA;
+    if (tmpColor.toLower() == "yellow") m_channels[iChan].color = COLOR_YELLOW;
+    if (tmpColor.toLower() == "black") m_channels[iChan].color = COLOR_BLACK;
+    if (tmpColor.toLower() == "white") m_channels[iChan].color = COLOR_WHITE;
+    
     m_settings->endGroup();
 
   }

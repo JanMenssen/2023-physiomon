@@ -18,6 +18,7 @@
 struct channelStruct {
   QString name;
   typeSignal type;
+  usedColors color;
   int source;
   int display;
   int precision;

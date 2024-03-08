@@ -164,6 +164,60 @@ void graphChart::setLabels(channelStruct *channelInfo) {
   }
 }
 
+// setColors
+//
+//  sets the color of the series.
+
+void graphChart::setColors(channelStruct *channelInfo) {
+
+  int alpha = 255;
+
+  for (int ichan=0;ichan<m_numchan;ichan++) {
+
+    int curchan = m_channels[ichan];
+    switch (channelInfo[curchan].color) {
+
+      case COLOR_RED :
+        m_series[ichan]->setColor(QColor(255,0,0,alpha));
+        break;
+
+      case COLOR_GREEN :
+        m_series[ichan]->setColor(QColor(0,255,0,alpha));
+        break;
+
+      case COLOR_BLUE :
+       m_series[ichan]->setColor(QColor(0,0,255,alpha));
+        break;
+
+      case COLOR_CYAN :
+        m_series[ichan]->setColor(QColor(0,255,255,alpha));
+        break;
+
+      case COLOR_MAGENTA :
+        m_series[ichan]->setColor(QColor(255,0,255,alpha));
+        break;
+      
+      case COLOR_YELLOW:
+        m_series[ichan]->setColor(QColor(255,255,0,alpha));
+        break;
+      
+      case COLOR_BLACK :
+         m_series[ichan]->setColor(QColor(0,0,0,alpha));
+         break;
+      
+      case COLOR_WHITE :
+        m_series[ichan]->setColor(QColor(255,255,255,alpha));
+        break;
+
+      default :
+        m_series[ichan]->setColor(QColor(0,255,0,alpha));
+
+    }
+  }
+
+}
+
+
 // initPlot
 //
 // configures the x-data using time on the x-axis and the sampleRate. To speed up the

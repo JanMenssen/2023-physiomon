@@ -31,6 +31,7 @@ class numericChart : public baseChart {
   
     void initPlot(physiomon_channels *channels);
     void setLabels(channelStruct *channelInfo);
+    void setColors(channelStruct *channelInfo);
     void updatePlot(int ichan, int nsamples, float* data);
   
     virtual bool initUpdatePlot();
@@ -55,6 +56,7 @@ class numericChart : public baseChart {
 
       QPointF m_valuePos[MAX_CHANNELS_IN_DISPLAY];   
       QPointF m_labelPos[MAX_CHANNELS_IN_DISPLAY];
+      QColor m_valueColor[MAX_CHANNELS_IN_DISPLAY];
 
       //-jm QFont m_fontLabels = QFont();
       //-jm QFont m_fontValues = QFont();
