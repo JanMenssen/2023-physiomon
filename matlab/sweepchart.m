@@ -76,7 +76,7 @@ classdef sweepchart < graphchart
       
       if (endReached)
         for i = 1:obj.m_numchan 
-          set(obj.m_lineHandles{i},xdata = [], ydata = []); 
+          set(obj.m_lineHandles(i),xdata = [], ydata = []); 
           obj.m_dataBuffer(i).y = [];
         end
       end
