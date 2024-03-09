@@ -29,7 +29,6 @@ classdef graphchart < basechart
     m_firstScreen = [];           % true if the first screen is plotted
 
     m_labelTxt = [];              % cell containing the labels for the legend
-    m_usedColors = [];
     m_legendFontSize = 9;         % size of the legend
 
   end
@@ -50,7 +49,7 @@ classdef graphchart < basechart
 
       obj@basechart(axisHandle,channels)
       
-      for i=1:obj.m_numchan, obj.m_lineHandles{i} = plot(obj.m_axisHandle,NaN); end
+      for i=1:obj.m_numchan, obj.m_lineHandles(i) = plot(obj.m_axisHandle,NaN); end
        
       obj.m_dataBuffer = repmat(struct('x',[],'y',[]),obj.m_numchan,1);
       obj.m_indx = ones(obj.m_numchan,1);      
@@ -59,7 +58,6 @@ classdef graphchart < basechart
       obj.m_firstScreen = true;
 
       obj.m_labelTxt = cell(obj.m_numchan,1);
-
     end
 
     %% setYaxis
@@ -121,10 +119,10 @@ classdef graphchart < basechart
         obj.m_downSampler{i}.setRate(rate(i)); 
         obj.m_dataBuffer(i).x = (1:obj.m_pntsInGraph(i)) * (rate(i) / sampleRate(i));
       end
-      
-      % and place the legend on the screen
+           
+      % set the legend
 
-      legend(obj.m_axisHandle,obj.m_labelTxt,'Location','northeast','Box','off','FontSize',obj.m_legendFontSize);
+      legend(obj.m_lineHandles,obj.m_labelTxt,'Location','northeast','Box','off','FontSize',obj.m_legendFontSize);
       
     end
 
@@ -159,7 +157,7 @@ classdef graphchart < basechart
 
       for i=1:obj.m_numchan
         len = length(obj.m_dataBuffer(i).y);
-        set(obj.m_lineHandles{i},xdata = obj.m_dataBuffer(i).x(1:len),ydata = obj.m_dataBuffer(i).y,color = obj.m_usedColors{i});
+        set(obj.m_lineHandles(i),xdata = obj.m_dataBuffer(i).x(1:len),ydata = obj.m_dataBuffer(i).y);
       end
     end
 
@@ -193,30 +191,29 @@ classdef graphchart < basechart
       %
       % with <allChannels>< the channel structure
   
-      obj.m_usedColors = cell(obj.m_numchan);
       for ichan=1:obj.m_numchan
       
         curchan = obj.m_channels(ichan);
         switch (allChannels(curchan).color)
   
           case obj.defs.COLOR_RED
-            obj.m_usedColors{ichan} = [1,0,0];
+            set(obj.m_lineHandles(ichan),'color',[1,0,0]);
           case obj.defs.COLOR_GREEN
-            obj.m_usedColors{ichan} = [0,1,0];
+            set(obj.m_lineHandles(ichan),'color',[0,1,0]);
           case obj.defs.COLOR_BLUE
-            obj.m_usedColors{ichan} = [0,0,1];
+            set(obj.m_lineHandles(ichan),'color',[0,0,1]);
           case obj.defs.COLOR_CYAN
-            obj.m_usedColors{ichan} = [0,1,1];
+            set(obj.m_lineHandles(ichan),'color',[0,1,1]);
           case obj.defs.COLOR_MAGENTA
-            obj.m_usedColors{ichan} = [1,0,1];
+            set(obj.m_lineHandles(ichan),'color',[1,0,1]);
           case obj.defs.COLOR_YELLOW
-            obj.m_usedColors{ichan} = [1,1,0];
+            set(obj.m_lineHandles(ichan),'color',[1,1,0]);
           case obj.defs.COLOR_BLACK
-            obj.m_usedColors{ichan} = [0,0,0];
+            set(obj.m_lineHandles(ichan),'color',[0,0,0]);
           case obj.defs.COLOR_WHITE
-            obj.m_usedColors{ichan} = [1,1,1];
+            set(obj.m_lineHandles(ichan),'color',[1,1,1]);
 
-        end     
+        end  
       end
     end
 

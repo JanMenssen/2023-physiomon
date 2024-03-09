@@ -195,7 +195,7 @@ classdef physiomon_settings < handle
           case "green"
             obj.m_channels(iChan).color = obj.defs.COLOR_GREEN;
           case "blue"
-            obj.m_channels(iCHan).color = obj.defs.COLOR_BLUE;
+            obj.m_channels(iChan).color = obj.defs.COLOR_BLUE;
           case "cyan"
             obj.m_channels(iChan).color = obj.defs.COLOR_CYAN;
           case "magenta"

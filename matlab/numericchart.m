@@ -125,9 +125,8 @@ classdef numericchart < basechart
       
       if ishandle(obj.m_valueHandle{ichan}), delete(obj.m_valueHandle{ichan}); end
       obj.m_valueHandle{ichan} = text(obj.m_axisHandle,pos.x,pos.y,valueTxt,'HorizontalAlignment','center', ...
-        'VerticalAlignment','middle','fontSize',fontsize,'color','g');
-     
-      
+        'VerticalAlignment','middle','fontSize',fontsize,'Color',obj.m_usedColors{ichan});
+       
     end
     
     %% finishUpdatePlot
@@ -295,8 +294,7 @@ classdef numericchart < basechart
       % screen
 
       pos = obj.m_labelPos(ichan);
-      text(obj.m_axisHandle,pos.x,pos.y,label,HorizontalAlignment = 'center',VerticalAlignment='middle', ...
-        fontSize = obj.m_fontSize,color = obj.m_usedColors{ichan});
+      text(obj.m_axisHandle,pos.x,pos.y,label,HorizontalAlignment = 'center',VerticalAlignment='middle',fontSize = obj.m_fontSize);
 
     end
 
