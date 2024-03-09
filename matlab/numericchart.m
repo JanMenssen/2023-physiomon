@@ -20,6 +20,7 @@ classdef numericchart < basechart
 
     m_precision = [];           % number of digits after decimal to display
     m_value = [];               % stores the calculated numeric value
+    m_usedColors = [];          % colors used
     
   end
 
@@ -158,6 +159,44 @@ classdef numericchart < basechart
       end
 
     end
+   
+    %% setColors
+
+    function setColors(obj,allChannels)
+    
+      % given the structure with the channel information, this methods finds the colors for
+      % the channels that are selected for the graph
+      %
+      %     syntax : setColors(allChannels)
+      %
+      % with <allChannels>< the channel structure
+  
+      obj.m_usedColors = cell(obj.m_numchan);
+      for ichan=1:obj.m_numchan
+      
+        curchan = obj.m_channels(ichan);
+        switch (allChannels(curchan).color)
+  
+          case obj.defs.COLOR_RED
+            obj.m_usedColors{ichan} = [1,0,0];
+          case obj.defs.COLOR_GREEN
+            obj.m_usedColors{ichan} = [0,1,0];
+          case obj.defs.COLOR_BLUE
+            obj.m_usedColors{ichan} = [0,0,1];
+          case obj.defs.COLOR_CYAN
+            obj.m_usedColors{ichan} = [0,1,1];
+          case obj.defs.COLOR_MAGENTA
+            obj.m_usedColors{ichan} = [1,0,1];
+          case obj.defs.COLOR_YELLOW
+            obj.m_usedColors{ichan} = [1,1,0];
+          case obj.defs.COLOR_BLACK
+            obj.m_usedColors{ichan} = [0,0,0];
+          case obj.defs.COLOR_WHITE
+            obj.m_usedColors{ichan} = [1,1,1];
+
+        end     
+      end
+    end
 
     %% setPrecsion
 
@@ -256,7 +295,8 @@ classdef numericchart < basechart
       % screen
 
       pos = obj.m_labelPos(ichan);
-      text(obj.m_axisHandle,pos.x,pos.y,label,HorizontalAlignment = 'center',VerticalAlignment='middle',fontSize = obj.m_fontSize);
+      text(obj.m_axisHandle,pos.x,pos.y,label,HorizontalAlignment = 'center',VerticalAlignment='middle', ...
+        fontSize = obj.m_fontSize,color = obj.m_usedColors{ichan});
 
     end
 

@@ -29,7 +29,7 @@ classdef sweepchart < graphchart
 
     end
 
-    %% update
+    %% updatePlot
 
     function updatePlot(obj,ichan,data)
 

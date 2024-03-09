@@ -171,23 +171,45 @@ classdef physiomon_settings < handle
       %
       % <m_channels> is an internal private member of the class
 
-      obj.m_channels = repmat(struct('name',[],'type',[],'source',[],'display',[],'precision',[]),numChannels,1);
+      obj.m_channels = repmat(struct('name',[],'type',[],'source',[],'display',[],'precision',[],'color',[]),numChannels,1);
 
       for iChan = 1:numChannels
 
         section = ['channel' num2str(iChan)];
 
         obj.m_channels(iChan).name = tmpStruct.(section).name;
+        obj.m_channels(iChan).source = str2double(tmpStruct.(section).source);
+        obj.m_channels(iChan).display = str2double(tmpStruct.(section).display);
+        obj.m_channels(iChan).precision = str2double(tmpStruct.(section).precision);
+
         switch lower(tmpStruct.(section).type) 
 
           case "analog in" 
             obj.m_channels(iChan).type = obj.defs.TYPE_ANALOG_IN;
         end
 
-        obj.m_channels(iChan).source = str2double(tmpStruct.(section).source);
-        obj.m_channels(iChan).display = str2double(tmpStruct.(section).display);
-        obj.m_channels(iChan).precision = str2double(tmpStruct.(section).precision);
-      
+        switch lower(tmpStruct.(section).color)
+          
+          case "red"
+            obj.m_channels(iChan).color = obj.defs.COLOR_RED;
+          case "green"
+            obj.m_channels(iChan).color = obj.defs.COLOR_GREEN;
+          case "blue"
+            obj.m_channels(iCHan).color = obj.defs.COLOR_BLUE;
+          case "cyan"
+            obj.m_channels(iChan).color = obj.defs.COLOR_CYAN;
+          case "magenta"
+            obj.m_channels(iChan).color = obj.defs.COLOR_MAGENTA;
+          case "yellow"
+            obj.m_channels(iChan).color = obj.defs.COLOR_YELLOW;
+          case "black"
+            obj.m_channels(iChan).color = obj.defs.COLOR_BLACK;
+          case "white"
+            obj.m_channels(iChan).color = obj.defs.COLOR_WHITE;
+          otherwise
+            obj.m_channels(iChan).color = obj.defs.COLOR_GREEN;
+        end
+
       end
     end
 

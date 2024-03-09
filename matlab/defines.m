@@ -25,6 +25,17 @@ classdef defines
     DISPLAY_MODE_SWEEP = 2;
     DISPLAY_MODE_SCOPE = 3;
     DISPLAY_MODE_NUMERIC = 4;
+
+    % colors used
+
+    COLOR_RED = 0;
+    COLOR_GREEN = 1;
+    COLOR_BLUE = 2;
+    COLOR_CYAN = 3;
+    COLOR_MAGENTA = 4;
+    COLOR_YELLOW = 5;
+    COLOR_BLACK = 6;
+    COLOR_WHITE = 7;
   
   end
 

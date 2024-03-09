@@ -29,6 +29,7 @@ classdef graphchart < basechart
     m_firstScreen = [];           % true if the first screen is plotted
 
     m_labelTxt = [];              % cell containing the labels for the legend
+    m_usedColors = [];
     m_legendFontSize = 9;         % size of the legend
 
   end
@@ -158,7 +159,7 @@ classdef graphchart < basechart
 
       for i=1:obj.m_numchan
         len = length(obj.m_dataBuffer(i).y);
-        set(obj.m_lineHandles{i},xdata = obj.m_dataBuffer(i).x(1:len),ydata = obj.m_dataBuffer(i).y);
+        set(obj.m_lineHandles{i},xdata = obj.m_dataBuffer(i).x(1:len),ydata = obj.m_dataBuffer(i).y,color = obj.m_usedColors{i});
       end
     end
 
@@ -179,6 +180,44 @@ classdef graphchart < basechart
         obj.m_labelTxt{ichan} = allChannels(curchan).name;
       end
 
+    end
+
+    %% setColors
+
+    function setColors(obj,allChannels)
+    
+      % given the structure with the channel information, this methods finds the colors for
+      % the channels that are selected for the graph
+      %
+      %     syntax : setColors(allChannels)
+      %
+      % with <allChannels>< the channel structure
+  
+      obj.m_usedColors = cell(obj.m_numchan);
+      for ichan=1:obj.m_numchan
+      
+        curchan = obj.m_channels(ichan);
+        switch (allChannels(curchan).color)
+  
+          case obj.defs.COLOR_RED
+            obj.m_usedColors{ichan} = [1,0,0];
+          case obj.defs.COLOR_GREEN
+            obj.m_usedColors{ichan} = [0,1,0];
+          case obj.defs.COLOR_BLUE
+            obj.m_usedColors{ichan} = [0,0,1];
+          case obj.defs.COLOR_CYAN
+            obj.m_usedColors{ichan} = [0,1,1];
+          case obj.defs.COLOR_MAGENTA
+            obj.m_usedColors{ichan} = [1,0,1];
+          case obj.defs.COLOR_YELLOW
+            obj.m_usedColors{ichan} = [1,1,0];
+          case obj.defs.COLOR_BLACK
+            obj.m_usedColors{ichan} = [0,0,0];
+          case obj.defs.COLOR_WHITE
+            obj.m_usedColors{ichan} = [1,1,1];
+
+        end     
+      end
     end
 
   end
