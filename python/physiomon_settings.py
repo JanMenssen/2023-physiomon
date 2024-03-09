@@ -114,7 +114,7 @@ class physiomon_settings() :
       typeSignal = self.m_settings.value("type",defaultValue = "analog in")
       if (typeSignal == 'analog in') : channel["type"] = TYPE_ANALOG_IN
    
-      color = self.m_settings.vbalue("color", defaultValue = "green")
+      color = self.m_settings.value("color", defaultValue = "green")
       if (color.lower() == "red") : channel["color"] = COLOR_RED
       if (color.lower() == "green") : channel["color"] = COLOR_GREEN
       if (color.lower() == "blue") : channel["color"] = COLOR_BLUE

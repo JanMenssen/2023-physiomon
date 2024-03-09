@@ -88,6 +88,7 @@ class numericChart (baseChart) :
   
   def setColors(self,channelInfo) :
 
+    alpha = 255
     self.m_valueColor = []
     for ichan in self.m_channels : 
 

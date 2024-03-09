@@ -128,6 +128,7 @@ classdef physiomon_displays <handle
         % and initialise the chart to prepare for plotting, add labels and so on 
 
         obj.m_chart{idisp}.setLabels(allChannels);
+        obj.m_chart{idisp}.setColors(allChannels);
         obj.m_chart{idisp}.initPlot(channels);
       
       end
