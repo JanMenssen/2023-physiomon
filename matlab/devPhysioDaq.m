@@ -168,8 +168,9 @@ classdef devPhysioDaq < measuredevice
           if (cmd == 'A')
             for i =1:length(data), obj.writeValuesToAllChannels(i,myChannels,data(i)); end
           end
-         end
-       end
+
+        end
+      end
     end
       
   end

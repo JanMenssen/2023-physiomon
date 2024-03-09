@@ -144,6 +144,11 @@ classdef measuredevice < handle
 
       % source is 0 based
 
+      % first clear the channels
+
+      for i=1:length(obj.m_analogIn), obj.m_analogIn(i).channels = []; end
+
+      % and add channels
       myChannels = mySettings.getChannels();
       for iChan = 1:length(myChannels)      
         source = myChannels(iChan).source;

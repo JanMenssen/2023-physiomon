@@ -90,7 +90,7 @@ classdef physiomon_channels < handle
       % with <channel> the channel number and <data> a vector with returned data
 
       data = obj.m_buffers(channel).display.read();
-      
+
     end
 
     %% readStore

@@ -114,7 +114,7 @@ classdef graphchart < basechart
       rate = round((nsec .* sampleRate) ./ obj.MAX_POINTS_IN_GRAPH);
       rate(rate == 0) = 1;
       obj.m_pntsInGraph = round(nsec * sampleRate) ./ rate;
-      
+  
       for i=1:obj.m_numchan  
         obj.m_downSampler{i}.setRate(rate(i)); 
         obj.m_dataBuffer(i).x = (1:obj.m_pntsInGraph(i)) * (rate(i) / sampleRate(i));
