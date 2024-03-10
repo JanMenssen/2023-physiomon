@@ -18,6 +18,7 @@ classdef defines
 
     TYPE_ANALOG_IN = 1;
     TYPE_NUMERIC = 2;
+    TYPE_WAVEFORM = 3;
 
     % the modes of displaying a signal
 
