@@ -29,10 +29,10 @@ private slots:
     void on_numchan_editingFinished();
     void on_numdisp_editingFinished();
     void on_channelSelected_valueChanged(int value);
-    void on_channelName_editingFinished();
-    void on_channelUnit_editingFinished();
-    void on_channelColor_editingFinished();
     void on_channelDisplaySelected_valueChanged(int value);
+    void on_channelColorSelect_currentIndexChanged(int index);
+    void on_channelPrecisionSelect_valueChanged(int value);
+    void on_channelName_textChanged(const QString &name);
     void on_channelAnalog_rb_clicked();
     void on_channelWaveform_rb_clicked();
     void on_channelNumeric_rb_clicked();
@@ -55,7 +55,9 @@ private:
 
     void setChannelRadioButtons(typeSignal typeSignal);
     void setDisplayRadioButtons(viewMode typeDisplay);
-
+    void fillChannelInfo(channelStruct *chanInfo, int indx);
+    void fillDisplayInfo(displayStruct *dispInfo, int indx);
+    
     // values that are not changed, the original that should be used in case of cancel
 
     int *m_nChanPtr = nullptr;

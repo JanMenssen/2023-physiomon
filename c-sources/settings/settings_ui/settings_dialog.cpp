@@ -47,34 +47,26 @@ settings_dialog::settings_dialog(QWidget *parent, int *numchan, channelStruct *c
   ui->numchan->setText(QString::number(m_numchan));
   ui->numdisp->setText(QString::number(m_numdisp));
 
-  // set the channels tab
+  // fill the allowed number of displays in the channel tab and the sources
 
+  ui->channelDisplaySelected->setRange(1, m_numdisp);
+  for (int i=0;i<numanalog;i++) ui->channelSignalSelect->addItem(analogInfo[i].name);
+  
+  // and fill for channel
+  
   ui->channelSelected->setRange(1, m_numchan);
   ui->channelSelected->setValue(1);
+  fillChannelInfo(m_channels,0);
+  
+  bool hidden = m_displays[m_channels[0].display-1].mode != DISPLAY_MODE_NUMERIC;
+  ui->channelPrecisionSelect->setHidden(hidden);
+  ui->precisionLabel->setHidden(hidden);
 
-  ui->channelName->setText(m_channels[0].name);
-  ui->channelDisplaySelected->setRange(1, m_numdisp);
-  ui->channelDisplaySelected->setValue(m_channels[0].display);
-
-  setChannelRadioButtons(m_channels[0].type);
-  for (int i=0;i<numanalog;i++) ui->channelSignalSelect->addItem(analogInfo[i].name);
-  ui->channelSignalSelect->setCurrentIndex(m_channels[0].source);
-
-  // set display tab
+  // display information 
 
   ui->displaySelected->setRange(1, m_numdisp);
   ui->displaySelected->setValue(1);
-
-  ui->displayTop->setText(QString::number(m_displays[0].top,'f',2));
-  ui->displayLeft->setText(QString::number(m_displays[0].left,'f',2));
-  ui->displayHeight->setText(QString::number(m_displays[0].height,'f',2));
-  ui->displayWidth->setText(QString::number(m_displays[0].width,'f',2));
-
-  ui->displayYmin->setText(QString::number(m_displays[0].ymin,'f',0));
-  ui->displayYmax->setText(QString::number(m_displays[0].ymax,'f',0));
-  ui->displayXaxis->setText(QString::number(m_displays[0].timescale,'f',0));
-
-  setDisplayRadioButtons(m_displays[0].mode);
+  fillDisplayInfo(m_displays,0);
 
   // set the events, the contents is stored in the dialog boxes 
 
@@ -95,7 +87,79 @@ settings_dialog::settings_dialog(QWidget *parent, int *numchan, channelStruct *c
 
 settings_dialog::~settings_dialog() {
   
-  delete ui;
+ delete ui;
+}
+
+// fillChannelInfo
+//
+//    fills all items belonging to the channel indx
+
+void settings_dialog::fillChannelInfo(channelStruct *chanInfo, int indx) {
+
+  ui->channelName->setText(chanInfo[indx].name);
+  ui->channelPrecisionSelect->setValue(chanInfo[indx].precision);
+  
+  switch (m_channels[indx].color) {
+    
+    case COLOR_RED :
+      ui->channelColorSelect->setCurrentIndex(0);
+      break;
+
+    case COLOR_GREEN :
+      ui->channelColorSelect->setCurrentIndex(1);
+      break;
+  
+    case COLOR_BLUE :
+      ui->channelColorSelect->setCurrentIndex(2);
+      break;
+  
+    case COLOR_CYAN :
+      ui->channelColorSelect->setCurrentIndex(3);
+      break;
+  
+    case COLOR_MAGENTA :
+      ui->channelColorSelect->setCurrentIndex(4);
+      break;
+  
+    case COLOR_YELLOW :
+      ui->channelColorSelect->setCurrentIndex(5);
+      break;
+  
+    case COLOR_BLACK :
+      ui->channelColorSelect->setCurrentIndex(6);
+      break;
+  
+    case COLOR_WHITE :
+      ui->channelColorSelect->setCurrentIndex(7);
+      break;
+  
+    default :
+      ui->channelColorSelect->setCurrentIndex(0);
+  }
+ 
+  setChannelRadioButtons(chanInfo[indx].type);
+  ui->channelDisplaySelected->setValue(chanInfo[indx].display);
+  ui->channelSignalSelect->setCurrentIndex(chanInfo[indx].source);
+
+}
+
+// fillDisplayInfo
+//
+//    fill the display items belonging to item indx
+
+void settings_dialog::fillDisplayInfo(displayStruct *dispInfo, int indx) {
+
+  ui->displayTop->setText(QString::number(dispInfo[indx].top,'f',2));
+  ui->displayLeft->setText(QString::number(dispInfo[indx].left,'f',2));
+  ui->displayHeight->setText(QString::number(dispInfo[indx].height,'f',2));
+  ui->displayWidth->setText(QString::number(dispInfo[indx].width,'f',2));
+
+  ui->displayYmin->setText(QString::number(dispInfo[indx].ymin,'f',0));
+  ui->displayYmax->setText(QString::number(dispInfo[indx].ymax,'f',0));
+  ui->displayXaxis->setText(QString::number(dispInfo[indx].timescale,'f',0));
+
+  setDisplayRadioButtons(dispInfo[indx].mode);
+
 }
 
 // setChannelRadioButtons
@@ -129,7 +193,8 @@ void settings_dialog::setChannelRadioButtons(typeSignal kindSignal) {
         ui->channelWaveform_rb->setChecked(false);
       
       break;
-  }      
+  }   
+   
 }
 
 void settings_dialog::setDisplayRadioButtons(viewMode kindChart) {
@@ -182,6 +247,7 @@ void settings_dialog::setDisplayRadioButtons(viewMode kindChart) {
       
       break;
   }
+
 }
 
 // on_cancelButton_clicked
@@ -261,28 +327,10 @@ void settings_dialog::on_numdisp_editingFinished() {
 //    name of the current channel is modified, store the new name in <m_channels> with the 
 //    current index
 
-void settings_dialog::on_channelName_editingFinished() {
+void settings_dialog::on_channelName_textChanged(const QString &name) {
 
   int curItem = ui->channelSelected->value() - 1;
-  m_channels[curItem].name = ui->channelName->text();
-
-}
-
-// on_channelUnit_editingFinished
-//
-//   change the units for the currently selected channel. Notem this feature is not 
-//   available currently
-
-void settings_dialog::on_channelUnit_editingFinished() {
-
-}
-
-// on_channelColor_editingFinished
-//
-//    change the plotting color of the signal in the channel. Note, this feature is currently
-//    not implemented
-
-void settings_dialog::on_channelColor_editingFinished() {
+  m_channels[curItem].name = name;
 
 }
 
@@ -295,6 +343,66 @@ void settings_dialog::on_channelDisplaySelected_valueChanged(int value) {
 
   int curItem = ui->channelSelected->value() - 1;
   m_channels[curItem].display = value;
+
+  bool hidden = m_displays[value-1].mode != DISPLAY_MODE_NUMERIC;
+  ui->channelPrecisionSelect->setHidden(hidden);
+  ui->precisionLabel->setHidden(hidden);
+
+}
+
+// on_chanColorSelect_currentIndxChanged
+//
+//    the color is changed, store this in the channel structure
+void settings_dialog::on_channelColorSelect_currentIndexChanged(int index) {
+
+  int curItem = ui->channelSelected->value() - 1;
+  switch(index) {
+
+    case 0 : 
+      m_channels[curItem].color = COLOR_RED;
+      break;
+    
+    case 1 :
+      m_channels[curItem].color = COLOR_GREEN;
+      break;
+
+    case 2 :
+      m_channels[curItem].color = COLOR_BLUE;
+      break;
+
+    case 3 :
+      m_channels[curItem].color = COLOR_CYAN;
+      break;
+
+    case 4 :
+      m_channels[curItem].color = COLOR_MAGENTA;
+      break;
+
+    case 5 :
+      m_channels[curItem].color = COLOR_YELLOW;
+      break;
+
+    case 6 :
+      m_channels[curItem].color = COLOR_BLACK;
+      break;
+    
+    case 7 :
+      m_channels[curItem].color = COLOR_WHITE;
+      break;
+
+    default :
+      m_channels[curItem].color = COLOR_GREEN;
+  } 
+}
+
+// on_channelPrecisionSelect_valueChanged
+//
+//    the number of digts for the decimal displays are set
+
+void settings_dialog::on_channelPrecisionSelect_valueChanged(int value) {
+
+  int curItem = ui->channelSelected->value() - 1;
+  m_channels[curItem].precision = value;
 
 }
 
@@ -335,11 +443,14 @@ void settings_dialog::on_channelNumeric_rb_clicked() {
 //
 //    for the current channel we want another source, adapt the <m_channels> structure with the
 //    new information
+//    
+//    Note: a check is done on curItem > 0, during creating this routine is called and then it r
+//    returns a value of 0 ?
 
 void settings_dialog::on_channelSignalSelect_currentIndexChanged(int index) {
 
-  int curItem = ui->channelSelected->value() - 1;
-  m_channels[curItem].source = index;
+  int curItem = ui->channelSelected->value()-1;
+  if (curItem > 0) m_channels[curItem].source = index;
 
 }
 
@@ -351,17 +462,7 @@ void settings_dialog::on_channelSignalSelect_currentIndexChanged(int index) {
 void settings_dialog::on_displaySelected_valueChanged(int value) {
 
   int curItem = value - 1;
-
-  ui->displayTop->setText(QString::number(m_displays[curItem].top,'f',2));
-  ui->displayLeft->setText(QString::number(m_displays[curItem].left,'f',2));
-  ui->displayHeight->setText(QString::number(m_displays[curItem].height,'f',2));
-  ui->displayWidth->setText(QString::number(m_displays[curItem].width,'f',2));
-
-  ui->displayYmin->setText(QString::number(m_displays[curItem].ymin,'f',0));
-  ui->displayYmax->setText(QString::number(m_displays[curItem].ymax,'f',0));
-  ui->displayXaxis->setText(QString::number(m_displays[curItem].timescale,'f',0));
-
-  setDisplayRadioButtons(m_displays[curItem].mode);
+  fillDisplayInfo(m_displays,curItem);
 
 }
 
@@ -373,12 +474,11 @@ void settings_dialog::on_displaySelected_valueChanged(int value) {
 void settings_dialog::on_channelSelected_valueChanged(int value) {
 
   int curItem = value - 1;
-
-  ui->channelName->setText(m_channels[curItem].name);
-  ui->channelDisplaySelected->setValue(m_channels[curItem].display);  
-  ui->channelSignalSelect->setCurrentIndex(m_channels[curItem].source);
-
-  setChannelRadioButtons(m_channels[curItem].type);
+  fillChannelInfo(m_channels,curItem);
+  
+  bool hidden = m_displays[m_channels[curItem].display-1].mode != DISPLAY_MODE_NUMERIC;
+  ui->channelPrecisionSelect->setHidden(hidden); 
+  ui->precisionLabel->setHidden(hidden);
 
 }
 
@@ -388,7 +488,7 @@ void settings_dialog::on_channelSelected_valueChanged(int value) {
 //    so it can be affected 
 
 void settings_dialog::on_displayTop_editingFinished() {
-  
+ 
   int curItem = ui->displaySelected->value() - 1;
   m_displays[curItem].top = ui->displayTop->text().toDouble();
 
@@ -473,8 +573,12 @@ void settings_dialog::on_displayXaxis_editingFinished() {
 
 void settings_dialog::on_displayStripChart_rb_clicked() {
 
-  int curItem = ui->displaySelected->value() - 1;
-  m_displays[curItem].mode = DISPLAY_MODE_STRIP;
+  int curDisplay = ui->displaySelected->value() - 1;
+  int curChannel = ui->channelSelected->value() - 1;
+
+  m_displays[curDisplay].mode = DISPLAY_MODE_STRIP;
+
+  if ((curDisplay + 1) == m_channels[curChannel].display) ui->channelPrecisionSelect->setHidden(true); 
 
 }
 
@@ -485,8 +589,12 @@ void settings_dialog::on_displayStripChart_rb_clicked() {
 
 void settings_dialog::on_displaySweepChart_rb_clicked() {
 
-  int curItem = ui->displaySelected->value() - 1;
-  m_displays[curItem].mode = DISPLAY_MODE_SWEEP;
+  int curDisplay = ui->displaySelected->value() - 1;
+  int curChannel = ui->channelSelected->value() - 1;
+
+  m_displays[curDisplay].mode = DISPLAY_MODE_SWEEP;
+  
+  if ((curDisplay + 1) == m_channels[curChannel].display) ui->channelPrecisionSelect->setHidden(true); 
 
 }
 
@@ -496,9 +604,13 @@ void settings_dialog::on_displaySweepChart_rb_clicked() {
 //    the value in the <m_display> structure
 
 void settings_dialog::on_displayScopeChart_rb_clicked() {
+ 
+  int curDisplay = ui->displaySelected->value() - 1;
+  int curChannel = ui->channelSelected->value() - 1;
 
-  int curItem = ui->displaySelected->value() - 1;
-  m_displays[curItem].mode = DISPLAY_MODE_SCOPE;
+  m_displays[curDisplay].mode = DISPLAY_MODE_SCOPE;
+  
+  if ((curDisplay + 1) == m_channels[curChannel].display) ui->channelPrecisionSelect->setHidden(true); 
 
 }
 
@@ -508,9 +620,16 @@ void settings_dialog::on_displayScopeChart_rb_clicked() {
 //    displayed. Note, this mode is currently not implemented
 
 void settings_dialog::on_displayNumeric_rb_clicked() {
+ 
+  int curDisplay = ui->displaySelected->value() - 1;
+  int curChannel = ui->channelSelected->value() - 1;
 
-  int curItem = ui->displaySelected->value() - 1;
-  m_displays[curItem].mode = DISPLAY_MODE_NUMERIC;
-
+  m_displays[curDisplay].mode = DISPLAY_MODE_NUMERIC;
+  
+  if ((curDisplay + 1) == m_channels[curChannel].display) ui->channelPrecisionSelect->setHidden(false); 
+  
 }
+
+
+
 

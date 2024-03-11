@@ -24,6 +24,7 @@ set(PROJECT_SOURCES
 include_directories (
     ${ROOT_DIR}
     ${ROOT_DIR}/settings
+    ${ROOT_DIR}/settings/settings_ui
     ${ROOT_DIR}/measuredevice
 )
 
@@ -32,7 +33,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         settings_dialog.h
-        ../settings.h
+        ../physiomon_settings.h
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET settings_ui APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
