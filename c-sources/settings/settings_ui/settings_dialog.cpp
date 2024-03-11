@@ -50,6 +50,7 @@ settings_dialog::settings_dialog(QWidget *parent, int *numchan, channelStruct *c
   // fill the allowed number of displays in the channel tab and the sources
 
   ui->channelDisplaySelected->setRange(1, m_numdisp);
+  ui->channelPrecisionSelect->setRange(0,3);
   for (int i=0;i<numanalog;i++) ui->channelSignalSelect->addItem(analogInfo[i].name);
   
   // and fill for channel

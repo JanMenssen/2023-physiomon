@@ -14,6 +14,15 @@ from PySide6.QtWidgets import QDialog
 from PySide6.QtGui import QDoubleValidator,QIntValidator
 from settings_ui import Ui_settings_dialog
 
+COLOR_RED = 0
+COLOR_GREEN = 1
+COLOR_BLUE = 2
+COLOR_CYAN = 3
+COLOR_MAGENTA = 4
+COLOR_YELLOW = 5
+COLOR_BLACK = 6
+COLOR_WHITE = 7
+
 class settings_dialog(QDialog) :
 
   # constructor
@@ -53,37 +62,29 @@ class settings_dialog(QDialog) :
 
     self.ui.numchan.setText("%d" % self.m_numchan)
     self.ui.numdisp.setText("%d" % self.m_numdisp)
-
-    # set the channels tab
+    
+    self.ui.channelPrecisionSelect.setRange(0,3)
+    self.ui.channelDisplaySelected.setRange(1,self.m_numdisp)
+    for i in analog : self.ui.channelSignalSelect.addItem(i["name"])
+  
+    # and fill for channels
 
     self.ui.channelSelected.setRange(1,self.m_numchan)
     self.ui.channelSelected.setValue(1)
-
-    self.ui.channelDisplaySelected.setRange(1,self.m_numdisp)
-    self.ui.channelDisplaySelected.setValue(self.m_channels[0]["display"])
-
-    self.ui.channelName.setText(self.m_channels[0]["name"])
-    for i in analog :
-      self.ui.channelSignalSelect.addItem(i["name"])
-    self.ui.channelSignalSelect.setCurrentIndex(self.m_channels[0]["source"])
-
-    self.setChannelRadioButtons(self.m_channels[0]['type'])
+    self.fillChannelInfo(self.m_channels,0)
+  
+    if self.m_displays[self.m_channels[0]["display"]-1]["mode"] != "numeric" :
+      hidden = True
+    else :
+      hidden = False
+    self.ui.channelPrecisionSelect.setHidden(hidden)
+    self.ui.precisionLabel.setHidden(hidden)
 
     # display tab
 
     self.ui.displaySelected.setRange(1,self.m_numdisp)
     self.ui.displaySelected.setValue(1)
-
-    self.ui.displayTop.setText("%3.2f" % self.m_displays[0]["top"])
-    self.ui.displayLeft.setText("%3.2f" % self.m_displays[0]["left"])
-    self.ui.displayHeight.setText("%3.2f" % self.m_displays[0]["height"])
-    self.ui.displayWidth.setText("%3.2f" % self.m_displays[0]["width"])
-
-    self.ui.displayYmin.setText("%3.1f" % self.m_displays[0]["ymin"])
-    self.ui.displayYmax.setText("%3.1f" % self.m_displays[0]["ymax"])
-    self.ui.displayXaxis.setText("%3.1f" % self.m_displays[0]["timescale"])
- 
-    self.setDisplayRadioButtons(self.m_displays[0]["mode"].lower())
+    self.fillDisplayInfo(self.m_displays,0)
 
     # events tab
 
@@ -109,6 +110,8 @@ class settings_dialog(QDialog) :
     self.ui.channelName.editingFinished.connect(self.onChannelNameChanged)
     self.ui.channelSignalSelect.currentIndexChanged.connect(self.onChannelSourceChanged)
     self.ui.channelDisplaySelected.valueChanged.connect(self.onChannelDisplayChanged)
+    self.ui.channelColorSelect.currentIndexChanged.connect(self.onChannelColorChanged)
+    self.ui.channelPrecisionSelect.valueChanged.connect(self.onChannelPrecisionChanged)
     self.ui.channelAnalog_rb.clicked.connect(self.onChannelTypeChanged)
     self.ui.channelWaveform_rb.clicked.connect(self.onChannelTypeChanged)
     self.ui.channelNumeric_rb.clicked.connect(self.onChannelTypeChanged)
@@ -126,6 +129,45 @@ class settings_dialog(QDialog) :
     self.ui.displayStripChart_rb.clicked.connect(self.onDisplayModeChanged)
     self.ui.displayNumeric_rb.clicked.connect(self.onDisplayModeChanged)  
     
+  # fillChannels
+  #
+  #   fills the channel info
+
+  def fillChannelInfo(self,chanInfo,indx) :
+  
+    self.ui.channelName.setText(chanInfo[indx]["name"])
+    self.ui.channelSignalSelect.setCurrentIndex(chanInfo[indx]["source"])
+    self.ui.channelDisplaySelected.setValue(chanInfo[indx]["display"])
+
+    if chanInfo[indx]["color"] == COLOR_RED : self.ui.channelColorSelect.setCurrentIndex(0)
+    if chanInfo[indx]["color"] == COLOR_GREEN : self.ui.channelColorSelect.setCurrentIndex(1)
+    if chanInfo[indx]["color"] == COLOR_BLUE : self.ui.channelColorSelect.setCurrentIndex(2)
+    if chanInfo[indx]["color"] == COLOR_CYAN : self.ui.channelColorSelect.setCurrentIndex(3)
+    if chanInfo[indx]["color"] == COLOR_MAGENTA : self.ui.channelColorSelect.setCurrentIndex(4)
+    if chanInfo[indx]["color"] == COLOR_YELLOW : self.ui.channelColorSelect.setCurrentIndex(5)
+    if chanInfo[indx]["color"] == COLOR_BLACK : self.ui.channelColorSelect.setCurrentIndex(6)
+    if chanInfo[indx]["color"] == COLOR_WHITE  : self.ui.channelColorSelect.setCurrentIndex(7)
+
+    self.ui.channelPrecisionSelect.setValue(chanInfo[indx]["precision"])
+    self.setChannelRadioButtons(chanInfo[indx]['type'])
+
+  # fillDisplayInfo
+  #
+  #   fills the information for the displays
+
+  def fillDisplayInfo(self,dispInfo,indx) :
+
+    self.ui.displayTop.setText("%3.2f" % dispInfo[indx]["top"])
+    self.ui.displayLeft.setText("%3.2f" % dispInfo[indx]["left"])
+    self.ui.displayHeight.setText("%3.2f" % dispInfo[indx]["height"])
+    self.ui.displayWidth.setText("%3.2f" % dispInfo[indx]["width"])
+
+    self.ui.displayYmin.setText("%3.1f" % dispInfo[indx]["ymin"])
+    self.ui.displayYmax.setText("%3.1f" % dispInfo[indx]["ymax"])
+    self.ui.displayXaxis.setText("%3.1f" % dispInfo[indx]["timescale"])
+ 
+    self.setDisplayRadioButtons(dispInfo[indx]["mode"].lower())
+   
   # onOK
   #
   #   handles the OK button, and accept is returned
@@ -150,13 +192,10 @@ class settings_dialog(QDialog) :
     
     if (newNumChan > self.m_numchan) :
 
-      newChannels = [ {"name" : "", "type" : 1, "source" : 0, "display" : 0} for k in range(newNumChan-self.m_numchan)]
+      newChannels = [ {"name" : "", "type" : 1, "source" : 0, "display" : 0, "color" : 0, "precision" :1 } for k in range(newNumChan-self.m_numchan)]
       self.m_channels.extend(newChannels)
 
-    if (newNumChan < self.m_numchan) :
-      
-      self.m_channels = self.m_channels[:newNumChan]
-
+    if (newNumChan < self.m_numchan) : self.m_channels = self.m_channels[:newNumChan]
     self.m_numchan = newNumChan
     self.ui.channelSelected.setRange(1,self.m_numchan)
 
@@ -190,17 +229,7 @@ class settings_dialog(QDialog) :
   def onDisplaySelected(self) :
 
     curDisplay = self.ui.displaySelected.value() - 1
-    
-    self.ui.displayTop.setText("%3.2f" % self.m_displays[curDisplay]["top"])
-    self.ui.displayLeft.setText("%3.2f" % self.m_displays[curDisplay]["left"])
-    self.ui.displayHeight.setText("%3.2f" % self.m_displays[curDisplay]["height"])
-    self.ui.displayWidth.setText("%3.2f" % self.m_displays[curDisplay]["width"])
-
-    self.ui.displayYmin.setText("%3.1f" % self.m_displays[curDisplay]["ymin"])
-    self.ui.displayYmax.setText("%3.1f" % self.m_displays[curDisplay]["ymax"])
-    self.ui.displayXaxis.setText("%3.1f" % self.m_displays[curDisplay]["timescale"])
- 
-    self.setDisplayRadioButtons(self.m_displays[curDisplay]["mode"].lower())
+    self.fillDisplayInfo(self.m_displays,curDisplay)
 
   # onDisplayPositionChanged
   #
@@ -238,12 +267,19 @@ class settings_dialog(QDialog) :
 
     if self.ui.displaySweepChart_rb.isChecked() :
       self.m_displays[curDisplay]["mode"] = "sweep"
+      hidden = True
     if self.ui.displayScopeChart_rb.isChecked() :
        self.m_displays[curDisplay]["mode"] = "scope"
+       hidden = True
     if self.ui.displayStripChart_rb.isChecked() :
        self.m_displays[curDisplay]["mode"] = "strip"
+       hidden = True
     if self.ui.displayNumeric_rb.isChecked() :
        self.m_displays[curDisplay]["mode"] = "numeric"
+       hidden = False
+
+    self.ui.channelPrecisionSelect.setHidden(hidden)
+    self.ui.precisionLabel.setHidden(hidden)  
   
   # onChannelSelected
   #   
@@ -252,12 +288,14 @@ class settings_dialog(QDialog) :
   def onChannelSelected(self) :
 
     curChannel = self.ui.channelSelected.value() - 1
-
-    self.ui.channelDisplaySelected.setValue(self.m_channels[curChannel]["display"])
-    self.ui.channelName.setText(self.m_channels[curChannel]["name"])
-    self.ui.channelSignalSelect.setCurrentIndex(self.m_channels[curChannel]["source"])
+    self.fillChannelInfo(self.m_channels,curChannel)
     
-    self.setChannelRadioButtons(self.m_channels[curChannel]["type"])
+    if self.m_displays[self.m_channels[curChannel]["display"]-1]["mode"] != "numeric" :
+      hidden = True
+    else :
+      hidden = False
+    self.ui.channelPrecisionSelect.setHidden(hidden)
+    self.ui.precisionLabel.setHidden(hidden)
 
   # onChannelNameChanged
   #
@@ -267,8 +305,36 @@ class settings_dialog(QDialog) :
 
     curChannel = self.ui.channelSelected.value() - 1   
     self.m_channels[curChannel]["name"] = self.ui.channelName.text()
-    
-  # onChannelSourceCHanged
+
+  # onChannelColorChanged
+  #
+  #    the color is changed
+
+  def onChannelColorChanged(self) :
+
+    curChannel = self.ui.channelSelected.value() - 1
+    indx = self.ui.channelColorSelect.currentIndex()
+
+    if indx == 0 : self.m_channels[curChannel]["color"] = COLOR_RED
+    if indx == 1 : self.m_channels[curChannel]["color"] = COLOR_GREEN
+    if indx == 2 : self.m_channels[curChannel]["color"] = COLOR_BLUE
+    if indx == 3 : self.m_channels[curChannel]["color"] = COLOR_CYAN
+    if indx == 4 : self.m_channels[curChannel]["color"] = COLOR_MAGENTA
+    if indx == 5 : self.m_channels[curChannel]["color"] = COLOR_YELLOW
+    if indx == 6 : self.m_channels[curChannel]["color"] = COLOR_BLACK
+    if indx == 7 : self.m_channels[curChannel]["color"] = COLOR_WHITE
+
+  # onChannelPrecisionChanged
+  #
+  #     precicsion is changed
+
+  def onChannelPrecisionChanged(self) :
+
+    curChannel = self.ui.channelSelected.value() - 1
+    value = self.ui.channelPrecisionSelect.value()
+    self.m_channels[curChannel]["precision"] = value
+  
+  # onChannelSourceCHanged  
   #
   #    the source of the current channel is changed
 
@@ -285,6 +351,13 @@ class settings_dialog(QDialog) :
 
     curChannel = self.ui.channelSelected.value() - 1
     self.m_channels[curChannel]["display"] = self.ui.channelDisplaySelected.value()
+
+    if self.m_displays[self.m_channels[curChannel]["display"]-1]["mode"] != "numeric" :
+      hidden = True
+    else :
+      hidden = False
+    self.ui.channelPrecisionSelect.setHidden(hidden)
+    self.ui.precisionLabel.setHidden(hidden) 
 
   # onChannelTypeChanged
   #

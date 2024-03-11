@@ -187,7 +187,7 @@ class graphChart (baseChart) :
       if channelInfo[channel]["color"] == COLOR_BLUE : self.m_series[ichan].setColor(QColor(0,0,255,alpha))
       if channelInfo[channel]["color"] == COLOR_CYAN : self.m_series[ichan].setColor(QColor(0,255,255,alpha))
       if channelInfo[channel]["color"] == COLOR_MAGENTA : self.m_series[ichan].setColor(QColor(255,0,255,alpha))
-      if channelInfo[channel]["color"] == COLOR_YELLOW : self.m_series[ichan].setColor(QColor(0,255,255,alpha))
+      if channelInfo[channel]["color"] == COLOR_YELLOW : self.m_series[ichan].setColor(QColor(255,255,0,alpha))
       if channelInfo[channel]["color"] == COLOR_BLACK : self.m_series[ichan].setColor(QColor(0,0,0,alpha))
       if channelInfo[channel]["color"] == COLOR_WHITE : self.m_series[ichan].setColor(QColor(255,255,255,alpha))
       

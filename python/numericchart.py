@@ -97,7 +97,7 @@ class numericChart (baseChart) :
       if channelInfo[ichan]["color"] == COLOR_BLUE : self.m_valueColor.append(QColor(0,0,255,alpha))
       if channelInfo[ichan]["color"] == COLOR_CYAN : self.m_valueColor.append(QColor(0,255,255,alpha))
       if channelInfo[ichan]["color"] == COLOR_MAGENTA : self.m_valueColor.append(QColor(255,0,255,alpha))
-      if channelInfo[ichan]["color"] == COLOR_YELLOW : self.m_valueColor.append(QColor(0,255,255,alpha))
+      if channelInfo[ichan]["color"] == COLOR_YELLOW : self.m_valueColor.append(QColor(255,255,0,alpha))
       if channelInfo[ichan]["color"] == COLOR_BLACK : self.m_valueColor.append(QColor(0,0,0,alpha))
       if channelInfo[ichan]["color"] == COLOR_WHITE : self.m_valueColor.append(QColor(255,255,255,alpha))
     

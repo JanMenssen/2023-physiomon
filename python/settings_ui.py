@@ -87,7 +87,7 @@ class Ui_settings_dialog(object):
 
         self.layoutWidget1 = QWidget(self.channels)
         self.layoutWidget1.setObjectName(u"layoutWidget1")
-        self.layoutWidget1.setGeometry(QRect(30, 80, 196, 23))
+        self.layoutWidget1.setGeometry(QRect(24, 84, 196, 23))
         self.horizontalLayout_2 = QHBoxLayout(self.layoutWidget1)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -102,12 +102,13 @@ class Ui_settings_dialog(object):
 
         self.channelName = QLineEdit(self.layoutWidget1)
         self.channelName.setObjectName(u"channelName")
+        self.channelName.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_2.addWidget(self.channelName)
+        self.horizontalLayout_2.addWidget(self.channelName, 0, Qt.AlignHCenter)
 
         self.layoutWidget2 = QWidget(self.channels)
         self.layoutWidget2.setObjectName(u"layoutWidget2")
-        self.layoutWidget2.setGeometry(QRect(30, 140, 194, 23))
+        self.layoutWidget2.setGeometry(QRect(25, 118, 201, 32))
         self.horizontalLayout_3 = QHBoxLayout(self.layoutWidget2)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
@@ -120,32 +121,39 @@ class Ui_settings_dialog(object):
 
         self.horizontalLayout_3.addItem(self.horizontalSpacer_4)
 
-        self.channelColor = QLineEdit(self.layoutWidget2)
-        self.channelColor.setObjectName(u"channelColor")
-        self.channelColor.setEnabled(False)
+        self.channelColorSelect = QComboBox(self.layoutWidget2)
+        self.channelColorSelect.addItem("")
+        self.channelColorSelect.addItem("")
+        self.channelColorSelect.addItem("")
+        self.channelColorSelect.addItem("")
+        self.channelColorSelect.addItem("")
+        self.channelColorSelect.addItem("")
+        self.channelColorSelect.addItem("")
+        self.channelColorSelect.addItem("")
+        self.channelColorSelect.setObjectName(u"channelColorSelect")
 
-        self.horizontalLayout_3.addWidget(self.channelColor)
+        self.horizontalLayout_3.addWidget(self.channelColorSelect, 0, Qt.AlignHCenter)
 
         self.layoutWidget3 = QWidget(self.channels)
         self.layoutWidget3.setObjectName(u"layoutWidget3")
-        self.layoutWidget3.setGeometry(QRect(30, 110, 193, 23))
+        self.layoutWidget3.setGeometry(QRect(25, 155, 191, 23))
         self.horizontalLayout_4 = QHBoxLayout(self.layoutWidget3)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
-        self.label_5 = QLabel(self.layoutWidget3)
-        self.label_5.setObjectName(u"label_5")
+        self.precisionLabel = QLabel(self.layoutWidget3)
+        self.precisionLabel.setObjectName(u"precisionLabel")
 
-        self.horizontalLayout_4.addWidget(self.label_5)
+        self.horizontalLayout_4.addWidget(self.precisionLabel)
 
-        self.horizontalSpacer_3 = QSpacerItem(18, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_4.addItem(self.horizontalSpacer_3)
 
-        self.channelUnit = QLineEdit(self.layoutWidget3)
-        self.channelUnit.setObjectName(u"channelUnit")
-        self.channelUnit.setEnabled(False)
+        self.channelPrecisionSelect = QSpinBox(self.layoutWidget3)
+        self.channelPrecisionSelect.setObjectName(u"channelPrecisionSelect")
+        self.channelPrecisionSelect.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_4.addWidget(self.channelUnit)
+        self.horizontalLayout_4.addWidget(self.channelPrecisionSelect)
 
         self.layoutWidget4 = QWidget(self.channels)
         self.layoutWidget4.setObjectName(u"layoutWidget4")
@@ -158,13 +166,14 @@ class Ui_settings_dialog(object):
 
         self.horizontalLayout_5.addWidget(self.label_7)
 
-        self.horizontalSpacer_5 = QSpacerItem(98, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_5.addItem(self.horizontalSpacer_5)
 
         self.channelDisplaySelected = QSpinBox(self.layoutWidget4)
         self.channelDisplaySelected.setObjectName(u"channelDisplaySelected")
         self.channelDisplaySelected.setAutoFillBackground(True)
+        self.channelDisplaySelected.setAlignment(Qt.AlignCenter)
 
         self.horizontalLayout_5.addWidget(self.channelDisplaySelected)
 
@@ -306,6 +315,7 @@ class Ui_settings_dialog(object):
         self.displayScopeChart_rb.setGeometry(QRect(40, 90, 99, 20))
         self.displayNumeric_rb = QRadioButton(self.groupBox_4)
         self.displayNumeric_rb.setObjectName(u"displayNumeric_rb")
+        self.displayNumeric_rb.setEnabled(True)
         self.displayNumeric_rb.setGeometry(QRect(40, 120, 99, 20))
         self.layoutWidget7 = QWidget(self.displays)
         self.layoutWidget7.setObjectName(u"layoutWidget7")
@@ -542,7 +552,7 @@ class Ui_settings_dialog(object):
 
         self.retranslateUi(settings_dialog)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(settings_dialog)
@@ -580,7 +590,16 @@ class Ui_settings_dialog(object):
         self.channelName.setToolTip(QCoreApplication.translate("settings_dialog", u"enter the channel name", None))
 #endif // QT_CONFIG(tooltip)
         self.label_6.setText(QCoreApplication.translate("settings_dialog", u"color", None))
-        self.label_5.setText(QCoreApplication.translate("settings_dialog", u"units", None))
+        self.channelColorSelect.setItemText(0, QCoreApplication.translate("settings_dialog", u"red", None))
+        self.channelColorSelect.setItemText(1, QCoreApplication.translate("settings_dialog", u"green", None))
+        self.channelColorSelect.setItemText(2, QCoreApplication.translate("settings_dialog", u"blue", None))
+        self.channelColorSelect.setItemText(3, QCoreApplication.translate("settings_dialog", u"cyan", None))
+        self.channelColorSelect.setItemText(4, QCoreApplication.translate("settings_dialog", u"magenta", None))
+        self.channelColorSelect.setItemText(5, QCoreApplication.translate("settings_dialog", u"yellow", None))
+        self.channelColorSelect.setItemText(6, QCoreApplication.translate("settings_dialog", u"black", None))
+        self.channelColorSelect.setItemText(7, QCoreApplication.translate("settings_dialog", u"white", None))
+
+        self.precisionLabel.setText(QCoreApplication.translate("settings_dialog", u"precision", None))
         self.label_7.setText(QCoreApplication.translate("settings_dialog", u"display", None))
 #if QT_CONFIG(tooltip)
         self.channelDisplaySelected.setToolTip(QCoreApplication.translate("settings_dialog", u"select the display to to shwo the data for this channel", None))
@@ -691,4 +710,3 @@ class Ui_settings_dialog(object):
 #endif // QT_CONFIG(tooltip)
         self.cancelButton.setText(QCoreApplication.translate("settings_dialog", u"Cancel", None))
     # retranslateUi
-
