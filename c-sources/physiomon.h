@@ -9,6 +9,11 @@
 #ifndef FYSIOMON_H
 #define FYSIOMON_H
 
+// some intro defines
+
+#define TIME_SPLASH_SCREEN 2000
+#define TIME_WINDOW_SHOW 1900
+
 // currently only 10 channels and displays are allowed
 
 #define MAX_CHANNELS 20

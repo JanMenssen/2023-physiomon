@@ -444,8 +444,6 @@ void mainWindow::onSettingsChanged() {
 //    this function is called when an event is happened (key pressed)
 
 void mainWindow::onEvent() {
-
-  qDebug() << "--> on event";
   
   QString eventStr;
 

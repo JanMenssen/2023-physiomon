@@ -7,4 +7,7 @@
         <file>saving-content_11753556.png</file>
         <file>report_4517968.png</file>
     </qresource>
+    <qresource prefix="/intro">
+        <file>splashscreen.png</file>
+    </qresource>
 </RCC>

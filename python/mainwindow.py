@@ -21,7 +21,7 @@ from settings_dialog import settings_dialog
 from physiomon_icons import qInitResources
 
 
-MAX_CHANNELS = 5
+MAX_CHANNELS = 20
 ICON_FIXED_WIDTH = 40
 ICON_SIZE = 20
 TIMER_PERIOD = 100
