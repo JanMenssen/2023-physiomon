@@ -6,6 +6,7 @@
 #
 # modifications
 #   08-jan-2024 JM    initial version
+#   12-mar-2024 JM    adapted for windowws
 
   cmake_minimum_required(VERSION 3.21)
   project(physiomon VERSION 1.0.0 LANGUAGES CXX)
@@ -17,8 +18,15 @@
 
   # install folder
 
-set(ROOT_DIR  "/Users/jan/Library/CloudStorage/OneDrive-Personal/my projects/2024 physiomon/c-sources")
-set(INSTALL_DIR "/Users/jan/")
+  if (APPLE)
+    set(ROOT_DIR  "/Users/jan/Library/CloudStorage/OneDrive-Personal/my projects/2024 physiomon/c-sources")
+    set(INSTALL_DIR "/Users/jan/")
+  endif()
+
+  if (WIN32)
+    set(ROOT_DIR  "c:/users/z558043/OneDrive - Radboudumc/my projects/2024 physiomon/c-sources")
+    set(INSTALL_DIR "c:/program files/physiomon/")
+  endif()
 
 # QT packages
 

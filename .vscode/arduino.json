@@ -1,6 +1,6 @@
 {
-    "port": "/dev/tty.usbmodemF412FA9B49C42",
-    "board": "arduino:renesas_uno:unor4wifi",
+    "port": "COM4",
+    "board": "arduino:avr:uno",
     "programmer": "cmsis-dap",
     "sketch": "devPhysioDaq/devPhysioDaq.ino"
 }

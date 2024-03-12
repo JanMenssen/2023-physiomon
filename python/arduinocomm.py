@@ -15,7 +15,7 @@ class arduinoComm :
 
   # constructor, nothing is done
 
-  def __init__(self,port,baudrate = 115200) :
+  def __init__(self,port,baudrate = 230400) :
     
     self.rcvBuffer = QByteArray()
     self.m_started = False

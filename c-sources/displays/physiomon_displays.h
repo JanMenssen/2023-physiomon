@@ -36,8 +36,8 @@ class physiomon_displays {
   private :
 
     int m_numDisplays = 0;
-    baseChart **m_chart;
-    QGridLayout *m_layout  = NULL;
+    baseChart **m_chart = nullptr;
+    QGridLayout *m_layout  = nullptr;
 };
 
 #endif
