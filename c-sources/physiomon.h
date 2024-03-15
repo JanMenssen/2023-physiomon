@@ -18,6 +18,7 @@
 
 #define MAX_CHANNELS 20
 #define MAX_DISPLAYS 10
+#define MAX_STORES    5
 #define MAX_EVENTS   10
 
 // some enums

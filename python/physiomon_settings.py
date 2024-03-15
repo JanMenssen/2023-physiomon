@@ -32,10 +32,12 @@ class physiomon_settings() :
 
     self.m_numchan = 0
     self.m_numdisp = 0
+    self.m_numstore = 0
     self.m_device = ""
 
     self.m_channels = []
     self.m_displays = []
+    self.m_stores = []
     self.m_events = []
 
     self.m_settings.setFallbacksEnabled(False)
@@ -88,6 +90,7 @@ class physiomon_settings() :
     self.m_settings.beginGroup("algemeen")
     self.m_numchan = int(self.m_settings.value("numchan",defaultValue = 1))
     self.m_numdisp = int(self.m_settings.value("numdisp",1))
+    self.m_numstore = int(self.m_settings.value("numstore",1))
     self.m_device = self.m_settings.value("device","")
     self.m_settings.endGroup()
     
@@ -158,7 +161,28 @@ class physiomon_settings() :
     
     return  
   
-  # _readEventSettings
+  # readStoreSettings
+  #
+  #     read the store information (name of groups)
+
+  def readStoreSettings(self) :
+
+    store = {"groupname" : ""}
+    self.m_stores = []
+
+    for i in range(self.m_numstore) :  
+      
+      keyName = "store " + str(i+1)
+      
+      self.m_settings.beginGroup(keyName)
+      store["groupname"] = self.m_settings.value("groupname",1)
+      self.m_settings.endGroup()
+      
+      self.m_stores.append(store.copy())
+
+    return
+  
+  #  readEventSettings
   #
   #     private method to read the text for the events
 

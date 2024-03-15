@@ -25,12 +25,12 @@ physiomon_settings::physiomon_settings() {
 
   // In C a maximum of MAX_CHANNELS are allowed, to avoid problems we set defaults values
 
-  char keyName[11];
+  char channelName[11];
   for (int i=0;i<MAX_CHANNELS;i++) {
 
-    snprintf(keyName,11,"channel %0d",i+1);
+    snprintf(channelName,11,"channel %0d",i+1);
 
-    m_channels[i].name = keyName;
+    m_channels[i].name = channelName;
     m_channels[i].display = 1;
     m_channels[i].source = 0;
     m_channels[i].type = TYPE_ANALOG_IN;
@@ -49,6 +49,15 @@ physiomon_settings::physiomon_settings() {
     m_displays[i].ymax = 1.0;
     m_displays[i].timescale = 10;
     m_displays[i].mode = DISPLAY_MODE_SCOPE;
+  }
+
+  // and the same for the stores
+
+  char storeName[9];
+  for (int i=0;i<MAX_STORES;i++) {
+    
+    snprintf(storeName,9,"store %0d",i+1);
+    m_stores[i].groupname = storeName;
   }
 
   return;
@@ -85,6 +94,7 @@ QString physiomon_settings::iniRead() {
   readGeneral();
   readChannels();
   readDisplaySettings();
+  readStoreSettings();
   readEventSettings();
 
   return(m_device);
@@ -109,6 +119,7 @@ void physiomon_settings::readGeneral() {
   m_settings->beginGroup("algemeen");
   m_numchan = m_settings->value("numchan",1).toInt();
   m_numdisp = m_settings->value("numdisp",1).toInt();
+  m_numstore = m_settings->value("numstore",1).toInt();
   m_device = m_settings->value("device","").toString();
   m_settings->endGroup();
 
@@ -181,6 +192,25 @@ void physiomon_settings::readDisplaySettings() {
     if (mode.toLower() == QString("numeric")) m_displays[iDisp].mode = DISPLAY_MODE_NUMERIC;
 
     m_settings->endGroup();
+  }
+}
+
+// readStoreSettings
+//
+//    this method reads the store info
+
+void physiomon_settings::readStoreSettings() {
+  
+  char keyName[9];
+
+  for (int iStore = 0; iStore < m_numstore; iStore++) {
+
+    snprintf(keyName,9,"store %0d",iStore+1);
+
+    m_settings->beginGroup(keyName);
+    m_stores[iStore].groupname = m_settings->value("name","").toString();
+    m_settings->endGroup();
+
   }
 }
 

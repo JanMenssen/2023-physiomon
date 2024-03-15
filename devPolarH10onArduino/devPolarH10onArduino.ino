@@ -20,7 +20,7 @@
 bleConnect myConnectDev;
 bleHR myHR;
 bleECG myECG;
-hostInterface myCommander(57600);
+hostInterface myCommander(BAUDRATE);
 //-jm keyBoardHandler myCommander(57600);
 
 int len = 0;

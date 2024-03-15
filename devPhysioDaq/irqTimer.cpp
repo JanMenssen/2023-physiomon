@@ -11,8 +11,8 @@
 
 // here all arduino types are defined. Only one should be selected
 
-//-jm #define ARDUINO_UNO_R4
-#define ARDUINO_UNO_R3
+#define ARDUINO_UNO_R4
+//-jm #define ARDUINO_UNO_R3
 //-jm #define ARDUINO_MEGA_2560
 //-jm #define ARDUINO_EUN_R3_WIFI_R2
 

@@ -21,6 +21,7 @@ struct channelStruct {
   usedColors color;
   int source;
   int display;
+  int store;
   int precision;
 };
 
@@ -37,6 +38,11 @@ struct displayStruct {
   viewMode mode;
 };
 
+// the store struct is used for which channels are stored
+
+struct storeStruct {
+  QString   groupname;
+};
 
 class physiomon_settings {
 
@@ -53,9 +59,11 @@ class physiomon_settings {
 
     int m_numdisp = 0;
     int m_numchan = 0;
+    int m_numstore = 0;
     QString m_device;
     channelStruct m_channels[MAX_CHANNELS];
     displayStruct m_displays[MAX_DISPLAYS];
+    storeStruct m_stores[MAX_STORES];
     QString m_events[MAX_EVENTS];
 
   private :
@@ -63,6 +71,7 @@ class physiomon_settings {
     void readGeneral();
     void readChannels();
     void readDisplaySettings();
+    void readStoreSettings();
     void readEventSettings();
 
 };
