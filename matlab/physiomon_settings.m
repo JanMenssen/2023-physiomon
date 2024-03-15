@@ -20,6 +20,7 @@ classdef physiomon_settings < handle
     m_filename = [];
     m_channels = [];
     m_displays = [];
+    m_stores = [];
     m_events = [];
 
     defs = defines();       % load the defines
@@ -132,10 +133,11 @@ classdef physiomon_settings < handle
 
     function devicename = iniRead(obj)
     
-      % reads the *.INI file and make 3 structures, depending on the information in the *.INI
+      % reads the *.INI file and make 4 structures, depending on the information in the *.INI
       % file
       %     - m_channels    : containing information about channels
       %     - m_displays    : contains the event settings
+      %     - m_stores      : contains store settings 
       %     - m_events      : contains information for the events
       %
       %   syntax : devicdename = iniRead(obj)
@@ -148,9 +150,11 @@ classdef physiomon_settings < handle
       
       numChan = round(str2double(tmpStruct.algemeen.numchan));
       numDisp = round(str2double(tmpStruct.algemeen.numdisp));
+      numStore = round(str2double(tmpStruct.algemeen.numstore));
 
       obj.readDisplays(tmpStruct,numDisp);
       obj.readChannels(tmpStruct,numChan);
+      obj.readStores(tmpStruct,numStore);
       obj.readEvents(tmpStruct,obj.defs.MAX_EVENTS);
       
       devicename = tmpStruct.algemeen.device;
@@ -256,6 +260,29 @@ classdef physiomon_settings < handle
 
     end
         
+    % readStores
+
+    function readStores(obj,tmpStruct,numStores)
+    
+      % readStores reads the groupname of the store engines
+      %
+      %   syntax : readStores(obj,tmpStruct,numStores)
+      %
+      % <m_stores> is an internal private member of the class. <tmpStruct> is the 
+      % tempory structure created from reading the *.IN* file and <numStores> are the 
+      % number of stores/group. 
+
+      obj.m_stores = repmat(struct('groupname',[]),numStores,1);
+
+      for iStore = 1:numStores
+
+        section = ['store' num2str(iChan)];
+        obj.m_channels(iStore).groupname = tmpStruct.(section).name;
+
+      end
+      
+    end
+
     % readEvents
 
     function readEvents(obj,tmpStruct,numEvents)
