@@ -74,7 +74,7 @@ classdef physiomon_store < handle
       % future there should be a check this samplerate is the same for all channels in a
       % group
 
-      for i=1:numstore, obj.m_groupInfo(i).sampleRate = channels(i).getSamplerate(); end
+      for i=1:numstore, obj.m_groupInfo(i).sampleRate = channels.getSamplerate(i); end
     
     end
 
