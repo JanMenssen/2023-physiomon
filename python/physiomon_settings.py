@@ -61,6 +61,7 @@ class physiomon_settings() :
     self._readGeneral()
     self._readChannels()
     self._readDisplaySettings()
+    self._readStoreSettings()
     self._readEventSettings()
 
   #-jm  return self.m_general["device"]
@@ -165,7 +166,7 @@ class physiomon_settings() :
   #
   #     read the store information (name of groups)
 
-  def readStoreSettings(self) :
+  def _readStoreSettings(self) :
 
     store = {"groupname" : ""}
     self.m_stores = []

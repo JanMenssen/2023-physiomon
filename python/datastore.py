@@ -14,13 +14,6 @@ class dataStore() :
   def __init__(self) :
     return
   
-  # initialise
-  #
-  #     initialisation of the object
-
-  def initialise(self) :
-    return
-  
   # configure
   #
   #   
@@ -28,12 +21,6 @@ class dataStore() :
   def configure(self) :
     return
   
-  # destroy
-  #
-  #     cleans and delete the object and data
-
-  def destroy(self) :
-    return
   
   # isStorareOn
   #
@@ -49,10 +36,13 @@ class dataStore() :
   def setStorage(self,onoff) :
     return
   
-
-# write
+# prepareWrite
 #
-#     writes the data to disk
+#     prepares for writing, copies to data from a channel to a tempory buffer 
+#     till this is done for all channels in the group
+
+def prepareWrite(self) :
+  return
   
 def write(self) :
   return

@@ -7,6 +7,7 @@
 # modifications
 #   08-jan-2024 JM    initial version
 #   12-mar-2024 JM    adapted for windowws
+#   15-mar-2024 JM    datastore added
 
   cmake_minimum_required(VERSION 3.21)
   project(physiomon VERSION 1.0.0 LANGUAGES CXX)
@@ -42,6 +43,7 @@
     ${ROOT_DIR}/channels/physiomon_channels.cpp
     ${ROOT_DIR}/displays/physiomon_displays.cpp
     ${ROOT_DIR}/settings/physiomon_settings.cpp
+    ${ROOT_DIR}/datastore/physiomon_store.cpp
     ${ROOT_DIR}/settings/settings_ui/settings_dialog.cpp
     ${ROOT_DIR}/basechart/basechart.cpp 
     ${ROOT_DIR}/graphchart/graphchart.cpp
@@ -64,6 +66,7 @@
     ${ROOT_DIR}/settings
     ${ROOT_DIR}/settings/settings_ui
     ${ROOT_DIR}/displays
+    ${ROOT_DIR}/datastore
     ${ROOT_DIR}/arduinocomm
     ${ROOT_DIR}/basechart
     ${ROOT_DIR}/graphchart
