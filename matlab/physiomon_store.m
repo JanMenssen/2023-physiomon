@@ -51,7 +51,7 @@ classdef physiomon_store < handle
       % and <channels> instances of the channels class
 
       numstore = length(settings.m_store);
-      obj.m_groupInfo = repmat(struct("name",[],"samplerate",[],"channels",cell([])),numstore,1);
+      obj.m_groupInfo = repmat(struct("name",[],"samplerate",[],"chanlist",cell([])),numstore,1);
 
       % first add the groupname to the groupInfo
 
@@ -65,7 +65,7 @@ classdef physiomon_store < handle
       for ichan = 1:nchannels
         usedStore = settings.m_channels(ichan).store;
         if usedStore > 0
-          obj.m_groupInfo(usedStore).channels{istore(usedStore)} = ichan;
+          obj.m_groupInfo(usedStore).chanlist{istore(usedStore)} = ichan;
           istore(usedStore) = istore(usedStore) + 1;
         end
       end

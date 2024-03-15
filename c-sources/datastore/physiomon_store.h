@@ -13,6 +13,16 @@
 
 #include "physiomon.h"
 #include "physiomon_settings.h"
+#include "physiomon_channels.h"
+
+// structure needed for the diffent storage engines
+
+struct groupInfoStruct {
+  QString name;
+  int sampleRate;
+  int nchan = 0;
+  int chanlist[MAX_CHANNELS];
+}; 
 
 class physiomon_store {
 
@@ -20,7 +30,7 @@ class physiomon_store {
   
     physiomon_store(QString filename);
     ~physiomon_store();
-    void configure(physiomon_settings *settings);
+    void configure(physiomon_settings *settings, physiomon_channels *channels);
     void write(int groupnr);  
     void writeEvent(QString eventStr);
     bool isStorageOn();
@@ -28,6 +38,7 @@ class physiomon_store {
 
   private :
 
+    groupInfoStruct m_groupInfo[MAX_STORES];
     void prepareWrite(int groupnr, int channr, float *data);
 };
 
