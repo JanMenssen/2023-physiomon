@@ -17,8 +17,8 @@ classdef defines
     % we have different types of signals, these are defined here
 
     TYPE_ANALOG_IN = 1;
-    TYPE_NUMERIC = 2;
-    TYPE_WAVEFORM = 3;
+    TYPE_NUMERIC_IN = 2;
+    TYPE_WAVEFORM_IN = 3;
 
     % the modes of displaying a signal
 

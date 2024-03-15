@@ -175,7 +175,7 @@ classdef physiomon_settings < handle
       %
       % <m_channels> is an internal private member of the class
 
-      obj.m_channels = repmat(struct('name',[],'type',[],'source',[],'display',[],'precision',[],'color',[]),numChannels,1);
+      obj.m_channels = repmat(struct('name',[],'type',[],'source',0,'display',0,'precision',[],'color',[],'store',0),numChannels,1);
 
       for iChan = 1:numChannels
 
@@ -183,13 +183,18 @@ classdef physiomon_settings < handle
 
         obj.m_channels(iChan).name = tmpStruct.(section).name;
         obj.m_channels(iChan).source = str2double(tmpStruct.(section).source);
-        obj.m_channels(iChan).display = str2double(tmpStruct.(section).display);
-        obj.m_channels(iChan).precision = str2double(tmpStruct.(section).precision);
+        if isfield(tmpStruct.(section),"display"), obj.m_channels(iChan).display = str2double(tmpStruct.(section).display); end
+        if isfield(tmpStruct.(section),"precision"), obj.m_channels(iChan).precision = str2double(tmpStruct.(section).precision); end
+        if isfield(tmpStruct.(section),"store"), obj.m_channels(iChan).store = tmpStruct.(section).store; end
 
         switch lower(tmpStruct.(section).type) 
 
           case "analog in" 
             obj.m_channels(iChan).type = obj.defs.TYPE_ANALOG_IN;
+          case "waveform in"
+            obj.m_channels(iChan).type = obj.defs.TYPE_WAVEFORM_IN;
+          case "numeric in"
+            obj.m_channels(iChan).type = obj.defs.TYPE_NUMERERC_IN;
         end
 
         switch lower(tmpStruct.(section).color)
